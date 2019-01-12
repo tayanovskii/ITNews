@@ -12,8 +12,8 @@ namespace ITNews.Data.Entities
         public string Description { get; set; }
         public string Content { get; set; }
         public long VisitorCount { get; set; }
-        public User Author { get; set; }
-        public int AuthorId { get; set; }
+        public User User { get; set; }
+        public string UserId { get; set; }
         public IEnumerable<NewsCategory> NewsCategories { get; set; }
         public IEnumerable<NewsTag> NewsTags { get; set; }
         public IEnumerable<Comment> Comments { get; set; }

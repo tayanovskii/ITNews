@@ -217,15 +217,14 @@ namespace ITNews.Migrations
                     Description = table.Column<string>(nullable: true),
                     Content = table.Column<string>(nullable: true),
                     VisitorCount = table.Column<long>(nullable: false),
-                    AuthorId1 = table.Column<string>(nullable: true),
-                    AuthorId = table.Column<int>(nullable: false)
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_News", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_News_AspNetUsers_AuthorId1",
-                        column: x => x.AuthorId1,
+                        name: "FK_News_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -240,8 +239,7 @@ namespace ITNews.Migrations
                     Content = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     ModifiedAt = table.Column<DateTime>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: false),
-                    AuthorId1 = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     ModifiedBy = table.Column<int>(nullable: false),
                     NewsId = table.Column<int>(nullable: false)
                 },
@@ -249,17 +247,17 @@ namespace ITNews.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_AuthorId1",
-                        column: x => x.AuthorId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Comments_News_NewsId",
                         column: x => x.NewsId,
                         principalTable: "News",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -317,8 +315,7 @@ namespace ITNews.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     RatingBy = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
-                    UserId1 = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     Value = table.Column<short>(nullable: false),
                     NewsId = table.Column<int>(nullable: false)
                 },
@@ -332,8 +329,8 @@ namespace ITNews.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Ratings_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Ratings_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -346,8 +343,7 @@ namespace ITNews.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CommentId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
-                    UserId1 = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -359,8 +355,8 @@ namespace ITNews.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CommentLikes_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_CommentLikes_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -416,14 +412,9 @@ namespace ITNews.Migrations
                 column: "CommentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommentLikes_UserId1",
+                name: "IX_CommentLikes_UserId",
                 table: "CommentLikes",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_AuthorId1",
-                table: "Comments",
-                column: "AuthorId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_NewsId",
@@ -431,9 +422,14 @@ namespace ITNews.Migrations
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_News_AuthorId1",
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_News_UserId",
                 table: "News",
-                column: "AuthorId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewsCategories_CategoryId",
@@ -451,9 +447,9 @@ namespace ITNews.Migrations
                 column: "NewsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_UserId1",
+                name: "IX_Ratings_UserId",
                 table: "Ratings",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

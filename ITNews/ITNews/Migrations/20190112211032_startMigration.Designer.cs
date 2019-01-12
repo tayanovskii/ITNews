@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITNews.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190112204658_startMigration")]
+    [Migration("20190112211032_startMigration")]
     partial class startMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,10 +40,6 @@ namespace ITNews.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AuthorId");
-
-                    b.Property<string>("AuthorId1");
-
                     b.Property<string>("Content");
 
                     b.Property<DateTime>("CreatedAt");
@@ -54,11 +50,13 @@ namespace ITNews.Migrations
 
                     b.Property<int>("NewsId");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
-
                     b.HasIndex("NewsId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -71,15 +69,13 @@ namespace ITNews.Migrations
 
                     b.Property<int?>("CommentId");
 
-                    b.Property<int>("UserId");
-
-                    b.Property<string>("UserId1");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("CommentLikes");
                 });
@@ -103,21 +99,19 @@ namespace ITNews.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AuthorId");
-
-                    b.Property<string>("AuthorId1");
-
                     b.Property<string>("Content");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Title");
 
+                    b.Property<string>("UserId");
+
                     b.Property<long>("VisitorCount");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("News");
                 });
@@ -158,9 +152,7 @@ namespace ITNews.Migrations
 
                     b.Property<int>("RatingBy");
 
-                    b.Property<int>("UserId");
-
-                    b.Property<string>("UserId1");
+                    b.Property<string>("UserId");
 
                     b.Property<short>("Value");
 
@@ -168,7 +160,7 @@ namespace ITNews.Migrations
 
                     b.HasIndex("NewsId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
                 });
@@ -371,14 +363,14 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("ITNews.Data.Entities.Comment", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId1");
-
                     b.HasOne("ITNews.Data.Entities.News")
                         .WithMany("Comments")
                         .HasForeignKey("NewsId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ITNews.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.CommentLike", b =>
@@ -389,14 +381,14 @@ namespace ITNews.Migrations
 
                     b.HasOne("ITNews.Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.News", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.User", "Author")
+                    b.HasOne("ITNews.Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("AuthorId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.NewsCategory", b =>
@@ -434,7 +426,7 @@ namespace ITNews.Migrations
 
                     b.HasOne("ITNews.Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.User", b =>
