@@ -28,6 +28,14 @@ namespace ITNews
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("Cors", builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -49,9 +57,9 @@ namespace ITNews
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
                         // standard configuration
-                        ValidIssuer = Configuration["Auth:Jwt:Issuer"],
-                        ValidAudience = Configuration["Auth:Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"])),
+                        ValidIssuer = Configuration["Tokens:Jwt:Issuer"],
+                        ValidAudience = Configuration["Tokens:Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Jwt:Key"])),
                         ClockSkew = TimeSpan.Zero,
                         // security switches
                         RequireExpirationTime = true,
@@ -89,6 +97,7 @@ namespace ITNews
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseCors("Cors");
             app.UseAuthentication();
 
             app.UseMvc(routes =>
