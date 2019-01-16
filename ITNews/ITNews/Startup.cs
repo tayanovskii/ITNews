@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using AutoMapper;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,12 +57,10 @@ namespace ITNews
                     cfg.SaveToken = true;
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        // standard configuration
                         ValidIssuer = Configuration["Tokens:Jwt:Issuer"],
                         ValidAudience = Configuration["Tokens:Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Jwt:Key"])),
                         ClockSkew = TimeSpan.Zero,
-                        // security switches
                         RequireExpirationTime = true,
                         ValidateIssuer = true,
                         ValidateIssuerSigningKey = true,
@@ -71,7 +70,7 @@ namespace ITNews
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-
+            services.AddAutoMapper();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -81,7 +80,7 @@ namespace ITNews
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services)
         {
             if (env.IsDevelopment())
             {
@@ -119,6 +118,8 @@ namespace ITNews
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            SeedData.InitializeAsync(services).Wait();
         }
     }
 }

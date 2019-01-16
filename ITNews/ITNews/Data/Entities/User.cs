@@ -9,13 +9,19 @@ namespace ITNews.Data.Entities
     public class User : IdentityUser
     {
         public int UserProfileId { get; set; }
+        public UserProfile UserProfile { get; set; }
         public int? LanguageId { get; set; }
         public Guid RandomRegistrationCode { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? ModifiedBy { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
 
+        public Language Language { get; set; }
+        public IEnumerable<News> News { get; set; }
+        public IEnumerable<CommentLike> CommentLikes { get; set; }
+        public IEnumerable<Rating> Ratings { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
 
     }
 }

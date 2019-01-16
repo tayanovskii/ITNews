@@ -47,8 +47,50 @@ namespace ITNews.Data
             newsCategory.HasOne(ns => ns.News).WithMany(n => n.NewsCategories).HasForeignKey(ns => ns.NewsId);
             newsCategory.HasOne(ns => ns.Category).WithMany(c => c.NewsCategories).HasForeignKey(ns => ns.CategoryId);
 
+            var category = builder.Entity<Category>();
+            category.HasKey(c => c.Id);
+            category.Property(c => c.Name).IsRequired();
+
+
             var user = builder.Entity<User>();
             user.Property(u => u.RandomRegistrationCode).ValueGeneratedOnAdd();
+            user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId);
+
+            var news = builder.Entity<News>();
+            news.HasKey(n => n.Id);
+            news.Property(n => n.Content).IsRequired();
+            news.Property(n => n.Description).IsRequired();
+            news.Property(n => n.Title).IsRequired();
+
+            var rating = builder.Entity<Rating>();
+            rating.HasKey(r => r.Id);
+            rating.Property(r => r.Value).IsRequired();
+            rating.HasOne(r => r.News).WithMany(n => n.Ratings).HasForeignKey(r=>r.NewsId);
+            rating.HasOne(r => r.User).WithMany(u => u.Ratings).HasForeignKey(r=>r.UserId);
+
+            var comment = builder.Entity<Comment>();
+            comment.HasKey(c => c.Id);
+            comment.Property(c => c.Content).IsRequired();
+            comment.HasOne(c => c.News).WithMany(n => n.Comments).HasForeignKey(c=>c.NewsId);
+            comment.HasMany(c => c.Likes).WithOne(l => l.Comment).HasForeignKey(cl=>cl.CommentId);
+            comment.HasOne(c => c.User).WithMany(u => u.Comments).HasForeignKey(c=>c.UserId);
+
+            var commentLike = builder.Entity<CommentLike>();
+            commentLike.HasKey(cl => cl.Id);
+            commentLike.HasOne(cl => cl.Comment).WithMany(c => c.Likes).HasForeignKey(cl=>cl.CommentId);
+            commentLike.HasOne(cl => cl.User).WithMany(u => u.CommentLikes).HasForeignKey(cl=>cl.UserId);
+
+            var language = builder.Entity<Language>();
+            language.HasKey(l => l.Id);
+            language.Property(l => l.Name).IsRequired();
+            language.HasMany(l => l.Users).WithOne(u => u.Language).HasForeignKey(u=>u.LanguageId);
+
+            var userProfile = builder.Entity<UserProfile>();
+            userProfile.HasKey(u => u.Id);
+            userProfile.Property(u => u.FirstName).IsRequired();
+            userProfile.Property(u => u.LastName).IsRequired();
+            userProfile.HasOne(up => up.User).WithOne(u => u.UserProfile);
+
         }
 
        

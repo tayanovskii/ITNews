@@ -13,8 +13,9 @@ namespace ITNews.Data.Entities
         public DateTime ModifiedAt { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
-        public int ModifiedBy { get; set; }
+        public string ModifiedBy { get; set; }
         public int NewsId { get; set; }
+        public News News { get; set; }
         public IEnumerable<CommentLike> Likes { get; set; }
     }
 }
