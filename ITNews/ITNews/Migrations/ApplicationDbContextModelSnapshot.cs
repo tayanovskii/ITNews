@@ -19,6 +19,74 @@ namespace ITNews.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ITNews.Data.Entities.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<DateTime?>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<int?>("LanguageId");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<DateTime?>("ModifiedAt");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.Property<int>("UserProfileId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("UserProfileId")
+                        .IsUnique();
+
+                    b.ToTable("AspNetUsers");
+                });
+
             modelBuilder.Entity("ITNews.Data.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -185,77 +253,6 @@ namespace ITNews.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("ITNews.Data.Entities.User", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<DateTime?>("CreatedAt");
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<int?>("LanguageId");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<DateTime?>("ModifiedAt");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<Guid>("RandomRegistrationCode")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.Property<int>("UserProfileId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LanguageId");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("UserProfileId")
-                        .IsUnique();
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("ITNews.Data.Entities.UserProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -273,8 +270,6 @@ namespace ITNews.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired();
-
-                    b.Property<string>("PhoneNumber");
 
                     b.Property<string>("UserId");
 
@@ -393,6 +388,18 @@ namespace ITNews.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("ITNews.Data.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("ITNews.Data.Entities.Language", "Language")
+                        .WithMany("Users")
+                        .HasForeignKey("LanguageId");
+
+                    b.HasOne("ITNews.Data.Entities.UserProfile", "UserProfile")
+                        .WithOne("User")
+                        .HasForeignKey("ITNews.Data.Entities.ApplicationUser", "UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ITNews.Data.Entities.Comment", b =>
                 {
                     b.HasOne("ITNews.Data.Entities.News", "News")
@@ -400,7 +407,7 @@ namespace ITNews.Migrations
                         .HasForeignKey("NewsId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ITNews.Data.Entities.User", "User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId");
                 });
@@ -412,14 +419,14 @@ namespace ITNews.Migrations
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ITNews.Data.Entities.User", "User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("CommentLikes")
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.News", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.User", "User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("News")
                         .HasForeignKey("UserId");
                 });
@@ -457,21 +464,9 @@ namespace ITNews.Migrations
                         .HasForeignKey("NewsId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ITNews.Data.Entities.User", "User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("Ratings")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("ITNews.Data.Entities.User", b =>
-                {
-                    b.HasOne("ITNews.Data.Entities.Language", "Language")
-                        .WithMany("Users")
-                        .HasForeignKey("LanguageId");
-
-                    b.HasOne("ITNews.Data.Entities.UserProfile", "UserProfile")
-                        .WithOne("User")
-                        .HasForeignKey("ITNews.Data.Entities.User", "UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -484,7 +479,7 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -492,7 +487,7 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -505,7 +500,7 @@ namespace ITNews.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ITNews.Data.Entities.User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -513,7 +508,7 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.User")
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -11,7 +11,7 @@ namespace ITNews.Data.Entities
 
         public string UserId { get; set; }
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
 
         public string Avatar { get; set; }
 
@@ -19,7 +19,6 @@ namespace ITNews.Data.Entities
 
         public string LastName { get; set; }
 
-        public string PhoneNumber { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
     }

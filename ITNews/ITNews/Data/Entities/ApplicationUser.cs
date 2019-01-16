@@ -6,17 +6,15 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ITNews.Data.Entities
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public int UserProfileId { get; set; }
         public UserProfile UserProfile { get; set; }
         public int? LanguageId { get; set; }
-        public Guid RandomRegistrationCode { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
-
         public Language Language { get; set; }
         public IEnumerable<News> News { get; set; }
         public IEnumerable<CommentLike> CommentLikes { get; set; }

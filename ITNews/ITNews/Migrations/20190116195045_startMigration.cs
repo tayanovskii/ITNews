@@ -73,7 +73,6 @@ namespace ITNews.Migrations
                     Avatar = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
-                    PhoneNumber = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
                     City = table.Column<string>(nullable: true)
                 },
@@ -124,7 +123,6 @@ namespace ITNews.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     UserProfileId = table.Column<int>(nullable: false),
                     LanguageId = table.Column<int>(nullable: true),
-                    RandomRegistrationCode = table.Column<Guid>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: true),
                     ModifiedAt = table.Column<DateTime>(nullable: true),
                     CreatedBy = table.Column<string>(nullable: true),

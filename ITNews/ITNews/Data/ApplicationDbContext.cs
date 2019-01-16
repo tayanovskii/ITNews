@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ITNews.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Rating> Ratings { get; set; }
@@ -52,8 +52,7 @@ namespace ITNews.Data
             category.Property(c => c.Name).IsRequired();
 
 
-            var user = builder.Entity<User>();
-            user.Property(u => u.RandomRegistrationCode).ValueGeneratedOnAdd();
+            var user = builder.Entity<ApplicationUser>();
             user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId);
 
             var news = builder.Entity<News>();
@@ -89,7 +88,7 @@ namespace ITNews.Data
             userProfile.HasKey(u => u.Id);
             userProfile.Property(u => u.FirstName).IsRequired();
             userProfile.Property(u => u.LastName).IsRequired();
-            userProfile.HasOne(up => up.User).WithOne(u => u.UserProfile).HasForeignKey<User>(u => u.UserProfileId);
+            userProfile.HasOne(up => up.User).WithOne(u => u.UserProfile).HasForeignKey<ApplicationUser>(u => u.UserProfileId);
 
         }
 

@@ -23,14 +23,14 @@ namespace ITNews.Controllers
     [AllowAnonymous]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IConfiguration configuration;
 
 
         public AccountController(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration)
         {
             this.userManager = userManager;
@@ -79,7 +79,7 @@ namespace ITNews.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User
+                var user = new ApplicationUser
                 {
                     //TODO: Use Automapper instaed of manual binding  
                 

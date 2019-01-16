@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ITNews.Data
 {
-    public class SeedData
+    public static class SeedData
     {
         public static async Task InitializeAsync(
             IServiceProvider services)
@@ -21,7 +21,7 @@ namespace ITNews.Data
             await CreateRolesAsync(roleManager, configuration);
 
             var userManager = services
-                .GetRequiredService<UserManager<User>>();
+                .GetRequiredService<UserManager<ApplicationUser>>();
             await CreateAdminAsync(userManager, configuration);
 
         }
@@ -40,28 +40,36 @@ namespace ITNews.Data
         }
 
         private static async Task CreateAdminAsync(
-            UserManager<User> userManager, IConfiguration configuration)
+            UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             var nameAdmin = configuration["AdminAccount:username"];
             var passwordAdmin = configuration["AdminAccount:password"];
             var emailAdmin = configuration["AdminAccount:email"];
             var roleAdmin = configuration["AdminAccount:role"];
 
-            var admin = await userManager.Users
-                .Where(x => x.UserName == nameAdmin)
-                .SingleOrDefaultAsync();
+            //var admin = await userManager.Users
+            //    .Where(x => x.UserName == nameAdmin)
+            //    .SingleOrDefaultAsync();
+
+            var admin = await userManager.FindByNameAsync(nameAdmin);
 
             if (admin != null) return;
 
-            admin = new User
+            admin = new ApplicationUser
             {
                 UserName = nameAdmin,
                 Email = emailAdmin
             };
-            await userManager.CreateAsync(
-                admin, passwordAdmin);
-            await userManager.AddToRoleAsync(
-                admin, roleAdmin);
+            //await userManager.CreateAsync(
+            //    admin, passwordAdmin);
+            var result = userManager.CreateAsync(admin, passwordAdmin).Result;
+            if (result.Succeeded)
+            {
+                userManager.AddToRoleAsync(
+                admin, roleAdmin).Wait();
+
+            }
+
         }
     }
 }
