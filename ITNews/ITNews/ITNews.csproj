@@ -27,12 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20190112204658_startMigration.cs" />
-    <Compile Remove="Migrations\20190112204658_startMigration.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Data\Repositories\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

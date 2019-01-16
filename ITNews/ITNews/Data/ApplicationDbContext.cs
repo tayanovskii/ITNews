@@ -89,7 +89,7 @@ namespace ITNews.Data
             userProfile.HasKey(u => u.Id);
             userProfile.Property(u => u.FirstName).IsRequired();
             userProfile.Property(u => u.LastName).IsRequired();
-            userProfile.HasOne(up => up.User).WithOne(u => u.UserProfile);
+            userProfile.HasOne(up => up.User).WithOne(u => u.UserProfile).HasForeignKey<User>(u => u.UserProfileId);
 
         }
 

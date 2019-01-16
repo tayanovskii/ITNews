@@ -83,12 +83,12 @@ namespace ITNews.Controllers
                 {
                     //TODO: Use Automapper instaed of manual binding  
                 
-                    UserName = registrationModel.Username,
+                    UserName = registrationModel.UserName,
                     Email = registrationModel.Email
                 };
 
                 var identityResult = await userManager.CreateAsync(user, registrationModel.Password);
-
+                await userManager.AddToRoleAsync(user, "user"); //todo constant class helper
                 //TODO: Use MailService for confirmation Email address  
 
                 if (identityResult.Succeeded)

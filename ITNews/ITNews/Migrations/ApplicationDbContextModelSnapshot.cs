@@ -25,7 +25,8 @@ namespace ITNews.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -38,13 +39,14 @@ namespace ITNews.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Content");
+                    b.Property<string>("Content")
+                        .IsRequired();
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<DateTime>("ModifiedAt");
 
-                    b.Property<int>("ModifiedBy");
+                    b.Property<string>("ModifiedBy");
 
                     b.Property<int>("NewsId");
 
@@ -65,7 +67,7 @@ namespace ITNews.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CommentId");
+                    b.Property<int>("CommentId");
 
                     b.Property<string>("UserId");
 
@@ -84,7 +86,8 @@ namespace ITNews.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -97,11 +100,14 @@ namespace ITNews.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Content");
+                    b.Property<string>("Content")
+                        .IsRequired();
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired();
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired();
 
                     b.Property<string>("UserId");
 
@@ -148,8 +154,6 @@ namespace ITNews.Migrations
 
                     b.Property<int>("NewsId");
 
-                    b.Property<int>("RatingBy");
-
                     b.Property<string>("UserId");
 
                     b.Property<short>("Value");
@@ -193,7 +197,7 @@ namespace ITNews.Migrations
 
                     b.Property<DateTime?>("CreatedAt");
 
-                    b.Property<int?>("CreatedBy");
+                    b.Property<string>("CreatedBy");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -208,7 +212,7 @@ namespace ITNews.Migrations
 
                     b.Property<DateTime?>("ModifiedAt");
 
-                    b.Property<int?>("ModifiedBy");
+                    b.Property<string>("ModifiedBy");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -246,7 +250,37 @@ namespace ITNews.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("UserProfileId")
+                        .IsUnique();
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("ITNews.Data.Entities.UserProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Avatar");
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired();
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserProfile");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -361,13 +395,13 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("ITNews.Data.Entities.Comment", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.News")
+                    b.HasOne("ITNews.Data.Entities.News", "News")
                         .WithMany("Comments")
                         .HasForeignKey("NewsId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ITNews.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("UserId");
                 });
 
@@ -375,17 +409,18 @@ namespace ITNews.Migrations
                 {
                     b.HasOne("ITNews.Data.Entities.Comment", "Comment")
                         .WithMany("Likes")
-                        .HasForeignKey("CommentId");
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ITNews.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("CommentLikes")
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.News", b =>
                 {
                     b.HasOne("ITNews.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("News")
                         .HasForeignKey("UserId");
                 });
 
@@ -417,21 +452,26 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("ITNews.Data.Entities.Rating", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.News")
+                    b.HasOne("ITNews.Data.Entities.News", "News")
                         .WithMany("Ratings")
                         .HasForeignKey("NewsId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ITNews.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Ratings")
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.User", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.Language")
+                    b.HasOne("ITNews.Data.Entities.Language", "Language")
                         .WithMany("Users")
                         .HasForeignKey("LanguageId");
+
+                    b.HasOne("ITNews.Data.Entities.UserProfile", "UserProfile")
+                        .WithOne("User")
+                        .HasForeignKey("ITNews.Data.Entities.User", "UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
