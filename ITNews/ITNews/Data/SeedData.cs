@@ -29,14 +29,15 @@ namespace ITNews.Data
         private static async Task CreateRolesAsync(
             RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
-            var role = configuration["AdminAccount:role"];
-            var alreadyExists = await roleManager
-                .RoleExistsAsync(role);
+            var roles = new List<string> {configuration["AdminAccount:role"], "user"};
 
-            if (alreadyExists) return;
-
-            await roleManager.CreateAsync(
-                new IdentityRole(role));
+            foreach (var role in roles)
+            {
+                if (await roleManager.RoleExistsAsync(role))
+                    continue;
+                await roleManager.CreateAsync(
+                    new IdentityRole(role));
+            }
         }
 
         private static async Task CreateAdminAsync(

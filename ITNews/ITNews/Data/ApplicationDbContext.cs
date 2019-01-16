@@ -6,6 +6,7 @@ using ITNews.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using UserProfile = ITNews.Data.Entities.UserProfile;
 
 namespace ITNews.Data
 {
@@ -54,6 +55,7 @@ namespace ITNews.Data
 
             var user = builder.Entity<ApplicationUser>();
             user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId);
+            user.HasOne(u => u.UserProfile).WithOne(up => up.User).HasForeignKey<UserProfile>(up => up.UserId);
 
             var news = builder.Entity<News>();
             news.HasKey(n => n.Id);
@@ -88,8 +90,6 @@ namespace ITNews.Data
             userProfile.HasKey(u => u.Id);
             userProfile.Property(u => u.FirstName).IsRequired();
             userProfile.Property(u => u.LastName).IsRequired();
-            userProfile.HasOne(up => up.User).WithOne(u => u.UserProfile).HasForeignKey<ApplicationUser>(u => u.UserProfileId);
-
         }
 
        

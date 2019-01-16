@@ -86,13 +86,14 @@ namespace ITNews.Controllers
                     UserName = registrationModel.UserName,
                     Email = registrationModel.Email
                 };
-
+                
                 var identityResult = await userManager.CreateAsync(user, registrationModel.Password);
-                await userManager.AddToRoleAsync(user, "user"); //todo constant class helper
+                 //todo constant class helper
                 //TODO: Use MailService for confirmation Email address  
 
                 if (identityResult.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, "user");
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return Ok(GetToken(user));
                 }
@@ -102,7 +103,6 @@ namespace ITNews.Controllers
                 }
             }
             return BadRequest(ModelState);
-
 
         }
 

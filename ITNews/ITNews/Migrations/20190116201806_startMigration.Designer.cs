@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITNews.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190116195123_SeedDatabase")]
-    partial class SeedDatabase
+    [Migration("20190116201806_startMigration")]
+    partial class startMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,9 +82,6 @@ namespace ITNews.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("UserProfileId")
-                        .IsUnique();
 
                     b.ToTable("AspNetUsers");
                 });
@@ -277,6 +274,10 @@ namespace ITNews.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
                     b.ToTable("UserProfile");
                 });
 
@@ -395,11 +396,6 @@ namespace ITNews.Migrations
                     b.HasOne("ITNews.Data.Entities.Language", "Language")
                         .WithMany("Users")
                         .HasForeignKey("LanguageId");
-
-                    b.HasOne("ITNews.Data.Entities.UserProfile", "UserProfile")
-                        .WithOne("User")
-                        .HasForeignKey("ITNews.Data.Entities.ApplicationUser", "UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.Comment", b =>
@@ -469,6 +465,13 @@ namespace ITNews.Migrations
                     b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("Ratings")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("ITNews.Data.Entities.UserProfile", b =>
+                {
+                    b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("ITNews.Data.Entities.UserProfile", "UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

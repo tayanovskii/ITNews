@@ -64,24 +64,6 @@ namespace ITNews.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProfile",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(nullable: true),
-                    Avatar = table.Column<string>(nullable: true),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
-                    Country = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserProfile", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -137,12 +119,6 @@ namespace ITNews.Migrations
                         principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_UserProfile_UserProfileId",
-                        column: x => x.UserProfileId,
-                        principalTable: "UserProfile",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -247,6 +223,30 @@ namespace ITNews.Migrations
                     table.PrimaryKey("PK_News", x => x.Id);
                     table.ForeignKey(
                         name: "FK_News_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserProfile",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(nullable: true),
+                    Avatar = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    Country = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserProfile", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserProfile_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -429,12 +429,6 @@ namespace ITNews.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_UserProfileId",
-                table: "AspNetUsers",
-                column: "UserProfileId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CommentLikes_CommentId",
                 table: "CommentLikes",
                 column: "CommentId");
@@ -478,6 +472,13 @@ namespace ITNews.Migrations
                 name: "IX_Ratings_UserId",
                 table: "Ratings",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfile_UserId",
+                table: "UserProfile",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -510,6 +511,9 @@ namespace ITNews.Migrations
                 name: "Ratings");
 
             migrationBuilder.DropTable(
+                name: "UserProfile");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -529,9 +533,6 @@ namespace ITNews.Migrations
 
             migrationBuilder.DropTable(
                 name: "Languages");
-
-            migrationBuilder.DropTable(
-                name: "UserProfile");
         }
     }
 }

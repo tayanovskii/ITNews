@@ -57,9 +57,9 @@ namespace ITNews
                     cfg.SaveToken = true;
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidIssuer = Configuration["Tokens:Jwt:Issuer"],
-                        ValidAudience = Configuration["Tokens:Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Jwt:Key"])),
+                        ValidIssuer = Configuration["Tokens:Issuer"],
+                        ValidAudience = Configuration["Tokens:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
                         ClockSkew = TimeSpan.Zero,
                         RequireExpirationTime = true,
                         ValidateIssuer = true,

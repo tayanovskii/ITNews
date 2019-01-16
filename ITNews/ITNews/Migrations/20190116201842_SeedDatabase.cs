@@ -14,7 +14,7 @@ namespace ITNews.Migrations
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
-        { 
+        {
             migrationBuilder.Sql("DELETE FROM Categories WHERE Name IN ('C#', 'JavaScript')");
             migrationBuilder.Sql("DELETE FROM Languages WHERE Name IN ('rus', 'eng')");
         }
