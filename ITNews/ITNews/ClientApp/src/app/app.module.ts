@@ -1,12 +1,15 @@
+import { AuthService } from './Shared/services/auth.service';
 import { HomeComponent } from './Core/components/home/home.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './Core/core.module';
 import { RouterModule } from '@angular/router';
 import { CreateNewsComponent } from './Core/components/create-news/create-news.component';
+import { UserModule } from './User/user.module';
+import { SharedModule } from './Shared/shared.module';
+
 
 @NgModule({
   declarations: [
@@ -16,6 +19,8 @@ import { CreateNewsComponent } from './Core/components/create-news/create-news.c
     BrowserModule,
     AppRoutingModule,
     CoreModule,
+    SharedModule,
+    UserModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
       { path: 'create-news', component: CreateNewsComponent }
