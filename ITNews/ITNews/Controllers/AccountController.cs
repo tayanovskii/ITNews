@@ -44,7 +44,7 @@ namespace ITNews.Controllers
         }
 
         [HttpPost]
-        [Route("token")]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginModel)
         {
             if (ModelState.IsValid)
@@ -167,7 +167,7 @@ namespace ITNews.Controllers
         private string GetToken(ApplicationUser user)
         {
             var utcNow = DateTime.UtcNow;
-            
+            //??? or use var identity = new ClaimsIdentity(new[]{new Claim..})
             var claims = new List<Claim>
             {
                         new Claim(JwtRegisteredClaimNames.Sub, user.Id),
