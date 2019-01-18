@@ -105,12 +105,10 @@ namespace ITNews.Controllers
                 };
                 
                 var identityResult = await userManager.CreateAsync(user, registrationModel.Password);
-                 //todo constant class helper
-                //TODO: Use MailService for confirmation Email address  
-
+                
                 if (identityResult.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "user");
+                    await userManager.AddToRoleAsync(user, "user");  //todo constant class helper
                     var confirmationToken = await userManager.
                         GenerateEmailConfirmationTokenAsync(user);
 

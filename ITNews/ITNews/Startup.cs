@@ -46,12 +46,12 @@ namespace ITNews
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<IEmailSender, EmailSender>(i =>
-                new EmailSender(
+            services.AddTransient<IEmailSender, EmailService>(i =>
+                new EmailService(
                     Configuration["EmailSender:Host"],
                     Configuration.GetValue<int>("EmailSender:Port"),
                     Configuration.GetValue<bool>("EmailSender:EnableSSL"),
-                    Configuration["EmailSender:UserName"],
+                    Configuration["EmailSender:UserEmail"],
                     Configuration["EmailSender:Password"]
                 )
             );
