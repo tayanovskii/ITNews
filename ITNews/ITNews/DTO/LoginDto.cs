@@ -4,13 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITNews.Models
+namespace ITNews.DTO
 {
-    public class LoginViewModel
+    public class LoginDto
     {
         [Required]
-        public string Username { get; set; }
+        public string UserName { get; set; }
         [Required]
         public string Password { get; set; }
+
     }
 }
