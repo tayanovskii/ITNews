@@ -16,7 +16,6 @@ namespace ITNews.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class TagController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -29,8 +28,9 @@ namespace ITNews.Controllers
         }
 
         // GET: api/Tag
+        [AllowAnonymous]
         [HttpGet]
-        public IEnumerable<TagDto> GetTagDto()
+        public IEnumerable<TagDto> GetTag()
         {
             var contextTags = context.Tags;
             var listTagDto = mapper.Map<IEnumerable<Tag>, IEnumerable<TagDto>>(contextTags);
@@ -38,8 +38,9 @@ namespace ITNews.Controllers
         }
 
         // GET: api/Tag/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTagDto([FromRoute] int id)
+        public async Task<IActionResult> GetTag([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -57,9 +58,25 @@ namespace ITNews.Controllers
             return Ok(tagDto);
         }
 
+        // GET: api/Tag/TagsByPart
+        [Authorize]
+        [HttpGet("TagsByPart/{tagPart}")]
+        //[Route("TagsByPart")]
+        public IActionResult GetTagByPart([FromRoute] string tagPart)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var listMatchTags = context.Tags.Where(t => t.Name.Contains(tagPart)).ToList();
+            var listMatchTagsDto = mapper.Map<IEnumerable<Tag>,IEnumerable<TagDto>>(listMatchTags);
+            return Ok(listMatchTagsDto);
+        }
+        [Authorize]
         // PUT: api/Tag/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTagDto([FromRoute] int id, [FromBody] TagDto tagDto)
+        public async Task<IActionResult> PutTag([FromRoute] int id, [FromBody] TagDto tagDto)
         {
             if (!ModelState.IsValid)
             {
@@ -93,10 +110,10 @@ namespace ITNews.Controllers
 
             return NoContent();
         }
-
+        [Authorize]
         // POST: api/Tag
         [HttpPost]
-        public async Task<IActionResult> PostTagDto([FromBody] TagDto tagDto)
+        public async Task<IActionResult> PostTag([FromBody] TagDto tagDto)
         {
             if (!ModelState.IsValid)
             {
@@ -109,12 +126,12 @@ namespace ITNews.Controllers
             context.Tags.Add(newTag);
             await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTagDto", new { id = newTag.Id }, newTag);
+            return CreatedAtAction("GetTag", new { id = newTag.Id }, newTag);
         }
-
+        [Authorize]
         // DELETE: api/Tag/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTagDto([FromRoute] int id)
+        public async Task<IActionResult> DeleteTag([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

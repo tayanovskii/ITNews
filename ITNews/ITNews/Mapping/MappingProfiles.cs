@@ -13,7 +13,10 @@ namespace ITNews.Mapping
         public MappingProfiles()
         {
 
-            CreateMap<Tag, TagDto>().ForMember(dto => dto.Name, opt => opt.MapFrom(tag => tag.Name));
+            CreateMap<Tag, TagDto>().ForMember(dto => dto.Name, opt => opt.MapFrom(tag => tag.Name)).ReverseMap();
+            CreateMap<News,NewsCardDto>()
+                .ForMember(dto => dto.Description, opt=>opt.MapFrom(news => news.Description))
+              //todo mapping news
 
             //CreateMap<News, CreateNewsDto>()
             //    .ForMember(model => model.Id, opts => opts.MapFrom(news => news.Id))
