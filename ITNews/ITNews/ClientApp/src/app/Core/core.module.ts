@@ -4,13 +4,15 @@ import { AppNavMenuComponent } from './components/app-nav-menu/app-nav-menu.comp
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from '../Core/components/home/home.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '../Shared/shared.module';
 
 @NgModule({
   declarations: [AppNavMenuComponent, HomeComponent, CreateNewsComponent],
   imports: [
     CommonModule,
     NgbModule,
+    SharedModule,
     RouterModule.forChild([])
   ],
   exports: [

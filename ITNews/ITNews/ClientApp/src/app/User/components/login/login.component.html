@@ -1,3 +1,25 @@
-<p>
-  login works perfect!
-</p>
+<div class="container login-container">
+  <div class="row">
+      <div class="col-md-7 login-form">
+          <h3>Login to ITNews</h3>
+          <form>
+              <div class="form-group">
+                  <label for="username"></label>
+                  <input [(ngModel)]="loginData.userName" required #username="ngModel" name="username" id="username" type="text"  class="form-control" placeholder="Your Email or Username" value="" />
+                  <div *ngIf="!username.valid && username.touched" class="alert alert-danger">Username is required</div>
+              </div>
+              <div class="form-group">
+                  <label for="password"></label>
+                  <input [(ngModel)]="loginData.password" required #password="ngModel" name="password" type="password" id="password" class="form-control" placeholder="Your Password *" value="" />
+                  <div *ngIf="!password.valid && password.touched" class="alert alert-danger">Password is required</div>
+              </div>
+              <div class="form-group">
+                  <input type="submit" class="btnSubmit" value="Login" (click)="onSubmit()"/>
+              </div>
+              <div class="form-group">
+                  <a [routerLink]="['/user/change-password']" routerLinkActive="router-link-active"  class="ForgetPwd">Forget Password?</a>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>

@@ -10,7 +10,13 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   imports: [
     CommonModule,
     HttpClientModule,
-    JwtModule.forRoot({})
+    // JwtModule.forRoot({
+    //   config: {
+    //     tokenGetter: () => {
+    //       return localStorage.getItem('ITNews_access_token');
+    //     }
+    //   }
+    // })
   ],
   providers: [
     AuthService,

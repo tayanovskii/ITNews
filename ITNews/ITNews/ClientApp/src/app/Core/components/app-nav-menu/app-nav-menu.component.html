@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-success fixed-top">
+<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
   <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="router-link-active">ITNews</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -12,16 +12,24 @@
       <li class="nav-item">
           <a class="nav-link" [routerLink]="['/create-news']" routerLinkActive="router-link-active">Users</a>
       </li>
-      <li ngbDropdown class="nav-item dropdown">
-        <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
+      <ng-template #auth>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/user/login']" routerLinkActive="router-link-active">Login</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/user/registration']" routerLinkActive="router-link-active">Registration</a>
+      </li>
+      </ng-template>
+      <li ngbDropdown class="nav-item dropdown" *ngIf="isLoggedIn$ | async as isLoggedIn else auth">
+        <button *ngIf="username$ | async as username" class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>{{ username }}</button>
         <!-- <a ngbDropdownToggle class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
         </a> -->
         <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" [routerLink]="['/user/login']" routerLinkActive="router-link-active" >Login</a>
-          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" [routerLink]="['/user/login']" routerLinkActive="router-link-active" >Profile</a>
+          <a class="dropdown-item" [routerLink]="['/']" routerLinkActive="router-link-active" >My News</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+          <a class="dropdown-item" (click)="logout()">Exit</a>
         </div>
       </li>
     </ul>

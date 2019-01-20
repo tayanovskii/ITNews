@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/Shared/services/auth.service';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-menu',
@@ -6,10 +8,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app-nav-menu.component.css']
 })
 export class AppNavMenuComponent implements OnInit {
-
-  constructor() { }
+  username$: Observable<string>;
+  isLoggedIn$: Observable<boolean>;
+  constructor(
+    private authService: AuthService) { }
 
   ngOnInit() {
+    this.isLoggedIn$ = this.authService.isLoggedIn;
+    this.username$ = this.authService.userName;
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
 }

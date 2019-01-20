@@ -39,6 +39,7 @@ namespace ITNews.Services
 
             using (var client = new SmtpClient())
             {
+                client.ServerCertificateValidationCallback = (s,c,h,e) => true;
                 await client.ConnectAsync(host, port, enableSSL);
                 await client.AuthenticateAsync(userEmail, password);
                 await client.SendAsync(emailMessage);

@@ -1,0 +1,31 @@
+<div class="container registration-container">
+  <div class="row">
+      <div class="col-md-7 registration-form">
+          <h3>Registration</h3>
+          <form>
+              <div class="form-group">
+                  <input [(ngModel)]="registrationData.userName" #userName=ngModel type="text" name="userName" class="form-control" placeholder="Your Name *" value="" />
+                  <div *ngIf="!userName.valid && userName.touched" class="alert alert-danger">User Name is required</div>
+              </div>
+              <div class="form-group">
+                  <input [(ngModel)]="registrationData.email" type="email" #email="ngModel" email="true" name="email" class="form-control" placeholder="Your Email *" value="" />
+                  <div *ngIf="!email.valid && email.touched" class="alert alert-danger">
+                    <div *ngIf="email.errors.required else wrongEmail">
+                        Email is required
+                    </div>
+                    <ng-template #wrongEmail> 
+                        Wrong email address format
+                    </ng-template>
+                    </div>
+              </div>
+              <div class="form-group">
+                  <input [(ngModel)]="registrationData.password" #password="ngModel" type="password" name="password" class="form-control" placeholder="Your Password *" value="" />
+                  <div *ngIf="!password.valid && password.touched" class="alert alert-danger">Password is required</div>
+              </div>
+              <div class="form-group">
+                  <input type="submit" class="btnSubmit" (click)="onSubmit()" value="Register" />
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
