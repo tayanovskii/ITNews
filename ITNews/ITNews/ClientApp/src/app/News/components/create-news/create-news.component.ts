@@ -6,8 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./create-news.component.css']
 })
 export class CreateNewsComponent implements OnInit {
-
-  constructor() { }
+  news: SaveNews;
+  constructor() {
+      this.news = <SaveNews> {};
+   }
 
   ngOnInit() {
   }

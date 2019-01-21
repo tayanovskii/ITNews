@@ -7,7 +7,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 @Injectable()
 export class AuthService {
   private url: string;
-  private tokenKey = 'ITNews_access_token';
   isLoggedIn: Subject<boolean> = new BehaviorSubject<boolean>(null);
   userName: Subject<string> = new BehaviorSubject<string>(null);
   private helper = new JwtHelperService();
@@ -16,7 +15,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     // private jwtHelper: JwtHelperService,
-    @Inject('BASE_URL') private baseUrl: string
+    @Inject('BASE_URL') private baseUrl: string,
+    @Inject('TOKEN') private tokenKey: string
     ) {
       this.url = baseUrl + 'api/account';
     }
@@ -74,7 +74,13 @@ export class AuthService {
       this.setAuth(null);
       return true;
     }
-
+    public isLoggedIN(): boolean {
+      return (this.getAuth() !== null);
+    }
+    public getAuth(): string | null {
+      const token = localStorage.getItem(this.tokenKey);
+      return token;
+    }
     public getDecodeToken(): DecodedToken | null {
       const token = this.getAuth();
       if (token != null) {
@@ -87,7 +93,6 @@ export class AuthService {
       const token = this.getAuth();
       return this.helper.isTokenExpired(token);
     }
-
 
     private setAuth(token: string | null): boolean {
       if (token) {
@@ -106,10 +111,5 @@ export class AuthService {
         return this.getDecodeToken().unique_name;
       }
       return null;
-    }
-
-    private getAuth(): string | null {
-      const token = localStorage.getItem(this.tokenKey);
-      return token;
     }
 }

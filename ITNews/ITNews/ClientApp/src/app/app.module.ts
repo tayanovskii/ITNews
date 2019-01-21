@@ -6,9 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './Core/core.module';
 import { RouterModule } from '@angular/router';
-import { CreateNewsComponent } from './Core/components/create-news/create-news.component';
+import { CreateNewsComponent } from './News/components/create-news/create-news.component';
 import { UserModule } from './User/user.module';
 import { SharedModule } from './Shared/shared.module';
+import { NewsModule } from './News/news.module';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { SharedModule } from './Shared/shared.module';
     CoreModule,
     SharedModule,
     UserModule,
+    NewsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
       { path: 'create-news', component: CreateNewsComponent }

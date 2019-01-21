@@ -1,5 +1,4 @@
 import { RouterModule } from '@angular/router';
-import { CreateNewsComponent } from './components/create-news/create-news.component';
 import { AppNavMenuComponent } from './components/app-nav-menu/app-nav-menu.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,7 +7,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../Shared/shared.module';
 
 @NgModule({
-  declarations: [AppNavMenuComponent, HomeComponent, CreateNewsComponent],
+  declarations: [
+    AppNavMenuComponent,
+    HomeComponent
+  ],
   imports: [
     CommonModule,
     NgbModule,
@@ -18,7 +20,6 @@ import { SharedModule } from '../Shared/shared.module';
   exports: [
     AppNavMenuComponent,
     HomeComponent,
-    CreateNewsComponent,
     NgbModule.forRoot().ngModule,
   ]
 })
