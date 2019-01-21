@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using ITNews.Data.Entities;
-using ITNews.Models;
+using ITNews.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -22,8 +23,7 @@ namespace ITNews.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
-    public class AccountController : ControllerBase
+ public class AccountController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
@@ -45,11 +45,12 @@ namespace ITNews.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel loginModel)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginModel)
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByNameAsync(loginModel.Username);
+                var user = await userManager.FindByNameAsync(loginModel.UserName);
                 if (user != null)
                 {
                     // check confirm email
@@ -60,7 +61,7 @@ namespace ITNews.Controllers
                     }
                 }
 
-                var result = await signInManager.PasswordSignInAsync(loginModel.Username, loginModel.Password,
+                var result = await signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password,
                     isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
@@ -78,7 +79,7 @@ namespace ITNews.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("refreshtoken")]
+        [Route("refresh")]
         public async Task<IActionResult> RefreshToken()
         {
             var user = await userManager.FindByNameAsync(
@@ -92,7 +93,7 @@ namespace ITNews.Controllers
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegistrationViewModel registrationModel)
+        public async Task<IActionResult> Register([FromBody] RegistrationDto registrationModel)
         {
             if (ModelState.IsValid)
             {
@@ -119,11 +120,15 @@ namespace ITNews.Controllers
                             token = confirmationToken
                         },
                         protocol: HttpContext.Request.Scheme);
-
-                    //await signInManager.SignInAsync(user, isPersistent: false);
-                    await emailSender.SendEmailAsync(user.Email, "Confirm email for ITNews site",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(confirmationLink)}'>clicking here</a>.");
-                    //return Ok(GetToken(user));
+                    try
+                    {
+                        await emailSender.SendEmailAsync(user.Email, "Confirm email for ITNews site",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(confirmationLink)}'>clicking here</a>.");
+                    }
+                    catch (Exception e)
+                    {
+                        return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+                    }
                     return Ok("To complete the registration, check the email and follow the link in the email!");
                 }
                 foreach (var error in identityResult.Errors)
@@ -148,13 +153,17 @@ namespace ITNews.Controllers
             var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return BadRequest("Not found user");
+                return NotFound();
             }
 
             var identityResult = await userManager.ConfirmEmailAsync(user,token);
 
             if (identityResult.Succeeded)
-                return Ok(GetToken(user));
+            {
+                //return Ok(GetToken(user));
+                //return CreatedAtAction("Login", user);
+                return Ok("Email сonfirmed. Please go to the website and login");
+            }
 
             foreach (var error in identityResult.Errors)
             {
@@ -176,10 +185,10 @@ namespace ITNews.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, utcNow.ToString()),
             };
-            var userRole = userManager.GetRolesAsync(user).Result;
-            foreach (var role in userRole)
+            var userRoles = userManager.GetRolesAsync(user).Result;
+            foreach (var role in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim("role", role));
             }
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("Tokens:Key")));
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);

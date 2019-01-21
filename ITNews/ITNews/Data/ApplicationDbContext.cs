@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITNews.Data.Entities;
+using ITNews.DTO;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using UserProfile = ITNews.Data.Entities.UserProfile;
+
 
 namespace ITNews.Data
 {
@@ -92,6 +92,5 @@ namespace ITNews.Data
             userProfile.Property(u => u.LastName).IsRequired();
         }
 
-       
     }
 }

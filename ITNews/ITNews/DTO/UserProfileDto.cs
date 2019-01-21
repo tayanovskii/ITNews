@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ITNews.Data.Entities
+namespace ITNews.DTO
 {
-    public class UserProfile
+    public class UserProfileDto
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public UserDto User { get; set; }
         public string Avatar { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -19,4 +16,3 @@ namespace ITNews.Data.Entities
         public string City { get; set; }
     }
 }
-
