@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ITNews.Controllers
 {
@@ -27,6 +28,8 @@ namespace ITNews.Controllers
 
         // GET: api/News
         [HttpGet]
+        [Route("listCardNews")]
+        [AllowAnonymous]
         public IEnumerable<NewsCardDto> GetCardNews()
         {
             var listNews = context.News;
@@ -34,8 +37,8 @@ namespace ITNews.Controllers
             return listNewsCardDto;
         }
 
-        //// GET: api/News/5
-        //[HttpGet("{id}")]
+        // GET: api/News/5
+        [HttpGet("{id}")]
         //public async Task<IActionResult> GetNews([FromRoute] int id)
         //{
         //    if (!ModelState.IsValid)
@@ -43,12 +46,14 @@ namespace ITNews.Controllers
         //        return BadRequest(ModelState);
         //    }
 
-        //    var news = await context.News.FindAsync(id);
+        //    var findNews = await context.News.FindAsync(id);
 
-        //    if (news == null)
+        //    if (findNews == null)
         //    {
         //        return NotFound();
         //    }
+        //    mapper.Map<News,>()
+       
 
         //    return Ok(news);
         //}
@@ -89,6 +94,7 @@ namespace ITNews.Controllers
         //}
 
         // POST: api/News
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> PostNews([FromBody] CreateNewsDto createNewsDto)
         {
@@ -96,34 +102,37 @@ namespace ITNews.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-
-            context.News.Add(news);
+            var createNews = mapper.Map<CreateNewsDto,News>(createNewsDto);
+            createNews.CreatedAt= DateTime.Now;
+            createNews.ModifiedAt = createNews.CreatedAt;
+            createNews.VisitorCount = 0;
+            context.News.Add(createNews);
             await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetNews", new { id = news.Id }, news);
+            //return CreatedAtAction("GetNews", new { id = news.Id }, news);
+            return Ok();
         }
 
         // DELETE: api/News/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNews([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //public async Task<IActionResult> DeleteNews([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var news = await context.News.FindAsync(id);
-            if (news == null)
-            {
-                return NotFound();
-            }
+        //    var news = await context.News.FindAsync(id);
+        //    if (news == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            context.News.Remove(news);
-            await context.SaveChangesAsync();
+        //    context.News.Remove(news);
+        //    await context.SaveChangesAsync();
 
-            return Ok(news);
-        }
+        //    return Ok(news);
+        //}
 
         private bool NewsExists(int id)
         {

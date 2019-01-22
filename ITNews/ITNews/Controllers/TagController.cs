@@ -58,6 +58,28 @@ namespace ITNews.Controllers
             return Ok(tagDto);
         }
 
+        [AllowAnonymous]
+        //[Route("TagsByNews")]
+        [HttpGet("TagsByNews/{idNews}")]
+        public IActionResult GetTagsByNews([FromRoute] int idNews)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var listTags = context.Tags.Include(t => t.NewsTags.Where(tag => tag.NewsId== idNews)).ToList();
+           
+            //todo correct data download
+
+            if (listTags.Count == 0)
+            {
+                return NotFound();
+            }
+            var listTagDto = mapper.Map<IEnumerable<Tag>, IEnumerable<TagDto>>(listTags);
+            return Ok(listTagDto);
+        }
+
         // GET: api/Tag/TagsByPart
         [Authorize]
         [HttpGet("TagsByPart/{tagPart}")]
