@@ -5,22 +5,24 @@ import { Injectable, Inject } from '@angular/core';
   providedIn: 'root'
 })
 export class NewsService {
-
+  url: string;
   constructor(private http: HttpClient,
-    @Inject('BASE_URL') private baseUrl) { }
+    @Inject('BASE_URL') private baseUrl) {
+      this.url = this.baseUrl + 'api/news';
+     }
 
   createNews(news: SaveNews) {
-    const url = this.baseUrl + 'api/news';
-    return this.http.post<News>(url, news);
+    return this.http.post<News>(this.url, news);
   }
   changeNews(news: SaveNews, id: string) {
-    const url = this.baseUrl + 'api/news/' + id;
-    return this.http.post<News>(url, news);
+    return this.http.post<News>(this.url + id, news);
   }
-  getNewsById() {
-
+  getNewsById(newsId: number) {
+    return this.http.get<SaveNews>(this.url + newsId);
   }
-  getNews() {}
+  getNews() {
+    return this.http.get<SaveNews[]>(this.url);
+  }
 
   getCardNews() {}
   getCardNewsById(id: number) {}

@@ -1,10 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
 import { Tag } from '../models/tag';
 import { HttpClient } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TagService {
 
   private url: string;
@@ -12,7 +11,7 @@ export class TagService {
   constructor(
     @Inject('BASE_URL') private baseUrl: string,
     private http: HttpClient) {
-      this.url = baseUrl + 'api/Tags';
+      this.url = baseUrl + 'api/tag';
    }
 
    getTag(id: number) {
@@ -20,11 +19,15 @@ export class TagService {
 
    }
    getTags() {
-     return this.http.get<Tag[]>(this.url);
+     return this.http.get<Tag[]>(this.url).pipe(
+       map(res => {
+         console.log('tags from service: ' + JSON.stringify(res));
+         return res;
+       }, catchError(error => error)));
    }
 
    getTagsByPart(tagPart: string) {
-      return this.http.get<Tag[]>(this.url + 'byPart');
+      return this.http.get<Tag[]>(this.url + '/byPart/' + tagPart);
    }
    getTagByNews(newsId: string) {
     return this.http.get<Tag[]>(this.url + 'byNews');

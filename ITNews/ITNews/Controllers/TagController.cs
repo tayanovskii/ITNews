@@ -59,8 +59,8 @@ namespace ITNews.Controllers
         }
 
         // GET: api/Tag/TagsByPart
-        [Authorize]
-        [HttpGet("TagsByPart/{tagPart}")]
+        // [Authorize]
+        [HttpGet("ByPart/{tagPart}")]
         //[Route("TagsByPart")]
         public IActionResult GetTagByPart([FromRoute] string tagPart)
         {
@@ -110,7 +110,7 @@ namespace ITNews.Controllers
 
             return NoContent();
         }
-        [Authorize]
+        // [Authorize]
         // POST: api/Tag
         [HttpPost]
         public async Task<IActionResult> PostTag([FromBody] TagDto tagDto)

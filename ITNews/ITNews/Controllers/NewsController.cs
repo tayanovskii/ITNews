@@ -97,7 +97,7 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-
+            var news = mapper.Map<News>(createNewsDto);
             context.News.Add(news);
             await context.SaveChangesAsync();
 

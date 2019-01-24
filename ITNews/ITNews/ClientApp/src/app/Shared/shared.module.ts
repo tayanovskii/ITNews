@@ -1,3 +1,6 @@
+import { FormsModule } from '@angular/forms';
+import { CategoryService } from './services/category.service';
+import { TagService } from './services/tag.service';
 import { AuthService } from './services/auth.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -6,6 +9,8 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
+import { NewsService } from '../News/services/news.service';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -13,6 +18,8 @@ import { ToastrModule } from 'ngx-toastr';
   imports: [
     CommonModule,
     HttpClientModule,
+    FormsModule,
+    BrowserModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot() // ToastrModule added
     // JwtModule.forRoot({
@@ -25,6 +32,9 @@ import { ToastrModule } from 'ngx-toastr';
   ],
   providers: [
     AuthService,
+    NewsService,
+    TagService,
+    CategoryService,
     {
       provide: 'BASE_URL',
       useValue: 'https://localhost:5001/',
@@ -39,7 +49,8 @@ import { ToastrModule } from 'ngx-toastr';
     }
   ],
   exports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ]
 })
 export class SharedModule { }

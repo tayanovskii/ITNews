@@ -15,7 +15,6 @@ import { ChangePasswordComponent } from '../User/components/change-password/chan
   ],
   imports: [
     SharedModule,
-    FormsModule,
     RouterModule.forChild([
       { path: 'user', component: LoginComponent },
       { path: 'user/login', component: LoginComponent},
