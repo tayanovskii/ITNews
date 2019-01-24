@@ -92,5 +92,7 @@ namespace ITNews.Data
             userProfile.Property(u => u.LastName).IsRequired();
         }
 
+        public DbSet<ITNews.Data.Entities.UserProfile> UserProfile { get; set; }
+
     }
 }

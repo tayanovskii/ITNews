@@ -37,6 +37,17 @@ namespace ITNews.Mapping
             CreateMap<Category, CategoryDto>()
                 .ForMember(dto => dto.Name, opt => opt.MapFrom(category => category.Name)).ReverseMap();
 
+            CreateMap<UserProfile, UserProfileDto>()
+                .ForMember(dto => dto.Avatar, opt => opt.MapFrom(profile => profile.Avatar))
+                .ForMember(dto => dto.BirthDay, opt => opt.MapFrom(profile => profile.BirthDay))
+                .ForMember(dto => dto.City, opt => opt.MapFrom(profile => profile.City))
+                .ForMember(dto => dto.Country, opt => opt.MapFrom(profile => profile.Country))
+                .ForMember(dto => dto.FirstName, opt => opt.MapFrom(profile => profile.FirstName))
+                .ForMember(dto => dto.LastName, opt => opt.MapFrom(profile => profile.LastName))
+                .ForMember(dto => dto.Specialization, opt => opt.MapFrom(profile => profile.Specialization))
+                .ForMember(dto => dto.UserId, opt => opt.MapFrom(profile => profile.UserId))
+                .ReverseMap();
+
 
         }
     }
