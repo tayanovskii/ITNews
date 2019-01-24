@@ -68,10 +68,8 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            var listTags = context.Tags.Include(t => t.NewsTags.Where(tag => tag.NewsId== idNews)).ToList();
-           
-            //todo correct data download
-
+            var listTags = context.Tags.Where(tag => tag.NewsTags.Any(newsTag => newsTag.NewsId == idNews)).ToList();
+    
             if (listTags.Count == 0)
             {
                 return NotFound();
