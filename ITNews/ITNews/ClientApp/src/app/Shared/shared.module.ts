@@ -11,12 +11,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NewsService } from '../News/services/news.service';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    FontAwesomeModule,
     HttpClientModule,
     FormsModule,
     BrowserModule,
@@ -50,7 +51,9 @@ import { BrowserModule } from '@angular/platform-browser';
   ],
   exports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule,
+    HttpClientModule
   ]
 })
 export class SharedModule { }

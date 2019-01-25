@@ -24,34 +24,49 @@
           <label class="form-check-label" for="{{category.id}}">{{category.name}}</label>
         </div>
         <h4 class="tags">Add or Choose Existing Tags</h4>
-        <form class="form-horizontal">
-          <div>
-            <div class="col-sm-5 form-group">
-                <input class="form-control"
-                  ngui-auto-complete
-                  auto-complete
-                  #result="ngModel"
-                  value-property-name="id"
-                  display-property-name="name"
-                  placeholder="enter tags..."
-                  [(ngModel)]="searchValue"
-                  [list-formatter]="myValueFormatter"
-                  (valueChanged)="addExistingTag()"
-                  (customSelected)="addExistingTag($event)"
-                  [max-num-list]="6"
-                  [source]="observableSource.bind(this)"
-                  name="searchBox" />
-            </div>
-            <div class="tags">
+        <div class=form-group>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text bg-white">
+                          <i class="fas fa-hashtag"></i>
+                      </div>
+                      <!-- <span class="input-group-text" id="basic-addon1">#</span> -->
+                    </div>
+                    <input
+                          class="form-control"
+                          ngui-auto-complete
+                          auto-complete
+                          value-property-name="id"
+                          display-property-name="name"
+                          placeholder="enter tags..."
+                          [(ngModel)]="searchValue"
+                          [list-formatter]="myValueFormatter"
+                          (valueChanged)="addExistingTag()"
+                          (customSelected)="addExistingTag($event)"
+                          [max-num-list]="6"
+                          [source]="observableSource.bind(this)"
+                          name="searchBox" />
+                  </div>
+        </div>
+            <div class="tags-list">
               <h4>Tags:</h4>
-                <button type="button" *ngFor="let tag of news.tags" class="btn btn-outline-secondary btn-sm">{{ tag.name }}
-                <span class="badge badge-light badge-dark" (click)="deleteTag(tag.id)">x</span></button>
-            </div>
-
+              <button type="button" *ngFor="let tag of news.tags" class="btn btn-outline-secondary btn-sm">{{ tag.name
+                }}
+                <span class="badge badge-light badge-dark" (click)="deleteTag(tag.id)">x</span>
+                <!-- <button type="button" *ngFor="let tag of news.tags" class="close" aria-label="Close">{{ tag.name }}
+                      <span aria-hidden="true">&times;</span> -->
+              </button>
           </div>
-        </form>
       </div>
     </div>
 
+    <div class="row">
+          <div class="col">
+              <textarea class="variable-textarea" [(ngModel)]="markdown" name="markdown"></textarea>
+          </div>
+          <div class="col">
+              <markdown class="variable-binding" [data]="markdown"></markdown>
+          </div>
+    </div>
   </form>
 </div>

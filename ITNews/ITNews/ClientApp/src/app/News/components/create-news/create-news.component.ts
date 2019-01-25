@@ -6,9 +6,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Tag } from 'src/app/Shared/models/tag';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, ignoreElements } from 'rxjs/operators';
 import { of } from 'rxjs/index';
-
 @Component({
   selector: 'app-create-news',
   templateUrl: './create-news.component.html',
@@ -18,6 +17,19 @@ export class CreateNewsComponent implements OnInit {
   news: SaveNews;
   categories: Category[] = [];
   searchValue;
+  markdown = `## Markdown __rulez__!
+  ---
+  ### Syntax highlight
+  \`\`\`typescript
+  const language = 'typescript';
+  \`\`\`
+  ### Lists
+  1. Ordered list
+  2. Another bullet point
+    - Unordered list
+    - Another unordered bullet point
+  ### Blockquote
+  > Blockquote to the max!!!`;
 
   editMode: boolean;
   sources = [

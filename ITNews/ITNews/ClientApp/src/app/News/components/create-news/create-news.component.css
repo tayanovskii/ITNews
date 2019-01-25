@@ -10,3 +10,16 @@ h4.tags {
 .form-horizontal .ngui-auto-complete ul {
   background-color: black;
 }
+ .variable-binding,
+.variable-textarea {
+  width: 100%;
+}
+.variable-textarea {
+  min-height: 420px;
+  padding: 8px;
+}
+
+.variable-binding {
+  display: block;
+  float: right;
+}
