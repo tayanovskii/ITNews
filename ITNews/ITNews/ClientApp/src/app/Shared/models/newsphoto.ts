@@ -1,0 +1,3 @@
+interface NewsPhoto {
+  fileName: string;
+}
