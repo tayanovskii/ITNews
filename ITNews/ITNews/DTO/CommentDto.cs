@@ -11,6 +11,7 @@ namespace ITNews.DTO
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public string UserId { get; set; }
+        public string ModifiedBy { get; set; }
         public string UserName { get; set; }
         public int CountLike { get; set; }
     }
