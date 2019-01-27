@@ -32,8 +32,8 @@ namespace ITNews.Controllers
         [AllowAnonymous]
         public IEnumerable<NewsCardDto> GetCardNews()
         {
-            var listNews = context.News.Include(news => news.User).Include(news => news.Ratings);
-            var listNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listNews);
+            var listNews = context.News.Include(news => news.User).Include(news => news.Comments).Include(news => news.Ratings).ToList();
+            var listNewsCardDto = mapper.Map<List<News>, List<NewsCardDto>>(listNews);
             return listNewsCardDto;
         }
 
@@ -138,7 +138,7 @@ namespace ITNews.Controllers
 
             //input TagID = 0 denote that it`s a new tag and we need to add it to database
             var listNewTagDto = createNewsDto.Tags.Where(tagDto => tagDto.Id == 0).ToList();  
-            if (listNewTagDto.Count != 0)
+            if (listNewTagDto.Any())
             {
                 var listNewTags = mapper.Map<IEnumerable<TagDto>,IEnumerable<Tag>>(listNewTagDto);
                 foreach (var newTag in listNewTags)

@@ -20,12 +20,18 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(news => news.CreatedAt))
                 .ForMember(dto => dto.ModifiedAt, opt => opt.MapFrom(news => news.ModifiedAt))
                 .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
-                .ForMember(dto => dto.Description, opt => opt.MapFrom(news => news.Description))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
                 .ForMember(dto => dto.UserName, opt => opt.MapFrom(news => news.User.UserName))
                 .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
                 .ForMember(dto => dto.CommentCount, opt => opt.MapFrom(news => news.Comments.Count()))
-                .ForMember(dto => dto.Rating, opt => opt.MapFrom(news => news.Ratings.Average(rating => rating.Value)));
+                .ForMember(dto => dto.Rating, opt => opt.Ignore())
+                .AfterMap((news, dto) =>
+                {
+                    if (news.Ratings.Any())
+                    {
+                        dto.Rating = news.Ratings.Average(rating => rating.Value);
+                    }
+                });
 
             CreateMap<News, FullNewsDto>()
                 .ForMember(dto => dto.Content, opt => opt.MapFrom(news => news.Content))
