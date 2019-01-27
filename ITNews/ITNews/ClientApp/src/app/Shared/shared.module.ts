@@ -12,6 +12,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NewsService } from '../News/services/news.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PhotoService } from './services/photo-service';
 
 @NgModule({
   declarations: [],
@@ -35,6 +36,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     AuthService,
     NewsService,
     TagService,
+    PhotoService,
     CategoryService,
     {
       provide: 'BASE_URL',

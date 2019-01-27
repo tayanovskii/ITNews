@@ -1,13 +1,17 @@
+import { PhotoService } from './../../../Shared/services/photo-service';
 import { Category } from './../../../Shared/models/category';
 import { NewsService } from './../../services/news.service';
 import { TagService } from './../../../Shared/services/tag.service';
 import { CategoryService } from './../../../Shared/services/category.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Tag } from 'src/app/Shared/models/tag';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, ignoreElements } from 'rxjs/operators';
 import { of } from 'rxjs/index';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MarkdownService } from 'ngx-markdown';
+import { EditorInstance, EditorOption } from 'angular-markdown-editor/lib/angular-markdown-editor';
 @Component({
   selector: 'app-create-news',
   templateUrl: './create-news.component.html',
@@ -17,6 +21,14 @@ export class CreateNewsComponent implements OnInit {
   news: SaveNews;
   categories: Category[] = [];
   searchValue;
+  @ViewChild('fileInput') fileInput: ElementRef;
+  photoName: string;
+
+  bsEditorInstance: EditorInstance;
+  markdownText: string;
+  showEditor = true;
+  templateForm: FormGroup;
+  editorOptions: EditorOption;
   markdown = `## Markdown __rulez__!
   ---
   ### Syntax highlight
@@ -44,13 +56,45 @@ export class CreateNewsComponent implements OnInit {
     private tagService: TagService,
     private newsService: NewsService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder,
+    private markdownService: MarkdownService,
+    private photoService: PhotoService
   ) {
     this.news = <SaveNews>{};
     this.news.tags = [];
   }
 
   ngOnInit() {
+    this.editorOptions = {
+      autofocus: false,
+      iconlibrary: 'fa',
+      savable: false,
+      onShow: (e) => this.bsEditorInstance = e,
+      parser: (val) => this.parse(val)
+    };
+
+    // put the text completely on the left to avoid extra white spaces
+    this.markdownText =
+`### Markdown example
+---
+This is an **example** where we bind a variable to the \`markdown\` component that is also bind to a textarea.
+#### example.component.ts
+\`\`\`javascript
+function hello() {
+  alert('Hello World');
+}
+\`\`\`
+#### example.component.css
+\`\`\`css
+.bold {
+  font-weight: bold;
+}
+\`\`\``;
+
+    this.buildForm(this.markdownText);
+
+
     this.categoryService.getCategories()
       .subscribe(res => {
         this.categories = res;
@@ -69,7 +113,7 @@ export class CreateNewsComponent implements OnInit {
     }
     this.editMode = (newsId !== 0);
   }
-  observableSource = (keyword: any) => {
+  tagSource = (keyword: any) => {
     if (keyword) {
       return this.tagService.getTagsByPart(keyword)
         .pipe(
@@ -99,5 +143,49 @@ export class CreateNewsComponent implements OnInit {
     }
     this.news.tags.push(this.searchValue);
     this.searchValue = null;
+  }
+
+  sendNews(form) {
+    console.log(JSON.stringify(form));
+  }
+    changeUpload() {
+      const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+      console.log(nativeElement.files[0].name);
+      // this.photoService.createNewsPhoto(nativeElement.files[0])
+      //   .subscribe(res => console.log(res));
+    }
+
+  buildForm(markdownText) {
+    this.templateForm = this.fb.group({
+      body: [markdownText],
+      isPreview: [true]
+    });
+  }
+
+  /** highlight all code found, needs to be wrapped in timer to work properly */
+  highlight() {
+    setTimeout(() => {
+      this.markdownService.highlight();
+    });
+  }
+
+  hidePreview() {
+    if (this.bsEditorInstance && this.bsEditorInstance.hidePreview) {
+      this.bsEditorInstance.hidePreview();
+    }
+  }
+
+  showFullScreen(isFullScreen: boolean) {
+    if (this.bsEditorInstance && this.bsEditorInstance.setFullscreen) {
+      this.bsEditorInstance.showPreview();
+      this.bsEditorInstance.setFullscreen(isFullScreen);
+    }
+  }
+
+  parse(inputValue: string) {
+    const markedOutput = this.markdownService.compile(inputValue.trim());
+    this.highlight();
+
+    return markedOutput;
   }
 }

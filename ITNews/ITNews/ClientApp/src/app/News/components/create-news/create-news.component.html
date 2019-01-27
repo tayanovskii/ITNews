@@ -1,7 +1,7 @@
 <div class="jumbotron">
   <h1 class="display-4 text-center">News Creation Page!</h1>
   <hr class="my-4">
-  <form action="" autoccomlete="on">
+  <form #form="ngForm" autoccomlete="on">
     <div class="row">
       <div class="col">
         <div class="form-group">
@@ -25,48 +25,60 @@
         </div>
         <h4 class="tags">Add or Choose Existing Tags</h4>
         <div class=form-group>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-white">
-                          <i class="fas fa-hashtag"></i>
-                      </div>
-                      <!-- <span class="input-group-text" id="basic-addon1">#</span> -->
-                    </div>
-                    <input
-                          class="form-control"
-                          ngui-auto-complete
-                          auto-complete
-                          value-property-name="id"
-                          display-property-name="name"
-                          placeholder="enter tags..."
-                          [(ngModel)]="searchValue"
-                          [list-formatter]="myValueFormatter"
-                          (valueChanged)="addExistingTag()"
-                          (customSelected)="addExistingTag($event)"
-                          [max-num-list]="6"
-                          [source]="observableSource.bind(this)"
-                          name="searchBox" />
-                  </div>
-        </div>
-            <div class="tags-list">
-              <h4>Tags:</h4>
-              <button type="button" *ngFor="let tag of news.tags" class="btn btn-outline-secondary btn-sm">{{ tag.name
-                }}
-                <span class="badge badge-light badge-dark" (click)="deleteTag(tag.id)">x</span>
-                <!-- <button type="button" *ngFor="let tag of news.tags" class="close" aria-label="Close">{{ tag.name }}
-                      <span aria-hidden="true">&times;</span> -->
-              </button>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <div class="input-group-text bg-white">
+                <i class="fas fa-hashtag"></i>
+              </div>
+              <!-- <span class="input-group-text" id="basic-addon1">#</span> -->
+            </div>
+            <input class="form-control" ngui-auto-complete auto-complete value-property-name="id" display-property-name="name"
+              placeholder="enter tags..." [(ngModel)]="searchValue" [list-formatter]="myValueFormatter" (valueChanged)="addExistingTag()"
+              (customSelected)="addExistingTag($event)" [max-num-list]="6" [source]="tagSource.bind(this)" name="searchBox" />
           </div>
+        </div>
+        <div class="tags-list">
+          <h4>Tags:</h4>
+          <button type="button" *ngFor="let tag of news.tags" class="btn btn-outline-secondary btn-sm">{{
+            tag.name
+            }}
+            <span class="badge badge-light badge-dark" (click)="deleteTag(tag.id)">x</span>
+            <!-- <button type="button" *ngFor="let tag of news.tags" class="close" aria-label="Close">{{ tag.name }}
+                        <span aria-hidden="true">&times;</span> -->
+          </button>
+        </div>
       </div>
     </div>
 
     <div class="row">
-          <div class="col">
-              <textarea class="variable-textarea" [(ngModel)]="markdown" name="markdown"></textarea>
+      <div class="col">
+        <h4>Enter Your News Text</h4>
+      </div>
+      <div class="col">
+        <h4>Photo Downloading Module</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="editor">
+          <angular-markdown-editor textareaId="editor1" [options]="editorOptions" rows="12" name="markdownText"
+            [(ngModel)]="markdownText" (onFullscreenExit)="hidePreview()">
+          </angular-markdown-editor>
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <div class="form-group">
+            <input type="file" text="Choose File" (change)="changeUpload()" #fileInput>
           </div>
-          <div class="col">
-              <markdown class="variable-binding" [data]="markdown"></markdown>
-          </div>
+        </div>
+      </div>
     </div>
   </form>
+  <hr />
+  <div class="form-group">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary" (click)="sendNews(form)">Save News</button>
+    </div>
+  </div>
 </div>

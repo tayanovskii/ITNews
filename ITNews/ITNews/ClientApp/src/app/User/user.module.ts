@@ -6,12 +6,20 @@ import { AuthService } from '../Shared/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { RegistrationComponent } from '../User/components/registration/registration.component';
 import { ChangePasswordComponent } from '../User/components/change-password/change-password.component';
+import { UserProfileComponent } from '../User/components/user-profile/user-profile.component';
+import { ProfilesComponent } from '../User/components/profiles/profiles.component';
+import { MyNewsComponent } from '../User/components/my-news/my-news.component';
+import { EditProfileComponent } from '../User/components/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegistrationComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    UserProfileComponent,
+    ProfilesComponent,
+    MyNewsComponent,
+    EditProfileComponent
   ],
   imports: [
     SharedModule,
