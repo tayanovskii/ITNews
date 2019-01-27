@@ -11,6 +11,7 @@ namespace ITNews.Data.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
+        public string MarkDownPath { get; set; }
         public long VisitorCount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }

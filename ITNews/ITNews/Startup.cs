@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using AutoMapper;
+using ITNews.Configurations;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.Services;
@@ -46,6 +47,8 @@ namespace ITNews
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
+
             services.AddTransient<IEmailSender, EmailService>(i =>
                 new EmailService(
                     Configuration["EmailSender:Host"],
@@ -55,6 +58,9 @@ namespace ITNews
                     Configuration["EmailSender:Password"]
                 )
             );
+
+            services.AddTransient<IPhotoService, PhotoService>();
+            services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
 
             services.AddAuthentication(opts =>
                 {

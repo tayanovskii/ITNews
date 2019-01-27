@@ -55,6 +55,26 @@ namespace ITNews.Controllers
             return Ok(userProfileDto);
         }
 
+        // GET: api/UserProfile/GetProfileByUser
+        [HttpGet("GetProfileByUser/{userId}")]
+        public async Task<IActionResult> GetProfileByUser([FromRoute] string userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userProfile = await context.UserProfile.SingleOrDefaultAsync(profile => profile.UserId == userId);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            var userProfileDto = mapper.Map<UserProfile, UserProfileDto>(userProfile);
+            return Ok(userProfileDto);
+        }
+
         // PUT: api/UserProfile/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserProfile([FromRoute] int id, [FromBody] UserProfileDto userProfileDto)
@@ -106,7 +126,7 @@ namespace ITNews.Controllers
             context.UserProfile.Add(newUserProfile);
             await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserProfile", new { id = newUserProfile.Id }, newUserProfile);
+            return CreatedAtAction("GetUserProfile", new { id = newUserProfile.Id }, userProfileDto);
         }
 
         // DELETE: api/UserProfile/5

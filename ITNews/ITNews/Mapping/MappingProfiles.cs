@@ -23,7 +23,49 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.Description, opt => opt.MapFrom(news => news.Description))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
                 .ForMember(dto => dto.UserName, opt => opt.MapFrom(news => news.User.UserName))
-                .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount));
+                .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
+                .ForMember(dto => dto.CommentCount, opt => opt.MapFrom(news => news.Comments.Count()))
+                .ForMember(dto => dto.Rating, opt => opt.MapFrom(news => news.Ratings.Average(rating => rating.Value)));
+
+            CreateMap<News, FullNewsDto>()
+                .ForMember(dto => dto.Content, opt => opt.MapFrom(news => news.Content))
+                .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(news => news.CreatedAt))
+                .ForMember(dto => dto.ModifiedAt, opt => opt.MapFrom(news => news.ModifiedAt))
+                .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
+                .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
+                .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
+                .ForMember(dto => dto.UserName, opt => opt.MapFrom(news => news.User.UserName))
+                .ForMember(dto => dto.UserMiniCardDto, opt => opt.MapFrom(news => news.User))
+                .ForMember(dto => dto.NewsTags, opt => opt.MapFrom(news => news.NewsTags))
+                .ForMember(dto => dto.Comments, opt => opt.MapFrom(news => news.Comments))
+                .ForMember(dto => dto.Rating, opt => opt.Ignore())
+                .ReverseMap()
+                .AfterMap((dto, news) => { dto.Rating = news.Ratings.Average(rating => rating.Value); });
+
+            CreateMap<News, EditNewsDto>()
+                .ForMember(dto => dto.Description, opt => opt.MapFrom(news => news.Description))
+                .ForMember(dto => dto.MarkDownPath, opt => opt.MapFrom(news => news.MarkDownPath))
+                .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
+                .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
+                .ForMember(dto => dto.Tags, opt => opt.MapFrom(news => news.NewsTags))
+                .ForMember(dto => dto.Categories, opt => opt.MapFrom(news => news.NewsCategories));
+
+            CreateMap<ApplicationUser, UserMiniCardDto>()
+                .ForMember(dto => dto.Avatar, opt => opt.MapFrom(user => user.UserProfile.Avatar))
+                .ForMember(dto => dto.CountLikes, opt => opt.MapFrom(user => user.CommentLikes.Count()))
+                .ForMember(dto => dto.UserId, opt => opt.MapFrom(user => user.Id))
+                .ForMember(dto => dto.UserName, opt => opt.MapFrom(user => user.UserName));
+    
+            CreateMap<Comment, CommentDto>()
+                .ForMember(dto => dto.Content, opt => opt.MapFrom(comment => comment.Content))
+                .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(comment => comment.CreatedAt))
+                .ForMember(dto => dto.ModifiedAt, opt => opt.MapFrom(comment => comment.ModifiedAt))
+                .ForMember(dto => dto.UserId, opt => opt.MapFrom(comment => comment.UserId))
+                .ForMember(dto => dto.ModifiedBy, opt => opt.MapFrom(comment => comment.ModifiedBy))
+                .ForMember(dto => dto.UserName, opt => opt.MapFrom(comment => comment.User.UserName))
+                .ForMember(dto => dto.CountLike, opt => opt.Ignore())
+                .ReverseMap()
+                .AfterMap((dto, comment) => { dto.CountLike = comment.Likes.Count(); });
 
             CreateMap<News, CreateNewsDto>()
                 .ForMember(dto => dto.Content, opt => opt.MapFrom(news => news.Content))
@@ -32,6 +74,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
                 .ForMember(dto => dto.Tags, opt => opt.MapFrom(news => news.NewsTags))
                 .ForMember(dto => dto.Categories, opt => opt.MapFrom(news => news.NewsTags))
+                .ForMember(dto => dto.MarkDownPath, opt=>opt.MapFrom(news => news.MarkDownPath))
                 .ReverseMap();
 
             CreateMap<Category, CategoryDto>()
@@ -47,7 +90,6 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.Specialization, opt => opt.MapFrom(profile => profile.Specialization))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(profile => profile.UserId))
                 .ReverseMap();
-
 
         }
     }
