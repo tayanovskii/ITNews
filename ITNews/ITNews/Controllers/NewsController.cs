@@ -98,9 +98,10 @@ namespace ITNews.Controllers
                 return BadRequest();
             }
 
+
+            //todo correct
             var editNews = mapper.Map<EditNewsDto,News>(editNewsDto);
             editNews.ModifiedAt = DateTime.Now;
-            editNews.
             context.Entry(editNews).State = EntityState.Modified;
 
             try
@@ -135,7 +136,7 @@ namespace ITNews.Controllers
             var news = mapper.Map<News>(createNewsDto);
             news.CreatedAt = DateTime.Now;
             news.ModifiedAt = news.CreatedAt;
-            news.
+            //todo correct
             context.News.Add(news);
             await context.SaveChangesAsync();
 
