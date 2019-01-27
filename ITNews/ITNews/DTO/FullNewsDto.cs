@@ -15,6 +15,7 @@ namespace ITNews.DTO
         public DateTime ModifiedAt { get; set; }
         public string UserName { get; set; }
         public string UserId { get; set; }
+        public string MarkDown { get; set; }
         public UserMiniCardDto UserMiniCardDto { get; set; }
         public IEnumerable<TagDto> NewsTags { get; set; }
         public IEnumerable<CommentDto> Comments { get; set; }

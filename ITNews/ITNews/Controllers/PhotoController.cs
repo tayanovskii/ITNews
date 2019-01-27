@@ -32,14 +32,28 @@ namespace ITNews.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
+        public async Task<IActionResult> UploadPhoto(IFormFile file)
         {
             if (file == null) return BadRequest("Null file");
             if (file.Length == 0) return BadRequest("Empty file");
             if (file.Length > photoSettings.MaxBytes) return BadRequest("Max file size exceeded");
             if (!photoSettings.IsSupported(file.FileName)) return BadRequest("Invalid file type");
 
-            var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads");
+            var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads", "newsPhoto");
+            var photo = await photoService.UploadPhoto(file, uploadsFolderPath);
+
+            return Ok(photo);
+        }
+        [Route("api/userProfile/Avatar/{userId}")]
+        [HttpPost]
+        public async Task<IActionResult> UploadAvatar([FromRoute] string userId,IFormFile file)
+        {
+            if (file == null) return BadRequest("Null file");
+            if (file.Length == 0) return BadRequest("Empty file");
+            if (file.Length > photoSettings.MaxBytes) return BadRequest("Max file size exceeded");
+            if (!photoSettings.IsSupported(file.FileName)) return BadRequest("Invalid file type");
+
+            var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads", "Avatars");
             var photo = await photoService.UploadPhoto(file, uploadsFolderPath);
 
             return Ok(photo);
