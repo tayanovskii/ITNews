@@ -3,7 +3,7 @@ interface News {
   description: string;
   dateCreated: Date;
   title: string;
-  content: string;
+  markDown: string;
   categories: KeyValuePair[];
   tags: KeyValuePair[];
   userCard: UserProfileCard;

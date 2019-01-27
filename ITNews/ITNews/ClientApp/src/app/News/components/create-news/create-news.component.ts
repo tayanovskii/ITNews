@@ -12,6 +12,8 @@ import { of } from 'rxjs/index';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MarkdownService } from 'ngx-markdown';
 import { EditorInstance, EditorOption } from 'angular-markdown-editor/lib/angular-markdown-editor';
+import { faFileDownload } from '@fortawesome/free-solid-svg-icons';
+import { SaveNews } from '../../models/SaveNews';
 @Component({
   selector: 'app-create-news',
   templateUrl: './create-news.component.html',
@@ -23,25 +25,13 @@ export class CreateNewsComponent implements OnInit {
   searchValue;
   @ViewChild('fileInput') fileInput: ElementRef;
   photoName: string;
+  photo;
+  fileImageDownload = faFileDownload;
 
   bsEditorInstance: EditorInstance;
-  markdownText: string;
   showEditor = true;
   templateForm: FormGroup;
   editorOptions: EditorOption;
-  markdown = `## Markdown __rulez__!
-  ---
-  ### Syntax highlight
-  \`\`\`typescript
-  const language = 'typescript';
-  \`\`\`
-  ### Lists
-  1. Ordered list
-  2. Another bullet point
-    - Unordered list
-    - Another unordered bullet point
-  ### Blockquote
-  > Blockquote to the max!!!`;
 
   editMode: boolean;
   sources = [
@@ -63,9 +53,26 @@ export class CreateNewsComponent implements OnInit {
   ) {
     this.news = <SaveNews>{};
     this.news.tags = [];
+    this.news.categories = [];
+    this.news.markDown = `### Markdown example
+    ---
+    This is an **example** where we bind a variable to the \`markdown\` component that is also bind to a textarea.
+    #### example.component.ts
+    \`\`\`javascript
+    function hello() {
+      alert('Hello World');
+    }
+    \`\`\`
+    #### example.component.css
+    \`\`\`css
+    .bold {
+      font-weight: bold;
+    }
+    \`\`\``;
   }
 
   ngOnInit() {
+
     this.editorOptions = {
       autofocus: false,
       iconlibrary: 'fa',
@@ -74,30 +81,14 @@ export class CreateNewsComponent implements OnInit {
       parser: (val) => this.parse(val)
     };
 
-    // put the text completely on the left to avoid extra white spaces
-    this.markdownText =
-`### Markdown example
----
-This is an **example** where we bind a variable to the \`markdown\` component that is also bind to a textarea.
-#### example.component.ts
-\`\`\`javascript
-function hello() {
-  alert('Hello World');
-}
-\`\`\`
-#### example.component.css
-\`\`\`css
-.bold {
-  font-weight: bold;
-}
-\`\`\``;
 
-    this.buildForm(this.markdownText);
+    this.buildForm(this.news.markDown);
 
 
     this.categoryService.getCategories()
       .subscribe(res => {
         this.categories = res;
+        console.log(this.categories);
       }, error => console.log(error));
 
     const newsId = +this.activatedRoute.snapshot.paramMap.get('id');
@@ -132,25 +123,51 @@ function hello() {
     const ind = this.news.tags.findIndex(t => t.id === tagId);
     this.news.tags.splice(ind, 1);
   }
-  addExistingTag(tag) {
-    console.log(JSON.stringify(tag));
-    if (this.news.tags.some(t => t.name === this.searchValue.name)) {
-      return;
+  addCustomTag($event) {
+    console.log($event);
+  }
+  addTag() {
+    console.log('searchValue -> ' + this.searchValue);
+
+    if (this.searchValue !== '' && !this.news.tags.some(t => t.name === this.searchValue.name)) {
+      this.news.tags.push(this.searchValue);
     }
-    if (tag) { // for new tag
-      this.news.tags.push({ id: 0, name: this.searchValue.name });
-      return;
-    }
-    this.news.tags.push(this.searchValue);
     this.searchValue = null;
   }
+  onNewTag($event) {
+    if ($event.keyCode === 13 && this.searchValue) {
+      console.log($event);
+      if (!this.news.tags.some(t => t.name === this.searchValue )) {
+        this.news.tags.push({ id: 0, name: this.searchValue });
+        this.searchValue = null;
+      }
+    }
+  }
+  toggleCategory(id, $event) {
+    if ($event.target.checked) {
+      const elemToAdd = this.categories.find(c => c.id === id);
+      this.news.categories.push(elemToAdd);
+    } else {
+      const indToRemove = this.news.categories.findIndex(c => c.id === id);
+      this.news.categories.splice(indToRemove, 1);
+    }
+    console.log(JSON.stringify(this.news.categories));
+  }
 
-  sendNews(form) {
-    console.log(JSON.stringify(form));
+  sendNews() {
+    console.log(JSON.stringify(this.news));
+    this.newsService.createNews(this.news)
+      .subscribe(res => {
+        console.log('News has been created');
+        console.log(res);
+        this.router.navigate(['/']);
+      });
   }
     changeUpload() {
       const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
       console.log(nativeElement.files[0].name);
+      this.photoName = nativeElement.files[0].name;
+      this.photo = nativeElement.files[0];
       // this.photoService.createNewsPhoto(nativeElement.files[0])
       //   .subscribe(res => console.log(res));
     }

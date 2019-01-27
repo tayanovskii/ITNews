@@ -8,6 +8,7 @@ import { AngularMarkdownEditorModule } from 'angular-markdown-editor';
 import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PhotoDownloadComponent } from '../News/components/photo-download/photo-download.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { PhotoDownloadComponent } from '../News/components/photo-download/photo-
   imports: [
     SharedModule,
     ReactiveFormsModule,
+    FontAwesomeModule,
     MarkdownModule.forRoot({
       loader: HttpClient,
       markedOptions: {

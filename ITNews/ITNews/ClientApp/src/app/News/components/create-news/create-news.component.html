@@ -1,26 +1,29 @@
 <div class="jumbotron">
   <h1 class="display-4 text-center">News Creation Page!</h1>
   <hr class="my-4">
-  <form #form="ngForm" autoccomlete="on">
+  <form #f="ngForm" autoccomlete="on">
     <div class="row">
       <div class="col">
         <div class="form-group">
           <label for="title">
             Title
           </label>
-          <input type="text" id=title name="title" class="form-control" placeholder="Enter Title">
+          <input type="text" required id=title #title="ngModel" [(ngModel)]="news.title"  name="title" class="form-control" placeholder="Enter Title">
+          <div *ngIf="!title.valid && title.touched" class="alert alert-danger">Title is required</div>
         </div>
         <div class="form-group">
           <label for="description">
             Description
           </label>
-          <textarea name="" id="description" cols="30" rows="10" class="form-control" placeholder="Write a Description for News"></textarea>
+          <textarea required [(ngModel)]="news.description" #description="ngModel" name="description" id="description" cols="30" rows="10" class="form-control" placeholder="Write a Description for News"></textarea>
+          <div *ngIf="!description.valid && description.touched" class="alert alert-danger">Title is required</div>
         </div>
       </div>
       <div class="col">
         <h4>Categories</h4>
-        <div class="form-check form-check-inline" *ngFor="let category of [{id:1, name:'C#'}, {id:2, name:'Java'}, {id:3, name:'C++'}, { id:4, name:'Algorithms'}]">
-          <input class="form-check-input" type="checkbox" id="{{category.id}}" value="{{category.name}}">
+        <!-- <div class="form-check form-check-inline" *ngFor="let category of [{id:1, name:'C#'}, {id:2, name:'Java'}, {id:3, name:'C++'}, { id:4, name:'Algorithms'}]"> -->
+        <div class="form-check form-check-inline" *ngFor="let category of categories">
+          <input class="form-check-input" type="checkbox" id="{{category.id}}" (change)="toggleCategory(category.id, $event)">
           <label class="form-check-label" for="{{category.id}}">{{category.name}}</label>
         </div>
         <h4 class="tags">Add or Choose Existing Tags</h4>
@@ -32,9 +35,17 @@
               </div>
               <!-- <span class="input-group-text" id="basic-addon1">#</span> -->
             </div>
-            <input class="form-control" ngui-auto-complete auto-complete value-property-name="id" display-property-name="name"
-              placeholder="enter tags..." [(ngModel)]="searchValue" [list-formatter]="myValueFormatter" (valueChanged)="addExistingTag()"
-              (customSelected)="addExistingTag($event)" [max-num-list]="6" [source]="tagSource.bind(this)" name="searchBox" />
+            <input
+                class="form-control"
+                ngui-auto-complete
+                value-property-name="id"
+                display-property-name="name"
+                placeholder="enter tags..."
+                [(ngModel)]="searchValue"
+                [list-formatter]="myValueFormatter"
+                (valueChanged)="addTag()"
+                (keyup)="onNewTag($event)"
+                [max-num-list]="6" [source]="tagSource.bind(this)" name="searchBox" />
           </div>
         </div>
         <div class="tags-list">
@@ -51,34 +62,47 @@
     </div>
 
     <div class="row">
-      <div class="col">
+      <div class="col-8">
         <h4>Enter Your News Text</h4>
       </div>
-      <div class="col">
+      <div class="col-4">
         <h4>Photo Downloading Module</h4>
       </div>
     </div>
     <div class="row">
-      <div class="col-6">
+      <div class="col-8">
         <div class="editor">
           <angular-markdown-editor textareaId="editor1" [options]="editorOptions" rows="12" name="markdownText"
-            [(ngModel)]="markdownText" (onFullscreenExit)="hidePreview()">
+            [(ngModel)]="news.markDown" (onFullscreenExit)="hidePreview()">
           </angular-markdown-editor>
         </div>
       </div>
-      <div class="col-6">
-        <div>
-          <div class="form-group">
-            <input type="file" text="Choose File" (change)="changeUpload()" #fileInput>
+      <div class="col-4">
+        <form method="post" action="#" id="#">
+          <div class="form-group files">
+            <br>Upload Your File
+            <input type="file" class="form-control" multiple="yes" (change)="changeUpload()" #fileInput>
+          </div>
+        </form>
+        <div *ngIf="photoName" class="card">
+          <img class="card-img-top" src="photo" alt="Card image cap">
+          <div class="card-header">
+            Links
+          </div>
+          <div class="links card-body">
+            <blockquote class="blockquote mb-0">
+              <p>Copy this link to MarkDown Editor</p>
+              <footer class="blockquote-footer">{{ photoName}} </footer>
+            </blockquote>
           </div>
         </div>
       </div>
     </div>
-  </form>
-  <hr />
-  <div class="form-group">
-    <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary" (click)="sendNews(form)">Save News</button>
+    <hr />
+    <div class="form-group">
+      <div class="col-sm-10">
+        <button type="submit" class="btn btn-primary" (click)="sendNews()">Save News</button>
+      </div>
     </div>
-  </div>
+  </form>
 </div>

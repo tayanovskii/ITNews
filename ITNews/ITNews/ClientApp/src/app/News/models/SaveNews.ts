@@ -1,8 +1,10 @@
-interface SaveNews {
+import { Category } from './../../Shared/models/category';
+export class SaveNews {
   id?: number;
   title: string;
   description: string;
-  categories: KeyValuePair [];
+  categories: Category [];
+  markDown: string;
   tags: KeyValuePair [];
   content: string;
   userId: string;
