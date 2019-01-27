@@ -105,11 +105,14 @@ export class AuthService {
       }
       return true;
     }
-    private getUserName(): string {
+    public getUserName(): string {
       const token = this.getAuth();
       if (token != null) {
         return this.getDecodeToken().unique_name;
       }
       return null;
+    }
+    public getUserId(): string {
+        return this.getDecodeToken().sub;
     }
 }

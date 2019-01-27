@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/Shared/services/auth.service';
 import { PhotoService } from './../../../Shared/services/photo-service';
 import { Category } from './../../../Shared/models/category';
 import { NewsService } from './../../services/news.service';
@@ -24,7 +25,7 @@ export class CreateNewsComponent implements OnInit {
   categories: Category[] = [];
   searchValue;
   @ViewChild('fileInput') fileInput: ElementRef;
-  photoName: string;
+  photoPath: string;
   photo;
   fileImageDownload = faFileDownload;
 
@@ -46,6 +47,7 @@ export class CreateNewsComponent implements OnInit {
     private tagService: TagService,
     private newsService: NewsService,
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
     private markdownService: MarkdownService,
@@ -155,6 +157,8 @@ export class CreateNewsComponent implements OnInit {
   }
 
   sendNews() {
+    this.news.content = this.markdownService.compile(this.news.markDown, true);
+    this.news.userId = this.authService.getUserId();
     console.log(JSON.stringify(this.news));
     this.newsService.createNews(this.news)
       .subscribe(res => {
@@ -166,10 +170,12 @@ export class CreateNewsComponent implements OnInit {
     changeUpload() {
       const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
       console.log(nativeElement.files[0].name);
-      this.photoName = nativeElement.files[0].name;
-      this.photo = nativeElement.files[0];
-      // this.photoService.createNewsPhoto(nativeElement.files[0])
-      //   .subscribe(res => console.log(res));
+      // this.photo = nativeElement.files[0];
+      this.photoService.createNewsPhoto(nativeElement.files[0])
+        .subscribe(res => {
+          console.log(res);
+          this.photoPath = res.fileName;
+        });
     }
 
   buildForm(markdownText) {

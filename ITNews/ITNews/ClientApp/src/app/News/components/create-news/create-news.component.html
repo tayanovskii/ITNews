@@ -84,15 +84,15 @@
             <input type="file" class="form-control" multiple="yes" (change)="changeUpload()" #fileInput>
           </div>
         </form>
-        <div *ngIf="photoName" class="card">
-          <img class="card-img-top" src="photo" alt="Card image cap">
+        <div *ngIf="photoPath" class="card">
+          <img class="card-img-top" src="/uploads/newsPhoto/{{photoPath}}" alt="Card image cap">
           <div class="card-header">
             Links
           </div>
           <div class="links card-body">
             <blockquote class="blockquote mb-0">
               <p>Copy this link to MarkDown Editor</p>
-              <footer class="blockquote-footer">{{ photoName}} </footer>
+              <footer class="blockquote-footer">{{ photoPath }} </footer>
             </blockquote>
           </div>
         </div>
