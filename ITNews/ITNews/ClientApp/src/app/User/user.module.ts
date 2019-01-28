@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { LoginComponent } from '../User/components/login/login.component';
 import { SharedModule } from '../Shared/shared.module';
 import { AuthService } from '../Shared/services/auth.service';
-import { FormsModule } from '@angular/forms';
 import { RegistrationComponent } from '../User/components/registration/registration.component';
 import { ChangePasswordComponent } from '../User/components/change-password/change-password.component';
 import { UserProfileComponent } from '../User/components/user-profile/user-profile.component';

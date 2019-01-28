@@ -9,6 +9,7 @@ import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PhotoDownloadComponent } from '../News/components/photo-download/photo-download.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AuthGuard } from '../Shared/services/auth.guard';
 
 
 @NgModule({
@@ -44,8 +45,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     // MarkdownModule.forRoot({ loader: HttpClient }),
     NguiAutoCompleteModule,
     RouterModule.forChild([
-      { path: 'news/create-news', component: CreateNewsComponent },
-      { path: 'news/create-news/:id', component: CreateNewsComponent },
+      { path: 'news/create-news', component: CreateNewsComponent, canActivate: [AuthGuard] },
+      { path: 'news/create-news/:id', component: CreateNewsComponent, canActivate: [AuthGuard] },
       { path: 'news/download-photo', component: PhotoDownloadComponent}
     ])
   ]

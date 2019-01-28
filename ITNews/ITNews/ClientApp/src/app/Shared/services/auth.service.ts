@@ -75,7 +75,7 @@ export class AuthService {
       return true;
     }
     public isLoggedIN(): boolean {
-      return (this.getAuth() !== null);
+      return this.getAuth() ? true : false;
     }
     public getAuth(): string | null {
       const token = localStorage.getItem(this.tokenKey);

@@ -1,3 +1,4 @@
+import { AuthGuard } from './services/auth.guard';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from './services/category.service';
 import { TagService } from './services/tag.service';
@@ -38,6 +39,7 @@ import { PhotoService } from './services/photo-service';
     TagService,
     PhotoService,
     CategoryService,
+    AuthGuard,
     {
       provide: 'BASE_URL',
       useValue: 'https://localhost:5001/',
