@@ -1,4 +1,4 @@
-﻿using System;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -116,14 +116,38 @@ namespace ITNews.Controllers
 
         //// PUT: api/News/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutNews([FromRoute] int id, [FromBody] CreateNewsDto editNewsDto)
+        public async Task<IActionResult> PutNews([FromRoute] int id, [FromBody] EditNewsDto editNewsDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var editNews = mapper.Map<CreateNewsDto, News>(editNewsDto);
+            var listNewTags = new List<Tag>();
+            //input TagID = 0 denote that it`s a new tag and we need to add it to database
+            var listNewTagDto = editNewsDto.Tags.Where(tagDto => tagDto.Id == 0).ToList();
+            if (listNewTagDto.Any())
+            {
+                listNewTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(listNewTagDto).ToList();
+                foreach (var newTag in listNewTags)
+                {
+                    newTag.CreatedAt = DateTime.Now;
+                    newTag.ModifiedAt = newTag.CreatedAt;
+                }
+                await context.Tags.AddRangeAsync(listNewTags);
+                await context.SaveChangesAsync();
+            }
+
+            var editNews = mapper.Map<EditNewsDto,News>(editNewsDto);
+            foreach (var tag in listNewTags)
+            {
+                editNews.NewsTags.Append(new NewsTag()
+                {
+                    TagId = tag.Id
+
+                });
+            }
+
             editNews.ModifiedAt = DateTime.Now;
             context.Entry(editNews).State = EntityState.Modified;
 
@@ -184,7 +208,7 @@ namespace ITNews.Controllers
                {
                    TagId = tagDto.Id
                    
-               });
+               });  
             }
 
             news.NewsTags = newsTags;
@@ -195,7 +219,8 @@ namespace ITNews.Controllers
             news.ModifiedBy = news.UserId;
             context.News.Add(news);
             await context.SaveChangesAsync();
-            return CreatedAtAction("GetFullNews", new { id = news.Id }, news);
+            return Ok();
+            //return CreatedAtAction("GetFullNews", new { id = news.Id }, news);
         }
 
         // DELETE: api/News/5
@@ -224,4 +249,4 @@ namespace ITNews.Controllers
             return context.News.Any(e => e.Id == id);
         }
     }
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       

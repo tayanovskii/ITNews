@@ -92,10 +92,18 @@ namespace ITNews.Mapping
                 .ForMember(news => news.NewsCategories, opt => opt.Ignore())
                 .AfterMap((dto, news) =>
                 {
-                    var removedCategories = news.NewsCategories.Where(category => !dto.Categories.Contains(new CategoryDto(){Id = category.CategoryId}));
+                    var removedCategories = news.NewsCategories.Where(newsCategory => !dto.Categories.Contains(new CategoryDto(){Id = newsCategory.CategoryId}));
+                    var newListNewsCategories = news.NewsCategories.Except(removedCategories);
+                    news.NewsCategories = newListNewsCategories;
+
+                    //todo added categories
+
+                    var removedTags = news.NewsTags.Where(newsTag => !dto.Tags.Contains(new TagDto() { Id = newsTag.TagId }));
+                    var newsListNewsTags = news.NewsTags.Except(removedTags);
+                    news.NewsTags = newsListNewsTags;
                 })
                 .ForAllOtherMembers(expression => expression.Ignore());
-
+                
                 CreateMap<CreateNewsDto, News>()
                 .ForMember(news => news.Content, opt => opt.MapFrom(dto => dto.Content))
                 .ForMember(news => news.Description, opt => opt.MapFrom(dto => dto.Description))
@@ -103,20 +111,14 @@ namespace ITNews.Mapping
                 .ForMember(news => news.Title, opt => opt.MapFrom(dto => dto.Title))
                 .ForMember(news => news.UserId, opt => opt.MapFrom(dto => dto.UserId))
                 .ForMember(news => news.NewsTags, opt => opt.Ignore())
-                .ForMember(dto => dto.NewsCategories, opt => opt.Ignore())
-                .ForMember(dto => dto.Ratings, opt => opt.Ignore())
-                .ForMember(dto => dto.Comments, opt => opt.Ignore())
+                //.ForMember(news => news.NewsCategories, opt => opt.Ignore())
+                .ForMember(news => news.Ratings, opt => opt.Ignore())
+                .ForMember(news => news.Comments, opt => opt.Ignore())
                 .AfterMap((dto, news) =>
-                {
-                    foreach (var newDtoCategory in dto.Categories)
                     {
-                        var newsCategory = new NewsCategory()
-                        {
-                            CategoryId = newDtoCategory.Id
-                        };
-                        news.NewsCategories.Append(newsCategory);
-                    }
-                });
+                        var newsCategories = dto.Categories.Select(newDtoCategory => new NewsCategory() {CategoryId = newDtoCategory.Id}).ToList();
+                        news.NewsCategories = newsCategories;
+                    });
 
 
             CreateMap<Category, CategoryDto>()
