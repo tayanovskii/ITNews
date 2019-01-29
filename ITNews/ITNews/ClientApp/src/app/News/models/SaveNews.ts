@@ -8,4 +8,5 @@ export class SaveNews {
   tags: KeyValuePair [];
   content: string;
   userId: string;
+  modifiedBy: string;
 }

@@ -1,13 +1,16 @@
 interface News {
   id: number;
-  description: string;
-  dateCreated: Date;
   title: string;
+  content: string;
+  visitorCount: number;
+  createdAt: Date;
+  modifiedAt: Date;
+  userName: string;
+  userId: string;
   markDown: string;
   categories: KeyValuePair[];
   tags: KeyValuePair[];
   userCard: UserProfileCard;
-  viewCount: number;
   rating: number;
   comments: CommentCard[];
 }
