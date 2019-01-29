@@ -37,6 +37,8 @@ namespace ITNews.Controllers
             return listNewsCardDto;
         }
 
+        //Todo search news by content!!!
+
         // GET: api/News/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFullNews([FromRoute] int id)
@@ -61,47 +63,67 @@ namespace ITNews.Controllers
 
             return Ok(findNewsDto);
         }
-
-        // GET: api/News/GetNewsByUser
-        [HttpGet("NewsByUser/{idUser}")]
-        public async Task<IActionResult> GetNewsByUser([FromRoute] string userId)
+      
+        // GET: api/News/ForEdit
+        [HttpGet("ForEdit/{newsId}")]
+        public async Task<IActionResult> GetNewsForEdit([FromRoute] int newsId)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var findNews = await context.News
-                .Include(news => news.User)
-                .Include(news => news.Ratings)
-                .SingleOrDefaultAsync(news => news.UserId == userId);
+                .Include(news => news.NewsTags)
+                .ThenInclude(tags => tags.Tag)
+                .Include(news => news.NewsCategories)
+                .ThenInclude(categories => categories.Category)
+                .SingleOrDefaultAsync(news => news.Id == newsId);
 
             if (findNews == null)
             {
                 return NotFound();
             }
 
-            var findNewsCardDto = mapper.Map<News, NewsCardDto>(findNews);
+            var findNewsEditDto = mapper.Map<News, EditNewsDto>(findNews);
 
-            return Ok(findNewsCardDto);
+            return Ok(findNewsEditDto);
         }
 
-        //// PUT: api/News/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutNews([FromRoute] int id, [FromBody] EditNewsDto editNewsDto)
+        // GET: api/News/NewsByUser
+        [HttpGet("NewsByUser/{userId}")]
+        public IActionResult GetNewsByUser([FromRoute] string userId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != editNewsDto.Id)
+            var listFindNews = context.News
+                .Include(news => news.User)
+                .Include(news => news.Ratings)
+                .Where(news => news.UserId == userId).ToList();
+
+            if (!listFindNews.Any())
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            var editNews = mapper.Map<EditNewsDto, News>(editNewsDto);
+            var listFindNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listFindNews);
+
+            return Ok(listFindNewsCardDto);
+        }
+
+        //// PUT: api/News/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutNews([FromRoute] int id, [FromBody] CreateNewsDto editNewsDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var editNews = mapper.Map<CreateNewsDto, News>(editNewsDto);
             editNews.ModifiedAt = DateTime.Now;
             context.Entry(editNews).State = EntityState.Modified;
 
@@ -170,10 +192,10 @@ namespace ITNews.Controllers
             news.VisitorCount = 0;
             news.CreatedAt = DateTime.Now;
             news.ModifiedAt = news.CreatedAt;
+            news.ModifiedBy = news.UserId;
             context.News.Add(news);
             await context.SaveChangesAsync();
-            //return CreatedAtAction("GetNews", new { id = news.Id }, news);
-            return Ok();
+            return CreatedAtAction("GetFullNews", new { id = news.Id }, news);
         }
 
         // DELETE: api/News/5
