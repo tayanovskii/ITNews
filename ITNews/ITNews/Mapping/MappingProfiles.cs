@@ -48,17 +48,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.Rating, opt => opt.Ignore())
                 .ReverseMap()
                 .AfterMap((dto, news) => { dto.Rating = news.Ratings.Average(rating => rating.Value); });
-
-            CreateMap<News, EditNewsDto>()
-                .ForMember(dto => dto.Description, opt => opt.MapFrom(news => news.Description))
-                .ForMember(dto => dto.MarkDown, opt => opt.MapFrom(news => news.MarkDown))
-                .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
-                .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
-                .ForMember(dto => dto.Tags, opt => opt.MapFrom(news => news.NewsTags))
-                .ForMember(dto => dto.Categories, opt => opt.MapFrom(news => news.NewsCategories))
-                .ForMember(dto => dto.MarkDown, opt => opt.MapFrom(news => news.MarkDown))
-                .ReverseMap();
-                
+      
             CreateMap<ApplicationUser, UserMiniCardDto>()
                 .ForMember(dto => dto.Avatar, opt => opt.MapFrom(user => user.UserProfile.Avatar))
                 .ForMember(dto => dto.CountLikes, opt => opt.MapFrom(user => user.CommentLikes.Count()))
@@ -76,7 +66,8 @@ namespace ITNews.Mapping
                 .ReverseMap()
                 .AfterMap((dto, comment) => { dto.CountLike = comment.Likes.Count(); });
 
-            CreateMap<News, CreateNewsDto>()
+
+            CreateMap<News, EditNewsDto>()
                 .ForMember(dto => dto.Content, opt => opt.MapFrom(news => news.Content))
                 .ForMember(dto => dto.Description, opt => opt.MapFrom(news => news.Description))
                 .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
@@ -84,7 +75,49 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.MarkDown, opt => opt.MapFrom(news => news.MarkDown))
                 .ForMember(dto => dto.Tags, opt => opt.Ignore())
                 .ForMember(dto => dto.Categories, opt => opt.Ignore())
-                .ReverseMap();
+                .AfterMap((news, dto) =>
+                    {
+                        dto.Tags = news.NewsTags.Select(tag => new TagDto {Id = tag.TagId, Name = tag.Tag.Name});
+                        dto.Categories = news.NewsCategories.Select(category => new CategoryDto
+                            {Id = category.CategoryId, Name = category.Category.Name});
+                    });
+            
+            CreateMap<EditNewsDto,News>()
+                .ForMember(news => news.Content, opt=>opt.MapFrom(dto => dto.Content))
+                .ForMember(news => news.Description, opt => opt.MapFrom(dto => dto.Description))
+                .ForMember(news => news.MarkDown, opt => opt.MapFrom(dto => dto.MarkDown))
+                .ForMember(news => news.Title, opt => opt.MapFrom(dto => dto.Title))
+                .ForMember(news => news.ModifiedBy, opt => opt.MapFrom(dto => dto.UserId))
+                .ForMember(news => news.NewsTags, opt => opt.Ignore())
+                .ForMember(news => news.NewsCategories, opt => opt.Ignore())
+                .AfterMap((dto, news) =>
+                {
+                    var removedCategories = news.NewsCategories.Where(category => !dto.Categories.Contains(new CategoryDto(){Id = category.CategoryId}));
+                })
+                .ForAllOtherMembers(expression => expression.Ignore());
+
+                CreateMap<CreateNewsDto, News>()
+                .ForMember(news => news.Content, opt => opt.MapFrom(dto => dto.Content))
+                .ForMember(news => news.Description, opt => opt.MapFrom(dto => dto.Description))
+                .ForMember(news => news.MarkDown, opt => opt.MapFrom(dto => dto.MarkDown))
+                .ForMember(news => news.Title, opt => opt.MapFrom(dto => dto.Title))
+                .ForMember(news => news.UserId, opt => opt.MapFrom(dto => dto.UserId))
+                .ForMember(news => news.NewsTags, opt => opt.Ignore())
+                .ForMember(dto => dto.NewsCategories, opt => opt.Ignore())
+                .ForMember(dto => dto.Ratings, opt => opt.Ignore())
+                .ForMember(dto => dto.Comments, opt => opt.Ignore())
+                .AfterMap((dto, news) =>
+                {
+                    foreach (var newDtoCategory in dto.Categories)
+                    {
+                        var newsCategory = new NewsCategory()
+                        {
+                            CategoryId = newDtoCategory.Id
+                        };
+                        news.NewsCategories.Append(newsCategory);
+                    }
+                });
+
 
             CreateMap<Category, CategoryDto>()
                 .ForMember(dto => dto.Name, opt => opt.MapFrom(category => category.Name)).ReverseMap();
