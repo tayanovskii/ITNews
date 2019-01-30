@@ -22,19 +22,27 @@ import { SaveNews } from '../../models/SaveNews';
 })
 export class CreateNewsComponent implements OnInit {
   news: SaveNews;
+  newsId: number;
   categories: Category[] = [];
+  // string for searching tag on the server
   searchValue;
+  // file input element
   @ViewChild('fileInput') fileInput: ElementRef;
   photoPath: string;
   photo;
   fileImageDownload = faFileDownload;
 
+  // makrdown editor
   bsEditorInstance: EditorInstance;
   showEditor = true;
   templateForm: FormGroup;
   editorOptions: EditorOption;
 
-  editMode: boolean;
+  // diffrent modes settings
+  editMode = false;
+  pageName = 'Creating News';
+  saveButtonName = 'Create News';
+  // for forkJoin
   sources = [
     this.categoryService.getCategories(),
     this.tagService.getTags()
@@ -56,25 +64,12 @@ export class CreateNewsComponent implements OnInit {
     this.news = <SaveNews>{};
     this.news.tags = [];
     this.news.categories = [];
-    this.news.markDown = `### Markdown example
-    ---
-    This is an **example** where we bind a variable to the \`markdown\` component that is also bind to a textarea.
-    #### example.component.ts
-    \`\`\`javascript
-    function hello() {
-      alert('Hello World');
-    }
-    \`\`\`
-    #### example.component.css
-    \`\`\`css
-    .bold {
-      font-weight: bold;
-    }
-    \`\`\``;
+    this.news.markDown = `### Markdown example`;
   }
 
   ngOnInit() {
 
+    // MarkDownEdotor settings
     this.editorOptions = {
       autofocus: false,
       iconlibrary: 'fa',
@@ -82,29 +77,28 @@ export class CreateNewsComponent implements OnInit {
       onShow: (e) => this.bsEditorInstance = e,
       parser: (val) => this.parse(val)
     };
-
-
     this.buildForm(this.news.markDown);
 
-
+    // Gettings of category and Tags
     this.categoryService.getCategories()
       .subscribe(res => {
         this.categories = res;
         console.log(this.categories);
       }, error => console.log(error));
-
-    const newsId = +this.activatedRoute.snapshot.paramMap.get('id');
-    if (newsId) {
+    this.newsId = +this.activatedRoute.snapshot.paramMap.get('id');
+    if (this.newsId) {
+      this.saveButtonName = 'Edit News';
+      this.pageName = 'Editing News';
       // TO DO:
       // forkJoin
       // getting of all the categories
       // getting news for editing
-      this.newsService.getNewsById(newsId)
+      this.editMode = true;
+      this.newsService.getForEdit(this.newsId)
         .subscribe(res => {
           this.news = res;
         }, error => console.log(error));
     }
-    this.editMode = (newsId !== 0);
   }
   tagSource = (keyword: any) => {
     if (keyword) {
@@ -116,17 +110,15 @@ export class CreateNewsComponent implements OnInit {
       return of(<Tag[]>([]));
     }
   }
-
+  // display settings for autocomplete input
   myValueFormatter(data: Tag): string {
     return `(${data.id}) ${data.name}`;
   }
+
   deleteTag(tagId: number) {
     console.log('tagId->' + tagId);
     const ind = this.news.tags.findIndex(t => t.id === tagId);
     this.news.tags.splice(ind, 1);
-  }
-  addCustomTag($event) {
-    console.log($event);
   }
   addTag() {
     console.log('searchValue -> ' + this.searchValue);
@@ -145,6 +137,7 @@ export class CreateNewsComponent implements OnInit {
       }
     }
   }
+
   toggleCategory(id, $event) {
     if ($event.target.checked) {
       const elemToAdd = this.categories.find(c => c.id === id);
@@ -158,16 +151,25 @@ export class CreateNewsComponent implements OnInit {
 
   sendNews() {
     this.news.content = this.markdownService.compile(this.news.markDown, true);
-    this.news.userId = this.authService.getUserId();
-    console.log(JSON.stringify(this.news));
-    this.newsService.createNews(this.news)
+    if (this.newsId) {
+      this.news.modifiedBy = this.authService.getUserId();
+      this.newsService.changeNews(this.news, this.newsId)
+        .subscribe(res => {
+          console.log(res);
+          this.router.navigate(['/news/success-saving/', this.newsId]);
+        });
+    } else {
+      this.news.userId = this.authService.getUserId();
+      this.newsService.createNews(this.news)
       .subscribe(res => {
         console.log('News has been created');
         console.log(res);
-        this.router.navigate(['/']);
+        console.log(JSON.stringify(this.news));
+        this.router.navigate(['/news/success-saving/', res.id]);
       });
+    }
   }
-    changeUpload() {
+  changeUpload() {
       const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
       console.log(nativeElement.files[0].name);
       // this.photo = nativeElement.files[0];

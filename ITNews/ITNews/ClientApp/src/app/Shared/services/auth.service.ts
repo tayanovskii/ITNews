@@ -6,10 +6,10 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthService {
-  private url: string;
-  isLoggedIn: Subject<boolean> = new BehaviorSubject<boolean>(null);
-  userName: Subject<string> = new BehaviorSubject<string>(null);
   private helper = new JwtHelperService();
+  private url: string;
+  isLoggedIn: Subject<boolean> = new BehaviorSubject<boolean>(this.isLoggedIN());
+  userName: Subject<string> = new BehaviorSubject<string>(this.getUserName());
 
 
   constructor(
@@ -83,7 +83,8 @@ export class AuthService {
     }
     public getDecodeToken(): DecodedToken | null {
       const token = this.getAuth();
-      if (token != null) {
+      if (token) {
+        console.log(token);
         return <DecodedToken> this.helper.decodeToken(token);
       }
       return null;
@@ -105,14 +106,18 @@ export class AuthService {
       }
       return true;
     }
-    public getUserName(): string {
-      const token = this.getAuth();
-      if (token != null) {
-        return this.getDecodeToken().unique_name;
+    public getUserName(): string | null {
+      const decodedToken = this.getDecodeToken();
+      if (decodedToken) {
+        return decodedToken.unique_name;
       }
       return null;
     }
     public getUserId(): string {
-        return this.getDecodeToken().sub;
+      const decodedToken = this.getDecodeToken();
+      if (decodedToken) {
+        return decodedToken.sub;
+      }
+      return null;
     }
 }

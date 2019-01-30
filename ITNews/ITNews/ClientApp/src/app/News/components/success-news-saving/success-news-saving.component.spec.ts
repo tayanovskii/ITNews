@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PhotoDownloadComponent } from './photo-download.component';
+import { NewsSuccessSavingComponent } from './success-news-saving.component';
 
-describe('PhotoDownloadComponent', () => {
-  let component: PhotoDownloadComponent;
-  let fixture: ComponentFixture<PhotoDownloadComponent>;
+describe('NewsSuccessSavingComponent', () => {
+  let component: NewsSuccessSavingComponent;
+  let fixture: ComponentFixture<NewsSuccessSavingComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PhotoDownloadComponent ]
+      declarations: [ NewsSuccessSavingComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PhotoDownloadComponent);
+    fixture = TestBed.createComponent(NewsSuccessSavingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

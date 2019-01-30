@@ -1,3 +1,4 @@
+import { ViewNewsComponent } from './components/view-news/view-news.component';
 import { CreateNewsComponent } from './components/create-news/create-news.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -7,15 +8,16 @@ import { HttpClient } from '@angular/common/http';
 import { AngularMarkdownEditorModule } from 'angular-markdown-editor';
 import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PhotoDownloadComponent } from '../News/components/photo-download/photo-download.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthGuard } from '../Shared/services/auth.guard';
+import { NewsSuccessSavingComponent } from '../News/components/success-news-saving/success-news-saving.component';
 
 
 @NgModule({
   declarations: [
     CreateNewsComponent,
-    PhotoDownloadComponent
+    NewsSuccessSavingComponent,
+    ViewNewsComponent
   ],
   imports: [
     SharedModule,
@@ -45,9 +47,11 @@ import { AuthGuard } from '../Shared/services/auth.guard';
     // MarkdownModule.forRoot({ loader: HttpClient }),
     NguiAutoCompleteModule,
     RouterModule.forChild([
-      { path: 'news/create-news', component: CreateNewsComponent, canActivate: [AuthGuard] },
-      { path: 'news/create-news/:id', component: CreateNewsComponent, canActivate: [AuthGuard] },
-      { path: 'news/download-photo', component: PhotoDownloadComponent}
+      { path: 'news/edit/:id', component: CreateNewsComponent, canActivate: [AuthGuard] },
+      { path: 'news/create', component: CreateNewsComponent, canActivate: [AuthGuard] },
+      { path: 'news/success-edit/:id', component: NewsSuccessSavingComponent },
+      { path: 'news/success-create/:id', component: NewsSuccessSavingComponent },
+      { path: 'news/view-news/:id', component: ViewNewsComponent}
     ])
   ]
 })

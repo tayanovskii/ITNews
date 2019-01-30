@@ -13,13 +13,16 @@ export class NewsService {
      }
 
   createNews(news: SaveNews) {
-    return this.http.post(this.url, news);
+    return this.http.post<News>(this.url, news);
   }
-  changeNews(news: SaveNews, id: string) {
-    return this.http.post(this.url + id, news);
+  changeNews(news: SaveNews, id: number) {
+    return this.http.post<News>(this.url + id, news);
   }
   getNewsById(newsId: number) {
-    return this.http.get<SaveNews>(this.url + newsId);
+    return this.http.get<News>(this.url + newsId);
+  }
+  getForEdit(newsId: number) {
+    return this.http.get<SaveNews>(this.url + '/forEdit/' + newsId);
   }
   getNews() {
     return this.http.get<SaveNews[]>(this.url);

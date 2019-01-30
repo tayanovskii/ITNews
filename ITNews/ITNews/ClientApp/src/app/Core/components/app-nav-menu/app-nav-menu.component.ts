@@ -11,7 +11,7 @@ export class AppNavMenuComponent implements OnInit {
   username$: Observable<string>;
   isLoggedIn$: Observable<boolean>;
   constructor(
-    private authService: AuthService) { }
+    public authService: AuthService) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;
