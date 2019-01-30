@@ -38,9 +38,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(news => news.CreatedAt))
                 .ForMember(dto => dto.ModifiedAt, opt => opt.MapFrom(news => news.ModifiedAt))
                 .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
-                .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
                 .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
-                .ForMember(dto => dto.UserName, opt => opt.MapFrom(news => news.User.UserName))
                 .ForMember(dto => dto.UserMiniCardDto, opt => opt.MapFrom(news => news.User))
                 .ForMember(dto => dto.Comments, opt => opt.MapFrom(news => news.Comments))
                 .ForMember(dto => dto.MarkDown, opt => opt.MapFrom(news => news.MarkDown))
@@ -109,10 +107,11 @@ namespace ITNews.Mapping
                 .AfterMap((dto, news) =>
                 {
                     var removedCategories = news.NewsCategories.Where(newsCategory => !dto.Categories.Contains(new CategoryDto(){Id = newsCategory.CategoryId}));
-                    var newListNewsCategories = news.NewsCategories.Except(removedCategories);
-                    news.NewsCategories = newListNewsCategories;
+                    news.NewsCategories = news.NewsCategories.Except(removedCategories);
 
                     //todo added categories
+                    dto.Categories.
+
 
                     var removedTags = news.NewsTags.Where(newsTag => !dto.Tags.Contains(new TagDto() { Id = newsTag.TagId }));
                     var newsListNewsTags = news.NewsTags.Except(removedTags);
@@ -132,8 +131,7 @@ namespace ITNews.Mapping
                 .ForMember(news => news.Comments, opt => opt.Ignore())
                 .AfterMap((dto, news) =>
                     {
-                        var newsCategories = dto.Categories.Select(newDtoCategory => new NewsCategory() {CategoryId = newDtoCategory.Id}).ToList();
-                        news.NewsCategories = newsCategories;
+                        news.NewsCategories = dto.Categories.Select(newDtoCategory => new NewsCategory() {CategoryId = newDtoCategory.Id}).ToList();
                     });
 
 

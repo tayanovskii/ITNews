@@ -16,5 +16,7 @@ namespace ITNews.DTO
         public string UserName { get; set; }
         public int CommentCount { get; set; }
         public double Rating { get; set; }
+        public IEnumerable<TagDto> Tags { get; set; }
+        public IEnumerable<CategoryDto> Categories { get; set; }
     }
 }

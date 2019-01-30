@@ -13,8 +13,6 @@ namespace ITNews.DTO
         public long VisitorCount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        public string UserName { get; set; }
-        public string UserId { get; set; }
         public string MarkDown { get; set; }
         public UserMiniCardDto UserMiniCardDto { get; set; }
         public IEnumerable<TagDto> Tags { get; set; }
