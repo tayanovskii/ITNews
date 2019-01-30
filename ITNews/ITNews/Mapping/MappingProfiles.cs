@@ -27,7 +27,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.Rating, opt => opt.Ignore())
                 .AfterMap((news, dto) =>
                 {
-                    if (news.Ratings.Any())
+                    if (news.Ratings != null && news.Ratings.Any())
                     {
                         dto.Rating = news.Ratings.Average(rating => rating.Value);
                     }
@@ -42,19 +42,28 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
                 .ForMember(dto => dto.UserName, opt => opt.MapFrom(news => news.User.UserName))
                 .ForMember(dto => dto.UserMiniCardDto, opt => opt.MapFrom(news => news.User))
-                .ForMember(dto => dto.NewsTags, opt => opt.MapFrom(news => news.NewsTags))
                 .ForMember(dto => dto.Comments, opt => opt.MapFrom(news => news.Comments))
                 .ForMember(dto => dto.MarkDown, opt => opt.MapFrom(news => news.MarkDown))
+                .ForMember(dto => dto.Categories, opt => opt.Ignore())
+                .ForMember(dto => dto.Tags, opt => opt.Ignore())
                 .ForMember(dto => dto.Rating, opt => opt.Ignore())
-                .ReverseMap()
-                .AfterMap((dto, news) => { dto.Rating = news.Ratings.Average(rating => rating.Value); });
+                .AfterMap((news, dto) =>
+                {
+                    dto.Tags = news.NewsTags.Select(tag => new TagDto(){Id = tag.TagId, Name = tag.Tag.Name});
+                    dto.Categories = news.NewsCategories.Select(category => new CategoryDto(){Id = category.CategoryId, Name = category.Category.Name});
+                    if (news.Ratings!=null && news.Ratings.Any())
+                    {
+                        dto.Rating = news.Ratings.Average(rating => rating.Value);
+                    }
+                });
+
       
             CreateMap<ApplicationUser, UserMiniCardDto>()
                 .ForMember(dto => dto.Avatar, opt => opt.MapFrom(user => user.UserProfile.Avatar))
                 .ForMember(dto => dto.CountLikes, opt => opt.MapFrom(user => user.CommentLikes.Count()))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(user => user.Id))
                 .ForMember(dto => dto.UserName, opt => opt.MapFrom(user => user.UserName));
-    
+
             CreateMap<Comment, CommentDto>()
                 .ForMember(dto => dto.Content, opt => opt.MapFrom(comment => comment.Content))
                 .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(comment => comment.CreatedAt))
@@ -63,8 +72,15 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.ModifiedBy, opt => opt.MapFrom(comment => comment.ModifiedBy))
                 .ForMember(dto => dto.UserName, opt => opt.MapFrom(comment => comment.User.UserName))
                 .ForMember(dto => dto.CountLike, opt => opt.Ignore())
-                .ReverseMap()
-                .AfterMap((dto, comment) => { dto.CountLike = comment.Likes.Count(); });
+                .AfterMap((comment, dto) =>
+                {
+                    if (comment.Likes!=null && comment.Likes.Any())
+                    {
+                        dto.CountLike = comment.Likes.Count();
+                    }
+                })
+                .ReverseMap();
+                
 
 
             CreateMap<News, EditNewsDto>()
@@ -111,7 +127,7 @@ namespace ITNews.Mapping
                 .ForMember(news => news.Title, opt => opt.MapFrom(dto => dto.Title))
                 .ForMember(news => news.UserId, opt => opt.MapFrom(dto => dto.UserId))
                 .ForMember(news => news.NewsTags, opt => opt.Ignore())
-                //.ForMember(news => news.NewsCategories, opt => opt.Ignore())
+                .ForMember(news => news.NewsCategories, opt => opt.Ignore())
                 .ForMember(news => news.Ratings, opt => opt.Ignore())
                 .ForMember(news => news.Comments, opt => opt.Ignore())
                 .AfterMap((dto, news) =>
@@ -134,6 +150,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.Specialization, opt => opt.MapFrom(profile => profile.Specialization))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(profile => profile.UserId))
                 .ReverseMap();
+
 
         }
     }

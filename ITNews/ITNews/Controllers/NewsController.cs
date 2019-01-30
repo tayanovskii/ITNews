@@ -51,7 +51,10 @@ namespace ITNews.Controllers
             var findNews = await context.News
                 .Include(news => news.User)
                 .Include(news => news.Comments)
-                .Include(news => news.Ratings).SingleOrDefaultAsync(news => news.Id == id);
+                .Include(news => news.Ratings)
+                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
+                .SingleOrDefaultAsync(news => news.Id == id);
 
             if (findNews == null)
             {
@@ -59,6 +62,7 @@ namespace ITNews.Controllers
             }
 
             findNews.VisitorCount++;
+            await context.SaveChangesAsync();
             var findNewsDto = mapper.Map<News,FullNewsDto>(findNews);
 
             return Ok(findNewsDto);
@@ -75,9 +79,9 @@ namespace ITNews.Controllers
 
             var findNews = await context.News
                 .Include(news => news.NewsTags)
-                .ThenInclude(tags => tags.Tag)
+                    .ThenInclude(tags => tags.Tag)
                 .Include(news => news.NewsCategories)
-                .ThenInclude(categories => categories.Category)
+                    .ThenInclude(categories => categories.Category)
                 .SingleOrDefaultAsync(news => news.Id == newsId);
 
             if (findNews == null)
@@ -219,8 +223,8 @@ namespace ITNews.Controllers
             news.ModifiedBy = news.UserId;
             context.News.Add(news);
             await context.SaveChangesAsync();
-            return Ok();
-            //return CreatedAtAction("GetFullNews", new { id = news.Id }, news);
+            //return Ok();
+            return CreatedAtAction("GetFullNews", new { id = news.Id });
         }
 
         // DELETE: api/News/5
