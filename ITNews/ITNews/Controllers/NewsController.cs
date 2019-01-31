@@ -32,8 +32,12 @@ namespace ITNews.Controllers
         [AllowAnonymous]
         public IEnumerable<NewsCardDto> GetCardNews()
         {
-            var listNews = context.News.Include(news => news.User).Include(news => news.Comments).Include(news => news.Ratings).ToList();
-            var listNewsCardDto = mapper.Map<List<News>, List<NewsCardDto>>(listNews);
+            var listNews = context.News.Include(news => news.User)
+                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
+                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                .Include(news => news.Comments)
+                .Include(news => news.Ratings);
+            var listNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listNews);
             return listNewsCardDto;
         }
 
@@ -127,12 +131,26 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            var listNewTags = new List<Tag>();
+            var editNews = await context.News
+                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
+                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                .SingleOrDefaultAsync(news => news.Id == id);
+
+
+            if (editNews == null)
+            {
+                return NotFound();
+            }
+
+            var listTag = new List<TagDto>();
+
+            //todo check that newTag does`nt exist in database
+
             //input TagID = 0 denote that it`s a new tag and we need to add it to database
             var listNewTagDto = editNewsDto.Tags.Where(tagDto => tagDto.Id == 0).ToList();
             if (listNewTagDto.Any())
             {
-                listNewTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(listNewTagDto).ToList();
+                var listNewTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(listNewTagDto);
                 foreach (var newTag in listNewTags)
                 {
                     newTag.CreatedAt = DateTime.Now;
@@ -140,18 +158,24 @@ namespace ITNews.Controllers
                 }
                 await context.Tags.AddRangeAsync(listNewTags);
                 await context.SaveChangesAsync();
+                var listNewTag = mapper.Map<IEnumerable<Tag>, IEnumerable<TagDto>>(listNewTags);
+                listTag.AddRange(listNewTag);
             }
+            var listExitingTagDto = editNewsDto.Tags.Except(listNewTagDto);
+            listTag.AddRange(listExitingTagDto);
 
-            var editNews = mapper.Map<EditNewsDto,News>(editNewsDto);
-            foreach (var tag in listNewTags)
+            mapper.Map(editNewsDto, editNews);
+            var newsTags = editNews.NewsTags.ToList();
+            foreach (var tag in listTag)
             {
-                editNews.NewsTags.Append(new NewsTag()
+                newsTags.Add(new NewsTag()
                 {
                     TagId = tag.Id
 
                 });
             }
 
+            editNews.NewsTags = newsTags;
             editNews.ModifiedAt = DateTime.Now;
             context.Entry(editNews).State = EntityState.Modified;
 

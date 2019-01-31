@@ -20,19 +20,37 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(news => news.CreatedAt))
                 .ForMember(dto => dto.ModifiedAt, opt => opt.MapFrom(news => news.ModifiedAt))
                 .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
-                .ForMember(dto => dto.UserId, opt => opt.MapFrom(news => news.UserId))
-                .ForMember(dto => dto.UserName, opt => opt.MapFrom(news => news.User.UserName))
+                .ForMember(dto => dto.User, opt => opt.MapFrom(news => news.User))
+                .ForMember(dto => dto.NewsStatistic, opt => opt.MapFrom(news => news))
+                .ForMember(dto => dto.Categories, opt => opt.Ignore())
+                .ForMember(dto => dto.Tags, opt => opt.Ignore())
+                .AfterMap((news, dto) =>
+                    {
+                        dto.Categories = news.NewsCategories.Select(category => new CategoryDto()
+                            {Id = category.CategoryId, Name = category.Category.Name});
+                        dto.Tags = news.NewsTags.Select(tag => new TagDto() {Id = tag.TagId, Name = tag.Tag.Name});
+                    });
+
+            CreateMap<News, NewsStatisticDto>()
                 .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
-                .ForMember(dto => dto.CommentCount, opt => opt.MapFrom(news => news.Comments.Count()))
-                .ForMember(dto => dto.Rating, opt => opt.Ignore())
+                .ForMember(dto => dto.CommentCount, opt => opt.Ignore())
+                .ForMember(dto => dto.RatingCount, opt => opt.Ignore())
+                .ForMember(dto => dto.RatingCount, opt => opt.Ignore())
                 .AfterMap((news, dto) =>
                 {
                     if (news.Ratings != null && news.Ratings.Any())
                     {
                         dto.Rating = news.Ratings.Average(rating => rating.Value);
+                        dto.RatingCount = news.Ratings.Count();
                     }
-                });
 
+                    if (news.Comments != null && news.Comments.Any())
+                    {
+                        dto.CommentCount = news.Comments.Count();
+                    }
+
+                });
+               
             CreateMap<News, FullNewsDto>()
                 .ForMember(dto => dto.Content, opt => opt.MapFrom(news => news.Content))
                 .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(news => news.CreatedAt))
@@ -55,7 +73,6 @@ namespace ITNews.Mapping
                     }
                 });
 
-      
             CreateMap<ApplicationUser, UserMiniCardDto>()
                 .ForMember(dto => dto.Avatar, opt => opt.MapFrom(user => user.UserProfile.Avatar))
                 .ForMember(dto => dto.CountLikes, opt => opt.MapFrom(user => user.CommentLikes.Count()))
@@ -79,8 +96,6 @@ namespace ITNews.Mapping
                 })
                 .ReverseMap();
                 
-
-
             CreateMap<News, EditNewsDto>()
                 .ForMember(dto => dto.Content, opt => opt.MapFrom(news => news.Content))
                 .ForMember(dto => dto.Description, opt => opt.MapFrom(news => news.Description))
@@ -109,9 +124,14 @@ namespace ITNews.Mapping
                     var removedCategories = news.NewsCategories.Where(newsCategory => !dto.Categories.Contains(new CategoryDto(){Id = newsCategory.CategoryId}));
                     news.NewsCategories = news.NewsCategories.Except(removedCategories);
 
-                    //todo added categories
-                    dto.Categories.
+                    var addedCategories = dto.Categories.Where(categoryDto => news.NewsCategories.All(category => category.CategoryId != categoryDto.Id)).Select(categoryDto => new NewsCategory(){CategoryId = categoryDto.Id});
+                    var listNewsCategories = news.NewsCategories.ToList();
+                    foreach (var addedCategory in addedCategories)
+                    {
+                        listNewsCategories.Add(addedCategory);
+                    }
 
+                    news.NewsCategories = listNewsCategories;
 
                     var removedTags = news.NewsTags.Where(newsTag => !dto.Tags.Contains(new TagDto() { Id = newsTag.TagId }));
                     var newsListNewsTags = news.NewsTags.Except(removedTags);
