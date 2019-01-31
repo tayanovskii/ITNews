@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace ITNews.Services
+namespace ITNews.Services.Photo
 {
     public class FileSystemPhotoStorage : IPhotoStorage
     {

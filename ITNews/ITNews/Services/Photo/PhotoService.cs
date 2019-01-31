@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ITNews.DTO;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace ITNews.Services
+namespace ITNews.Services.Photo
 {
     public class PhotoService : IPhotoService
     {
@@ -14,10 +10,10 @@ namespace ITNews.Services
         {
             this.photoStorage = photoStorage;
         }
-        public async Task<Photo> UploadPhoto(IFormFile file, string uploadsFolderPath)
+        public async Task<DTO.Photo> UploadPhoto(IFormFile file, string uploadsFolderPath)
         {
             var fileName = await photoStorage.StorePhoto(uploadsFolderPath, file);
-            var photo = new Photo { FileName = fileName };
+            var photo = new DTO.Photo { FileName = fileName };
             return photo;
         }
     }

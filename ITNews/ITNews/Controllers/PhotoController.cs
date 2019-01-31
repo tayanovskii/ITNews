@@ -7,6 +7,7 @@ using AutoMapper;
 using ITNews.Configurations;
 using ITNews.DTO;
 using ITNews.Services;
+using ITNews.Services.Photo;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

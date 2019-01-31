@@ -5,6 +5,9 @@ using ITNews.Configurations;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.Services;
+using ITNews.Services.Email;
+using ITNews.Services.Photo;
+using ITNews.Services.Tags;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -61,6 +64,7 @@ namespace ITNews
 
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
+            services.AddTransient<ITagService, TagService>();
 
             services.AddAuthentication(opts =>
                 {

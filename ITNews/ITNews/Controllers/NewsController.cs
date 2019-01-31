@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.DTO;
-using Microsoft.AspNetCore.Authorization;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            using ITNews.Services.Tags;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            using Microsoft.AspNetCore.Authorization;
 
 namespace ITNews.Controllers
 {
@@ -20,11 +21,13 @@ namespace ITNews.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly ITagService tagService;
 
-        public NewsController(ApplicationDbContext context, IMapper mapper)
+        public NewsController(ApplicationDbContext context, IMapper mapper, ITagService tagService)
         {
             this.context = context;
             this.mapper = mapper;
+            this.tagService = tagService;
         }
 
         // GET: api/News
@@ -142,31 +145,34 @@ namespace ITNews.Controllers
                 return NotFound();
             }
 
-            var listTag = new List<TagDto>();
+            //var listTag = new List<TagDto>();
 
             //todo check that newTag does`nt exist in database
 
             //input TagID = 0 denote that it`s a new tag and we need to add it to database
-            var listNewTagDto = editNewsDto.Tags.Where(tagDto => tagDto.Id == 0).ToList();
-            if (listNewTagDto.Any())
-            {
-                var listNewTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(listNewTagDto);
-                foreach (var newTag in listNewTags)
-                {
-                    newTag.CreatedAt = DateTime.Now;
-                    newTag.ModifiedAt = newTag.CreatedAt;
-                }
-                await context.Tags.AddRangeAsync(listNewTags);
-                await context.SaveChangesAsync();
-                var listNewTag = mapper.Map<IEnumerable<Tag>, IEnumerable<TagDto>>(listNewTags);
-                listTag.AddRange(listNewTag);
-            }
-            var listExitingTagDto = editNewsDto.Tags.Except(listNewTagDto);
-            listTag.AddRange(listExitingTagDto);
+            //var listNewTagDto = editNewsDto.Tags.Where(tagDto => tagDto.Id == 0).ToList();
+            //if (listNewTagDto.Any())
+            //{
+            //    var listNewTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(listNewTagDto);
+            //    foreach (var newTag in listNewTags)
+            //    {
+            //        newTag.CreatedAt = DateTime.Now;
+            //        newTag.ModifiedAt = newTag.CreatedAt;
+            //    }
+            //    await context.Tags.AddRangeAsync(listNewTags);
+            //    await context.SaveChangesAsync();
+            //    var listNewTag = mapper.Map<IEnumerable<Tag>, IEnumerable<TagDto>>(listNewTags);
+            //    listTag.AddRange(listNewTag);
+            //}
+            //var listExitingTagDto = editNewsDto.Tags.Except(listNewTagDto);
+            //listTag.AddRange(listExitingTagDto);
+
+            var addedTagsDto = tagService.AddTags(editNewsDto.Tags).Result;
+            editNewsDto.Tags = addedTagsDto;
 
             mapper.Map(editNewsDto, editNews);
             var newsTags = editNews.NewsTags.ToList();
-            foreach (var tag in listTag)
+            foreach (var tag in addedTagsDto)
             {
                 newsTags.Add(new NewsTag()
                 {
@@ -207,30 +213,13 @@ namespace ITNews.Controllers
             {
                 return BadRequest(ModelState);
             }
-          
-            var listTag = new List<TagDto>();
 
-            //input TagID = 0 denote that it`s a new tag and we need to add it to database
-            var listNewTagDto = createNewsDto.Tags.Where(tagDto => tagDto.Id == 0).ToList();  
-            if (listNewTagDto.Any())
-            {
-                var listNewTags = mapper.Map<IEnumerable<TagDto>,IEnumerable<Tag>>(listNewTagDto);
-                foreach (var newTag in listNewTags)
-                {
-                    newTag.CreatedAt = DateTime.Now;
-                    newTag.ModifiedAt = newTag.CreatedAt;
-                }
-                await context.Tags.AddRangeAsync(listNewTags);
-                await context.SaveChangesAsync();
-                var listNewTag= mapper.Map<IEnumerable<Tag>,IEnumerable<TagDto>>(listNewTags);
-                listTag.AddRange(listNewTag);
-            }
-            var listExitingTagDto = createNewsDto.Tags.Except(listNewTagDto);
-            listTag.AddRange(listExitingTagDto);
+            var addedTagsDto = tagService.AddTags(createNewsDto.Tags).Result;
+            createNewsDto.Tags = addedTagsDto;
 
             var news = mapper.Map<CreateNewsDto, News>(createNewsDto);
             var newsTags = new List<NewsTag>();
-            foreach (var tagDto in listTag)
+            foreach (var tagDto in addedTagsDto)
             {
                newsTags.Add(new NewsTag()
                {
@@ -238,9 +227,7 @@ namespace ITNews.Controllers
                    
                });  
             }
-
             news.NewsTags = newsTags;
-           
             news.VisitorCount = 0;
             news.CreatedAt = DateTime.Now;
             news.ModifiedAt = news.CreatedAt;
