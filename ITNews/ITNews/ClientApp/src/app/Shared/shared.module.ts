@@ -14,15 +14,25 @@ import { NewsService } from '../News/services/news.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PhotoService } from './services/photo-service';
+import { NewsCardComponent } from '../Shared/components/news-card/news-card.component';
+import { UserCardComponent } from '../Shared/components/user-card/user-card.component';
+import { NewsStatComponent } from '../Shared/components/news-stat/news-stat.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    NewsCardComponent,
+    UserCardComponent,
+    NewsStatComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
     HttpClientModule,
     FormsModule,
     BrowserModule,
+    NgbModule,
+    RouterModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot() // ToastrModule added
     // JwtModule.forRoot({
@@ -57,7 +67,8 @@ import { PhotoService } from './services/photo-service';
     CommonModule,
     FormsModule,
     FontAwesomeModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule.forRoot().ngModule,
   ]
 })
 export class SharedModule { }

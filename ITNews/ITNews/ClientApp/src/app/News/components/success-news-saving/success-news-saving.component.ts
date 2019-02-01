@@ -16,10 +16,12 @@ export class NewsSuccessSavingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.newsId = this.activatedRoute.snapshot.queryParamMap.get('id');
+    this.newsId = this.activatedRoute.snapshot.paramMap.get('id');
     this.action = this.activatedRoute.snapshot.url[1].path.includes('edit')
     ? 'modifed'
     : 'created';
+    console.log('newsId-> ', this.newsId);
+    console.log('action-> ', this.action);
   }
 
 }

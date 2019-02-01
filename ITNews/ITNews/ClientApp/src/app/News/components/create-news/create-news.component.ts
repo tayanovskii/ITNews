@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Tag } from 'src/app/Shared/models/tag';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, ignoreElements } from 'rxjs/operators';
-import { of } from 'rxjs/index';
+import { of, forkJoin } from 'rxjs/index';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MarkdownService } from 'ngx-markdown';
 import { EditorInstance, EditorOption } from 'angular-markdown-editor/lib/angular-markdown-editor';
@@ -43,10 +43,7 @@ export class CreateNewsComponent implements OnInit {
   pageName = 'Creating News';
   saveButtonName = 'Create News';
   // for forkJoin
-  sources = [
-    this.categoryService.getCategories(),
-    this.tagService.getTags()
-  ];
+  sources = <any>[];
 
 
 
@@ -79,26 +76,34 @@ export class CreateNewsComponent implements OnInit {
     };
     this.buildForm(this.news.markDown);
 
+    this.sources = [
+      this.categoryService.getCategories()
+    ];
     // Gettings of category and Tags
-    this.categoryService.getCategories()
-      .subscribe(res => {
-        this.categories = res;
-        console.log(this.categories);
-      }, error => console.log(error));
     this.newsId = +this.activatedRoute.snapshot.paramMap.get('id');
     if (this.newsId) {
+      this.sources.push(this.newsService.getForEdit(this.newsId));
       this.saveButtonName = 'Edit News';
       this.pageName = 'Editing News';
-      // TO DO:
-      // forkJoin
-      // getting of all the categories
-      // getting news for editing
       this.editMode = true;
-      this.newsService.getForEdit(this.newsId)
-        .subscribe(res => {
-          this.news = res;
-        }, error => console.log(error));
+
     }
+    forkJoin(this.sources)
+      .subscribe(data => {
+        console.log('categories: ' + JSON.stringify(data[0]));
+        console.log('news -> ' + JSON.stringify(data[1]));
+        this.categories = <Category[]>data[0];
+        if (this.newsId) {
+          this.news = <SaveNews>data[1];
+        }
+      }, error => console.log(error));
+
+  }
+  showForm(f) {
+    console.log(f);
+  }
+  containCategory(id: number) {
+    return this.news.categories.some(cat => cat.id === id);
   }
   tagSource = (keyword: any) => {
     if (keyword) {
@@ -156,7 +161,7 @@ export class CreateNewsComponent implements OnInit {
       this.newsService.changeNews(this.news, this.newsId)
         .subscribe(res => {
           console.log(res);
-          this.router.navigate(['/news/success-saving/', this.newsId]);
+          this.router.navigate(['/news/success-edit/', this.newsId]);
         });
     } else {
       this.news.userId = this.authService.getUserId();
@@ -165,7 +170,7 @@ export class CreateNewsComponent implements OnInit {
         console.log('News has been created');
         console.log(res);
         console.log(JSON.stringify(this.news));
-        this.router.navigate(['/news/success-saving/', res.id]);
+        this.router.navigate(['/news/success-create/', res.id]);
       });
     }
   }
