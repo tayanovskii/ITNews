@@ -19,6 +19,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +31,13 @@
 
   <ItemGroup>
     <Folder Include="Data\Repositories\" />
-    <Folder Include="Helpers\" />
+    <Folder Include="Services\News\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ImageProcessor">
+      <HintPath>C:\Users\Director\.nuget\packages\imageprocessor\2.6.2.25\lib\net452\ImageProcessor.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

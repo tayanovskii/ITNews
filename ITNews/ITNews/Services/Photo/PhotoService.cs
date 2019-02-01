@@ -16,6 +16,13 @@ namespace ITNews.Services.Photo
             var photo = new DTO.Photo { FileName = fileName };
             return photo;
         }
-    }
+
+        public DTO.Photo UploadAvatar(IFormFile file, string uploadsFolderPath)
+        {
+            var fileName = photoStorage.StoreAvatar(uploadsFolderPath, file);
+            var photo = new DTO.Photo { FileName = fileName };
+            return photo;
+        }
+    } 
 }
 

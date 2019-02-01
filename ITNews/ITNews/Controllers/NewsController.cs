@@ -35,7 +35,8 @@ namespace ITNews.Controllers
         [AllowAnonymous]
         public IEnumerable<NewsCardDto> GetCardNews()
         {
-            var listNews = context.News.Include(news => news.User)
+            var listNews = context.News
+                .Include(news => news.User)
                 .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
                 .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                 .Include(news => news.Comments)
@@ -111,9 +112,12 @@ namespace ITNews.Controllers
             }
 
             var listFindNews = context.News
-                .Include(news => news.User)
-                .Include(news => news.Ratings)
-                .Where(news => news.UserId == userId).ToList();
+                    .Include(news => news.User)
+                    .Include(news => news.Comments)
+                    .Include(news => news.Ratings)
+                    .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                    .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
+                    .Where(news => news.UserId == userId).ToList();
 
             if (!listFindNews.Any())
             {

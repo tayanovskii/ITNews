@@ -47,7 +47,7 @@ namespace ITNews.Controllers
         }
         [Route("api/userProfile/Avatar/{userId}")]
         [HttpPost]
-        public async Task<IActionResult> UploadAvatar([FromRoute] string userId,IFormFile file)
+        public IActionResult UploadAvatar([FromRoute] string userId,IFormFile file)
         {
             if (file == null) return BadRequest("Null file");
             if (file.Length == 0) return BadRequest("Empty file");
@@ -55,7 +55,7 @@ namespace ITNews.Controllers
             if (!photoSettings.IsSupported(file.FileName)) return BadRequest("Invalid file type");
 
             var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads", "Avatars");
-            var photo = await photoService.UploadPhoto(file, uploadsFolderPath);
+            var photo = photoService.UploadAvatar(file, uploadsFolderPath);
 
             return Ok(photo);
         }

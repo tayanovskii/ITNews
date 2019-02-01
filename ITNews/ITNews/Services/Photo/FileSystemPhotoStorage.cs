@@ -1,7 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using ITNews.Helpers;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
+
 
 namespace ITNews.Services.Photo
 {
@@ -22,5 +28,26 @@ namespace ITNews.Services.Photo
 
             return fileName;
         }
+
+        public string StoreAvatar(string uploadsFolderPath, IFormFile file)
+        {
+            if (!Directory.Exists(uploadsFolderPath))
+                Directory.CreateDirectory(uploadsFolderPath);
+
+            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsFolderPath, fileName);
+
+            using (var img = Image.Load(file.OpenReadStream()))
+            {
+                using (Image<Rgba32> destRound = img.Clone(x => x.ConvertToAvatar(new Size(200, 200), 100)))
+                {
+                    destRound.Save(filePath);
+                }
+            }
+            return fileName;
+
+        }
+
+        
     }
 }
