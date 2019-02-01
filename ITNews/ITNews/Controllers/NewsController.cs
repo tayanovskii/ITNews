@@ -145,28 +145,6 @@ namespace ITNews.Controllers
                 return NotFound();
             }
 
-            //var listTag = new List<TagDto>();
-
-            //todo check that newTag does`nt exist in database
-
-            //input TagID = 0 denote that it`s a new tag and we need to add it to database
-            //var listNewTagDto = editNewsDto.Tags.Where(tagDto => tagDto.Id == 0).ToList();
-            //if (listNewTagDto.Any())
-            //{
-            //    var listNewTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(listNewTagDto);
-            //    foreach (var newTag in listNewTags)
-            //    {
-            //        newTag.CreatedAt = DateTime.Now;
-            //        newTag.ModifiedAt = newTag.CreatedAt;
-            //    }
-            //    await context.Tags.AddRangeAsync(listNewTags);
-            //    await context.SaveChangesAsync();
-            //    var listNewTag = mapper.Map<IEnumerable<Tag>, IEnumerable<TagDto>>(listNewTags);
-            //    listTag.AddRange(listNewTag);
-            //}
-            //var listExitingTagDto = editNewsDto.Tags.Except(listNewTagDto);
-            //listTag.AddRange(listExitingTagDto);
-
             var addedTagsDto = tagService.AddTags(editNewsDto.Tags).Result;
             editNewsDto.Tags = addedTagsDto;
 

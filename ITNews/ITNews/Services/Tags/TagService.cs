@@ -26,19 +26,26 @@ namespace ITNews.Services.Tags
         public async Task<IEnumerable<TagDto>> AddTags(IEnumerable<TagDto> newTagDto)
         {
             var newTagsDto = new List<TagDto>();
-            var resultTags = new List<Tag>();
+            var newTagsDtoToSaveDataBase = new List<TagDto>();
+
+            //input TagID = 0 denote that it`s a new tag and we need to add it to database
             foreach (var tagDto in newTagDto)
             {
-                var tagByName = GetTagByName(tagDto.Name).Result;
-                if (tagByName != null)
+                if (tagDto.Id == 0)
                 {
-                    resultTags.Add(tagByName);
+                    var tagByName = GetTagByName(tagDto.Name).Result;
+                    if (tagByName != null)
+                    {
+                        newTagsDto.Add(new TagDto(){Id = tagByName.Id, Name = tagByName.Name});
+                        continue;
+                    }
+                    newTagsDtoToSaveDataBase.Add(tagDto);
                     continue;
                 }
                 newTagsDto.Add(tagDto);
             }
 
-            var newTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(newTagsDto);
+            var newTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(newTagsDtoToSaveDataBase);
             foreach (var newTag in newTags)
             {
                 newTag.CreatedAt = DateTime.Now;
@@ -47,14 +54,16 @@ namespace ITNews.Services.Tags
 
             await context.Tags.AddRangeAsync(newTags);
             await context.SaveChangesAsync();
-            resultTags.AddRange(newTags);
-            var resultTagsDto = mapper.Map<IEnumerable<Tag>,IEnumerable<TagDto>>(resultTags);
-            return resultTagsDto;
+            var newTagsSavedInDataBase= mapper.Map<IEnumerable<Tag>, IEnumerable<TagDto>>(newTags);
+            newTagsDto.AddRange(newTagsSavedInDataBase);
+            return newTagsDto;
         }
 
         public async Task<Tag> GetTagByName(string name)
         {
-            return await context.Tags.FirstOrDefaultAsync(tag => tag.Name == name);
+            var findTag = await context.Tags.FirstOrDefaultAsync(tag => tag.Name == name);
+            return findTag;
+
         }
     }
 }
