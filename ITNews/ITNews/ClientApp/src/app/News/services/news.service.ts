@@ -16,7 +16,7 @@ export class NewsService {
     return this.http.post<News>(this.url, news);
   }
   changeNews(news: SaveNews, id: number) {
-    return this.http.post<News>(this.url + id, news);
+    return this.http.put<News>(this.url + `/${id}`, news);
   }
   getNewsById(newsId: number) {
     return this.http.get<News>(this.url + newsId);

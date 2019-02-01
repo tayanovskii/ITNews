@@ -1,0 +1,13 @@
+<div *ngIf="card" class="card text-center">
+  <div class="card-header">
+    {{ card.Title }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ card.Title }}</h5>
+    <p class="card-text">card.description</p>
+    <a [routerLink]="['/news/view-news', card.id]" routerLinkActive="router-link-active"  class="btn btn-outline-primary">Read more</a>
+  </div>
+  <div class="card-footer text-muted">
+    2 days ago
+  </div>
+</div>

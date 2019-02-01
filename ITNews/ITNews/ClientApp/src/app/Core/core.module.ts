@@ -12,15 +12,12 @@ import { SharedModule } from '../Shared/shared.module';
     HomeComponent
   ],
   imports: [
-    CommonModule,
-    NgbModule,
     SharedModule,
     RouterModule.forChild([])
   ],
   exports: [
     AppNavMenuComponent,
-    HomeComponent,
-    NgbModule.forRoot().ngModule,
+    HomeComponent
   ]
 })
 export class CoreModule { }

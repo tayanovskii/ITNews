@@ -1,12 +1,13 @@
-interface NewsCard {
+export class NewsCard {
   id: number;
   title: string;
-  dateCreated: Date;
   description: string;
+  visitorCount: number;
+  createdAt: Date;
+  modifiedAt: Date;
   categories: KeyValuePair[];
-  viewCount: number;
   tags: KeyValuePair[];
   userCard: UserProfileCard;
   rating: number;
-  commentsCount: number;
+  commentCount: number;
 }

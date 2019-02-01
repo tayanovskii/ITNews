@@ -1,11 +1,16 @@
-<div class="jumbotron">
-  <h1 class="display-4">Congratulations!</h1>
-  <p class="lead"></p>
-  <hr class="my-4">
-  <p>News with id: {{ newsId}} has been succesfully {{ action }}</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" role="button" [routerLink]="['/']" routerLinkActive="router-link-active" >Go home page</a>
-    <a class='btn btn-info btn-lg' role="button" [routerLink]="['/news/views-news']" routerLinkActive="router-link-active">View News</a>
-    <a class='btn btn-default btn-lg' role="button" [routerLink]="['/news/views-news']" routerLinkActive="router-link-active">Edit News</a>
-  </p>
+
+<div class="card text-center">
+  <div class="card-header">
+    Success Saving Page
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Congratulations!</h5>
+    <p class="card-text">News with {{ newsId}} id has been succesfully {{ action }}</p>
+    <a class="btn btn-primary btn-md" role="button" [routerLink]="['/']" routerLinkActive="router-link-active" >Go home page</a>
+    <a class='btn btn-info btn-md' role="button" [routerLink]="['/news/view-news', newsId]" routerLinkActive="router-link-active">View News</a>
+    <a class='btn btn-debug btn-md' role="button" [routerLink]="['/news/edit/', newsId]" routerLinkActive="router-link-active">Edit News</a>
+  </div>
+  <div class="card-footer text-muted">
+    2 days ago
+  </div>
 </div>

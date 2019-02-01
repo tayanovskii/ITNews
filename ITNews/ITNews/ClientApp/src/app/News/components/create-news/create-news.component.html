@@ -21,9 +21,8 @@
       </div>
       <div class="col">
         <h4>Categories</h4>
-        <!-- <div class="form-check form-check-inline" *ngFor="let category of [{id:1, name:'C#'}, {id:2, name:'Java'}, {id:3, name:'C++'}, { id:4, name:'Algorithms'}]"> -->
-        <div class="form-check form-check-inline" *ngFor="let category of categories">
-          <input class="form-check-input" type="checkbox" id="{{category.id}}" (change)="toggleCategory(category.id, $event)">
+        <div class="form-check form-check-inline categories" *ngFor="let category of categories">
+          <input class="form-check-input" type="checkbox" id="{{category.id}}" [checked]=" containCategory(category.id)" (change)="toggleCategory(category.id, $event)">
           <label class="form-check-label" for="{{category.id}}">{{category.name}}</label>
         </div>
         <h4 class="tags">Add or Choose Existing Tags</h4>
@@ -50,9 +49,7 @@
         </div>
         <div class="tags-list">
           <h4>Tags:</h4>
-          <button type="button" *ngFor="let tag of news.tags" class="btn btn-outline-secondary btn-sm">{{
-            tag.name
-            }}
+          <button type="button" *ngFor="let tag of news.tags" class="btn btn-outline-secondary btn-sm">{{tag.name}}
             <span class="badge badge-light badge-dark" (click)="deleteTag(tag.id)">x</span>
             <!-- <button type="button" *ngFor="let tag of news.tags" class="close" aria-label="Close">{{ tag.name }}
                         <span aria-hidden="true">&times;</span> -->
@@ -101,7 +98,7 @@
     <hr />
     <div class="form-group">
       <div class="col-sm-10">
-        <button type="submit" class="btn btn-primary" (click)="sendNews()">{{ saveButtonName }}</button>
+        <button type="submit" [disabled]="f.form.invalid" class="btn btn-primary" (click)="sendNews()">{{ saveButtonName }}</button>
       </div>
     </div>
   </form>
