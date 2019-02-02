@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using ITNews.Configurations;
+using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ITNews.Controllers
@@ -25,22 +30,31 @@ namespace ITNews.Controllers
     [ApiController]
  public class AccountController : ControllerBase
     {
+        private readonly ApplicationDbContext context;
+        private readonly IHostingEnvironment host;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IConfiguration configuration;
         private readonly IEmailSender emailSender;
+        private readonly PhotoSettings photoSettings;
 
 
         public AccountController(
+            ApplicationDbContext context,
+            IHostingEnvironment host,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
+            IOptionsSnapshot<PhotoSettings> options,
             IEmailSender emailSender)
         {
+            this.context = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.emailSender = emailSender;
+            this.host = host;
+            photoSettings = options.Value;
         }
 
         [HttpPost]
@@ -162,7 +176,16 @@ namespace ITNews.Controllers
             {
                 //return Ok(GetToken(user));
                 //return CreatedAtAction("Login", user);
+                var defaultAvatar = Path.Combine(host.WebRootPath, photoSettings.DefaultAvatar);
+                await context.UserProfile.AddAsync(new UserProfile()
+                {
+                    UserId = user.Id,
+                    Avatar = defaultAvatar
+                });
+
+                await context.SaveChangesAsync();
                 return Ok("Email сonfirmed. Please go to the website and login");
+
             }
 
             foreach (var error in identityResult.Errors)

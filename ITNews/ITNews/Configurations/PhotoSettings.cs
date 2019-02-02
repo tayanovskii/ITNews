@@ -10,6 +10,7 @@ namespace ITNews.Configurations
     {
         public int MaxBytes { get; set; }
         public string[] AcceptedFileTypes { get; set; }
+        public string DefaultAvatar { get; set; }
 
         public bool IsSupported(string fileName)
         {

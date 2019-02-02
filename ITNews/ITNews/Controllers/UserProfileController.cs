@@ -55,8 +55,8 @@ namespace ITNews.Controllers
             return Ok(userProfileDto);
         }
 
-        // GET: api/UserProfile/GetProfileByUser
-        [HttpGet("GetProfileByUser/{userId}")]
+        // GET: api/UserProfile/ByUser
+        [HttpGet("ByUser/{userId}")]
         public async Task<IActionResult> GetProfileByUser([FromRoute] string userId)
         {
             if (!ModelState.IsValid)

@@ -88,8 +88,8 @@ namespace ITNews.Data
 
             var userProfile = builder.Entity<UserProfile>();
             userProfile.HasKey(u => u.Id);
-            userProfile.Property(u => u.FirstName).IsRequired();
-            userProfile.Property(u => u.LastName).IsRequired();
+            userProfile.Property(u => u.FirstName);
+            userProfile.Property(u => u.LastName);
         }
 
         public DbSet<ITNews.Data.Entities.UserProfile> UserProfile { get; set; }

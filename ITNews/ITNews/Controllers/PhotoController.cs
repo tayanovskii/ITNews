@@ -57,7 +57,7 @@ namespace ITNews.Controllers
             if (file.Length == 0) return BadRequest("Empty file");
             if (file.Length > photoSettings.MaxBytes) return BadRequest("Max file size exceeded");
             if (!photoSettings.IsSupported(file.FileName)) return BadRequest("Invalid file type");
-            var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads", "Avatars");
+            var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads", "userAvatars");
             var photo = photoService.UploadAvatar(file, uploadsFolderPath);
             //var currentUserProfile = await context.UserProfile.SingleOrDefaultAsync(profile => profile.UserId == userId);
             //currentUserProfile.Avatar = photo.FileName;
