@@ -1,25 +1,22 @@
-<div>
-  <ul class="news-stat">
-    <li class="news-rating">
-      <ngb-rating [(rate)]="currentRate">
-        <ng-template let-fill="fill" let-index="index">
-            <span class="star" [class.full]="fill === 100">
-                <span class="half" [style.width.%]="fill" [class.bad]="index<currentRate">&hearts;</span>&hearts;
-              </span>
-        </ng-template>
-      </ngb-rating>
-      <button type="button" class="btn btn-outline-secondary mr-2" placement="top" ngbTooltip="Number of ratings: {{ newsStat.newsStat.ratingCount || 0}}">
-          Current rating: <span class="raating" > {{ newsStat.rating |  number }} </span>
-      </button>
+  <ul class="list-inline news-stat">
+    <li class="list-inline-item news-rating">
+      <ngb-rating [rate]="3" [max]="5"></ngb-rating>
+      <span ngbTooltip="Number of ratings: {{ newsStat.ratingCount || 0}}" tooltipClass="visitorCount">
+         Current rating: {{ newsStat.rating |  number }}
+      </span>
     </li>
-    <li class="news-count">
+    <li class="list-inline-item visitor-count">
       <div style="text-align:center">
-        <fa-icon [icon]="faCoffee"></fa-icon>
-        <button type="button" class="btn btn-outline-secondary" ngbTooltip="Visitor count"
-          tooltipClass="visitorCount">{{ newsStat.visitorCount | number }}
-        </button>
+        <fa-icon [icon]="eyeIco"></fa-icon>
+        <span ngbTooltip="Visitor count" tooltipClass="visitorCount">
+            {{ newsStat.visitorCount | number }}
+        </span>
       </div>
     </li>
-    <li></li>
+    <li class="list-inline-item comment-count">
+      <fa-icon [icon]="commentsIcon"></fa-icon>
+      <span ngbTooltip="Comment count" tooltipClass="commentCount">
+          {{ newsStat.commentCount | number }}
+      </span>
+      </li>
   </ul>
-</div>

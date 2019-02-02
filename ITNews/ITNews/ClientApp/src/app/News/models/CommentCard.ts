@@ -1,6 +1,10 @@
 interface CommentCard {
-  text: string;
+  id: number;
+  newsId: number;
+  content: string;
   userCard: UserProfileCard;
-  likes: number;
-  dateCreated: Date;
+  countLikes: number;
+  createdAt: Date;
+  modifiedAt: Date;
+  modifiedBy: string;
 }

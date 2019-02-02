@@ -20,7 +20,6 @@ export class NewsStatComponent implements OnInit, OnChanges {
   }
   ngOnChanges() {
     this.currentRate = this.newsStat.rating;
-
   }
   setRating(newRating: number) {
      this.changeRating.emit(newRating);

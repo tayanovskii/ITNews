@@ -19,3 +19,12 @@
 .visitorCount .arrow::before {
   border-top-color: darkblue;
 }
+
+ul.news-stat {
+  border: 1px darkblue;
+  margin-top: 20px;
+}
+
+.news-rating, .visitor-count, .comment-count {
+    margin-left: 10px;
+}

@@ -1,4 +1,10 @@
 <header class="news-header">
-  <user-card *ngIf="user" [user-card]="user"></user-card>
-  <span class="news-time"> published at {{ publishedTime | date:mediumDate }}</span>
+  <ul class="list-inline">
+    <li class="list-inline-item">
+      <user-card *ngIf="user" [user-card]="user"></user-card>
+    </li>
+    <li class="list-inline-item">
+      <span class="news-time"> published at {{ publishedTime | date:mediumDate }}</span>
+    </li>
+  </ul>
 </header>

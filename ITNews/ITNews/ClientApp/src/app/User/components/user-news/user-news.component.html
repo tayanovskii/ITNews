@@ -19,7 +19,7 @@
       <td>{{ news.createdAt | date }}</td>
       <td>
         <a class="btn btn-outline-primary" [routerLink]="['/news/view-news', news.id]" routerLinkActive="router-link-active" >View</a>
-        <a class="btn btn-outline-info" [routerLink]="['/news/view-news', news.id]" routerLinkActive="router-link-active" >Edit</a>
+        <a class="btn btn-outline-info" [routerLink]="['/news/edit-news', news.id]" routerLinkActive="router-link-active" >Edit</a>
       </td>
     </tr>
     </tbody>

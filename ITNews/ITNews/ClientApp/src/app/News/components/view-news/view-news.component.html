@@ -1,8 +1,8 @@
 <div class="container" *ngIf="news.title">
-  <news-header  [user-card]="news.userMiniCardDto" [time]="news.modifiedAt"></news-header>
   <div class="row">
     <div class="col-9 article">
       <section class="content">
+          <news-header  [user-card]="news.userMiniCardDto" [time]="news.modifiedAt"></news-header>
           <h1 *ngIf="news">
               {{news.title}}
             </h1>
@@ -15,6 +15,9 @@
       </section>
       <section class="additionalInfo">
         <news-stat [stat]="news.newsStatistic" (changeRating)="changeRating($event)"></news-stat>
+      </section>
+      <section class="comment">
+
       </section>
     </div>
     <div class="col-3 sidebar">

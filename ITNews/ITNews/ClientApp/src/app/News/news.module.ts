@@ -12,6 +12,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthGuard } from '../Shared/services/auth.guard';
 import { NewsSuccessSavingComponent } from '../News/components/success-news-saving/success-news-saving.component';
 import { NewsHeaderComponent } from '../News/components/news-header/news-header.component';
+import { NewsCommentComponent } from '../News/components/news-comment/news-comment.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { NewsHeaderComponent } from '../News/components/news-header/news-header.
     CreateNewsComponent,
     NewsSuccessSavingComponent,
     ViewNewsComponent,
-    NewsHeaderComponent
+    NewsHeaderComponent,
+    NewsCommentComponent
   ],
   imports: [
     SharedModule,

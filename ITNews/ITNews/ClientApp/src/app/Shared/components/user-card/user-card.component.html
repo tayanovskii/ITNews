@@ -1,9 +1,15 @@
 <ng-container *ngIf="userCard">
-    <a  [routerLink]="['/user/profiles', userCard.userName]" routerLinkActive="router-link-active" >
-      <img src="" alt="">
-      <span class="glyphicon-user">{{ userCard.userName }}</span>
-    </a>
-    <fa-icon [icon]="likeImage"></fa-icon>
-    <span> {{ userCard.countLikes }}, </span>
+  <ul class="list-inline news-user-header">
+      <li class="list-inline-item user-name">
+        <a  [routerLink]="['/user/profiles', userCard.userName]" routerLinkActive="router-link-active" >
+          <img src="" alt="">
+          <span class="glyphicon-user">{{ userCard.userName }}</span>
+        </a>
+    </li>
+      <li class="list-inline-item user-likes">
+        <fa-icon [icon]="likeImage"></fa-icon>
+        <span ngbTooltip="Like's count" tooltipClass="likesCount"> {{ userCard.countLikes }} </span>
+      </li>
+  </ul>
 </ng-container>
 
