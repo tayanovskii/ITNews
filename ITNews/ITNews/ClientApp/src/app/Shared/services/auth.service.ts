@@ -84,7 +84,6 @@ export class AuthService {
     public getDecodeToken(): DecodedToken | null {
       const token = this.getAuth();
       if (token) {
-        console.log(token);
         return <DecodedToken> this.helper.decodeToken(token);
       }
       return null;

@@ -11,13 +11,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthGuard } from '../Shared/services/auth.guard';
 import { NewsSuccessSavingComponent } from '../News/components/success-news-saving/success-news-saving.component';
+import { NewsHeaderComponent } from '../News/components/news-header/news-header.component';
 
 
 @NgModule({
   declarations: [
     CreateNewsComponent,
     NewsSuccessSavingComponent,
-    ViewNewsComponent
+    ViewNewsComponent,
+    NewsHeaderComponent
   ],
   imports: [
     SharedModule,

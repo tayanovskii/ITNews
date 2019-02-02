@@ -103,7 +103,7 @@ namespace ITNews.Controllers
         }
 
         // GET: api/News/NewsByUser
-        [HttpGet("NewsByUser/{userId}")]
+        [HttpGet("ByUser/{userId}")]
         public IActionResult GetNewsByUser([FromRoute] string userId)
         {
             if (!ModelState.IsValid)
@@ -118,11 +118,6 @@ namespace ITNews.Controllers
                     .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                     .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
                     .Where(news => news.UserId == userId);
-
-            if (!listFindNews.Any())
-            {
-                return NotFound();
-            }
 
             var listFindNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listFindNews);
 

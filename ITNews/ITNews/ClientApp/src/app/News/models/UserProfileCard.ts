@@ -1,6 +1,6 @@
 interface UserProfileCard {
   userId: string;
   userName: string;
-  imageUrl: string;
-  likesCount: number;
+  avatar: string;
+  countLikes: number;
 }
