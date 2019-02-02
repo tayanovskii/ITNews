@@ -103,7 +103,8 @@ namespace ITNews.Controllers
             var category = mapper.Map<CategoryDto,Category>(categoryDto);       
             context.Categories.Add(category);
             await context.SaveChangesAsync();
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            return CreatedAtRoute(new { id = category.Id }, category);
+            
         }
 
         // DELETE: api/Category/5

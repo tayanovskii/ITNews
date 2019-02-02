@@ -21,6 +21,7 @@ namespace ITNews.Data
         public DbSet<CommentLike> CommentLikes { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<UserProfile> UserProfile { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -92,7 +93,7 @@ namespace ITNews.Data
             userProfile.Property(u => u.LastName);
         }
 
-        public DbSet<ITNews.Data.Entities.UserProfile> UserProfile { get; set; }
+
 
     }
 }

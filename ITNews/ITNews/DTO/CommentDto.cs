@@ -10,9 +10,9 @@ namespace ITNews.DTO
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        public string UserId { get; set; }
+        public UserMiniCardDto UserCard { get; set; }
+        public int NewsId { get; set; }
         public string ModifiedBy { get; set; }
-        public string UserName { get; set; }
-        public int CountLike { get; set; }
+        public int CountLikes { get; set; }
     }
 }

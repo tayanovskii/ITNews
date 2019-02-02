@@ -4,6 +4,7 @@ using AutoMapper;
 using ITNews.Configurations;
 using ITNews.Data;
 using ITNews.Data.Entities;
+using ITNews.Hubs;
 using ITNews.Services;
 using ITNews.Services.Email;
 using ITNews.Services.Photo;
@@ -93,6 +94,10 @@ namespace ITNews
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddAutoMapper();
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.EnableDetailedErrors = true;
+            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -120,6 +125,11 @@ namespace ITNews
 
             app.UseCors("Cors");
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<CommentHub>("/commentHub");
+            });
 
             app.UseMvc(routes =>
             {
