@@ -60,6 +60,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.UserMiniCardDto, opt => opt.MapFrom(news => news.User))
                 .ForMember(dto => dto.Comments, opt => opt.MapFrom(news => news.Comments))
                 .ForMember(dto => dto.MarkDown, opt => opt.MapFrom(news => news.MarkDown))
+                .ForMember(dto => dto.NewsStatistic, opt => opt.MapFrom(news => news))
                 .ForMember(dto => dto.Categories, opt => opt.Ignore())
                 .ForMember(dto => dto.Tags, opt => opt.Ignore())
                 .ForMember(dto => dto.Rating, opt => opt.Ignore())

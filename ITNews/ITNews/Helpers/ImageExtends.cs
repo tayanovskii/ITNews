@@ -33,8 +33,9 @@ namespace ITNews.Helpers
 
             var graphicOptions = new GraphicsOptions(true)
             {
-               ColorBlendingMode = PixelColorBlendingMode.Normal
-                  // BlenderMode = PixelBlenderMode.Src // enforces that any part of this shape that has color is punched out of the background
+                
+               BlenderMode = PixelBlenderMode.Src
+              
             };
             // mutating in here as we already have a cloned original
             img.Mutate(x => x.Fill(graphicOptions, Rgba32.Transparent, corners));

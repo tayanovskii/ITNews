@@ -117,7 +117,52 @@ namespace ITNews.Controllers
                     .Include(news => news.Ratings)
                     .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                     .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
-                    .Where(news => news.UserId == userId).ToList();
+                    .Where(news => news.UserId == userId);
+
+            if (!listFindNews.Any())
+            {
+                return NotFound();
+            }
+
+            var listFindNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listFindNews);
+
+            return Ok(listFindNewsCardDto);
+        }
+
+        // GET: api/News/NewsByTag
+        [HttpGet("NewsByTag/{tagId}")]
+        public IActionResult GetNewsByTad ([FromRoute] int tagId)
+        {
+            var listFindNews = context.News
+                .Include(news => news.User)
+                .Include(news => news.Comments)
+                .Include(news => news.Ratings)
+                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
+                .Where(news => news.NewsTags.Any(tag => tag.TagId == tagId));
+
+            if (!listFindNews.Any())
+            {
+                return NotFound();
+            }
+
+            var listFindNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listFindNews);
+
+            return Ok(listFindNewsCardDto);
+        }
+
+
+        // GET: api/News/NewsByCategory
+        [HttpGet("NewsByCategory/{categoryId}")]
+        public IActionResult GetNewsByCategory([FromRoute] int categoryId)
+        {
+            var listFindNews = context.News
+                .Include(news => news.User)
+                .Include(news => news.Comments)
+                .Include(news => news.Ratings)
+                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
+                .Where(news => news.NewsCategories.Any(category => category.CategoryId==categoryId));
 
             if (!listFindNews.Any())
             {
