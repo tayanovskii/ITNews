@@ -1,3 +1,4 @@
+import { UserNewsComponent } from './components/user-news/user-news.component';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { LoginComponent } from '../User/components/login/login.component';
@@ -9,7 +10,6 @@ import { UserProfileComponent } from '../User/components/user-profile/user-profi
 import { ProfilesComponent } from '../User/components/profiles/profiles.component';
 import { MyNewsComponent } from '../User/components/my-news/my-news.component';
 import { EditProfileComponent } from '../User/components/edit-profile/edit-profile.component';
-
 @NgModule({
   declarations: [
     LoginComponent,
@@ -18,13 +18,16 @@ import { EditProfileComponent } from '../User/components/edit-profile/edit-profi
     UserProfileComponent,
     ProfilesComponent,
     MyNewsComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    UserNewsComponent
   ],
   imports: [
     SharedModule,
     RouterModule.forChild([
       { path: 'user', component: LoginComponent },
       { path: 'user/login', component: LoginComponent},
+      { path: 'user/profiles/:userName', component: UserProfileComponent },
+      { path: 'user/user-news/:id', component: UserNewsComponent},
       { path: 'user/registration', component: RegistrationComponent},
       { path: 'user/change-password', component: ChangePasswordComponent }
     ])

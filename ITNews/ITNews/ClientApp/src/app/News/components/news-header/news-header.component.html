@@ -1,0 +1,4 @@
+<header class="news-header">
+  <user-card *ngIf="user" [user-card]="user"></user-card>
+  <span class="news-time"> published at {{ publishedTime | date:mediumDate }}</span>
+</header>

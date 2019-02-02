@@ -1,3 +1,9 @@
-<p>
-  user-card works!
-</p>
+<ng-container *ngIf="userCard">
+    <a  [routerLink]="['/user/profiles', userCard.userName]" routerLinkActive="router-link-active" >
+      <img src="" alt="">
+      <span class="glyphicon-user">{{ userCard.userName }}</span>
+    </a>
+    <fa-icon [icon]="likeImage"></fa-icon>
+    <span> {{ userCard.countLikes }}, </span>
+</ng-container>
+

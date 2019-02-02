@@ -1,3 +1,30 @@
-<p>
-  view-news works!
-</p>
+<div class="container" *ngIf="news.title">
+  <news-header  [user-card]="news.userMiniCardDto" [time]="news.modifiedAt"></news-header>
+  <div class="row">
+    <div class="col-9 article">
+      <section class="content">
+          <h1 *ngIf="news">
+              {{news.title}}
+            </h1>
+            <ul *ngIf="news.tags" class="list-inline tags">
+              <li class="list-inline-item" *ngFor="let tag of news.tags">
+                <a [routerLink]="['./']" routerLinkActive="router-link-active" > {{ tag.name }} </a>
+              </li>
+            </ul>
+            <div *ngIf="news" [innerHTML]="news.content"></div>
+      </section>
+      <section class="additionalInfo">
+        <news-stat [stat]="news.newsStatistic" (changeRating)="changeRating($event)"></news-stat>
+      </section>
+    </div>
+    <div class="col-3 sidebar">
+      <h4>Categories related to this news</h4>
+        <ul class="list-group">
+            <li *ngFor="let c of news.categories" class="list-group-item d-flex justify-content-between align-items-center">
+              {{ c.name }}
+              <span class="badge badge-primary badge-pill">{{c.id}}</span>
+            </li>
+          </ul>
+    </div>
+  </div>
+</div>

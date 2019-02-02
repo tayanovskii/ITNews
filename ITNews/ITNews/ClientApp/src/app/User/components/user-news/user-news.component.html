@@ -1,0 +1,26 @@
+<h3>Your news</h3>
+<table *ngIf="userNews" class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Id</th>
+      <th scope="col">Title</th>
+      <th scope="col">CreatedAt</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let news of userNews; index as i">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>
+        {{ news.id }}
+      </td>
+      <td>{{ news.title }}</td>
+      <td>{{ news.createdAt | date }}</td>
+      <td>
+        <a class="btn btn-outline-primary" [routerLink]="['/news/view-news', news.id]" routerLinkActive="router-link-active" >View</a>
+        <a class="btn btn-outline-info" [routerLink]="['/news/view-news', news.id]" routerLinkActive="router-link-active" >Edit</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>

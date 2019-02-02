@@ -21,16 +21,18 @@
       </li>
       </ng-template>
       <li ngbDropdown class="nav-item dropdown" *ngIf="isLoggedIn$ | async as isLoggedIn else auth">
-        <button *ngIf="username$ | async as username" class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>{{ username }}</button>
-        <!-- <a ngbDropdownToggle class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a> -->
-        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" [routerLink]="['/user/login']" routerLinkActive="router-link-active" >Profile</a>
-          <a class="dropdown-item" [routerLink]="['/']" routerLinkActive="router-link-active" >My News</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" (click)="logout()">Exit</a>
-        </div>
+        <ng-container *ngIf="username$ | async as username" >
+            <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>{{ username }}</button>
+            <!-- <a ngbDropdownToggle class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dropdown
+            </a> -->
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" [routerLink]="['/user/profiles', username]" routerLinkActive="router-link-active" >Profile</a>
+              <a class="dropdown-item" [routerLink]="['/user/user-news', authService.getUserId()]" routerLinkActive="router-link-active" >My News</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" (click)="logout()">Exit</a>
+            </div>
+        </ng-container>
       </li>
     </ul>
     <div class="nav-item">

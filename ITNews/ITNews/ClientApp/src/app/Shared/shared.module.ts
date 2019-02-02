@@ -69,6 +69,8 @@ import { RouterModule } from '@angular/router';
     FontAwesomeModule,
     HttpClientModule,
     NgbModule.forRoot().ngModule,
+    UserCardComponent,
+    NewsStatComponent
   ]
 })
 export class SharedModule { }

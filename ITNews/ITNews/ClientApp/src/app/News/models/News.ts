@@ -1,16 +1,15 @@
-interface News {
+import { Category } from './../../Shared/models/category';
+import { Tag } from 'src/app/Shared/models/tag';
+export interface News {
   id: number;
   title: string;
   content: string;
-  visitorCount: number;
   createdAt: Date;
   modifiedAt: Date;
-  userName: string;
-  userId: string;
   markDown: string;
-  categories: KeyValuePair[];
-  tags: KeyValuePair[];
-  userCard: UserProfileCard;
-  rating: number;
+  categories: Category[];
+  tags: Tag[];
+  newsStatistic: NewsStat;
+  userMiniCardDto: UserProfileCard;
   comments: CommentCard[];
 }

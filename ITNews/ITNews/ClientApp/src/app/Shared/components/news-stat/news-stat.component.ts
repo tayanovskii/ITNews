@@ -2,12 +2,14 @@ import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angu
 import { faComments, faEye } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-news-stat',
+  // tslint:disable-next-line:component-selector
+  selector: 'news-stat',
   templateUrl: './news-stat.component.html',
   styleUrls: ['./news-stat.component.css']
 })
 export class NewsStatComponent implements OnInit, OnChanges {
-  @Input() newsStat: NewsStat;
+  // tslint:disable-next-line:no-input-rename
+  @Input('stat') newsStat: NewsStat;
   @Output() changeRating: EventEmitter<any> = new EventEmitter();
   commentsIcon = faComments;
   eyeIco = faEye;
