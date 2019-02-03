@@ -2,32 +2,62 @@
   <div class="row">
     <div class="col-9 article">
       <section class="content">
-          <news-header  [user-card]="news.userMiniCardDto" [time]="news.modifiedAt"></news-header>
-          <h1 *ngIf="news">
-              {{news.title}}
-            </h1>
-            <ul *ngIf="news.tags" class="list-inline tags">
-              <li class="list-inline-item" *ngFor="let tag of news.tags">
-                <a [routerLink]="['./']" routerLinkActive="router-link-active" > {{ tag.name }} </a>
-              </li>
-            </ul>
-            <div *ngIf="news" [innerHTML]="news.content"></div>
+        <news-header [user-card]="news.userMiniCardDto" [time]="news.modifiedAt"></news-header>
+        <h1 *ngIf="news">
+          {{news.title}}
+        </h1>
+        <ul *ngIf="news.tags" class="list-inline tags">
+          <li class="list-inline-item" *ngFor="let tag of news.tags">
+            <a [routerLink]="['./']" routerLinkActive="router-link-active"> {{ tag.name }} </a>
+          </li>
+        </ul>
+        <div *ngIf="news" [innerHTML]="news.content"></div>
       </section>
       <section class="additionalInfo">
         <news-stat [stat]="news.newsStatistic" (changeRating)="changeRating($event)"></news-stat>
       </section>
-      <section class="comment">
-
+      <section class="comments">
+        <!-- <h3 class="text-center">Commnets</h3> -->
+        <div class="comment-enter-header input-group">
+          <h5>{{ news.comments.length }} comments</h5>
+          <div ngbDropdown class="sort-dropdown d-inline-block">
+            <fa-icon [icon]="commentSortIcon"></fa-icon>
+            <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Sort</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button class="dropdown-item">First new</button>
+              <button class="dropdown-item">First popular</button>
+            </div>
+          </div>
+        </div>
+        <div class="comment-enter-form">
+            <div class="input-group d-inline-block">
+                <div class="input-group-prepend commemt-textarea">
+                    <div style="text-align:center">
+                        <fa-icon class="user" [icon]="userIcon"></fa-icon>
+                    </div>
+                    <textarea [(ngModel)]="currentComment" #commentForm=ngModel name="commentTextarea" class="form-control" id="commentTextarea" rows="1"></textarea>
+                </div>
+              </div>
+              <div class="float-right">
+                  <button type="button" class="btn btn-light">Cancel</button>
+                  <button type="button" class="btn btn-primary" (click)="addComment()">Leave a Comment</button>
+              </div>
+        </div>
+        <div class="row">
+          <div ngFor="let c of news.comments">
+            <news-comment [comment]="c"></news-comment>
+          </div>
+        </div>
       </section>
     </div>
     <div class="col-3 sidebar">
       <h4>Categories related to this news</h4>
-        <ul class="list-group">
-            <li *ngFor="let c of news.categories" class="list-group-item d-flex justify-content-between align-items-center">
-              {{ c.name }}
-              <span class="badge badge-primary badge-pill">{{c.id}}</span>
-            </li>
-          </ul>
+      <ul class="list-group">
+        <li *ngFor="let c of news.categories" class="list-group-item d-flex justify-content-between align-items-center">
+          {{ c.name }}
+          <span class="badge badge-primary badge-pill">{{c.id}}</span>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

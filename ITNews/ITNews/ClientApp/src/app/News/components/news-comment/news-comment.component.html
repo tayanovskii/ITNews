@@ -1,4 +1,4 @@
-<div *ngIf="comment" class="comment">
+<ng-container *ngIf="comment" class="comment">
   <div class="comment-header">
     <ul class="list-inline">
       <li class="list-inline-item">
@@ -8,12 +8,9 @@
         added at {{ comment.modifiedAt | date:mediumDate}}
       </li>
       <li class="list-inline-item float-right">
-        <!-- <buttton class="btn-sm" (click)="addLike()">
-
-        </buttton> -->
-        <fa-icon [icon]="likeIcon"></fa-icon>
+        <fa-icon [icon]="likeIcon" (click)="addLike()"></fa-icon>
         <span class="like-count" >
-            comment.countLikes
+            {{comment.countLikes}}
         </span>
       </li>
     </ul>
@@ -21,4 +18,4 @@
   <div class="comment-content">
     {{ comment.content }}
   </div>
-</div>
+</ng-container>
