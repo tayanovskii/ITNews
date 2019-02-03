@@ -15,3 +15,7 @@ fa-icon.user {
   height: 25px;
   font-size: 25px;
 }
+
+div.comments-list {
+  margin-top: 50px;
+}

@@ -20,7 +20,7 @@ export class UserNewsComponent implements OnInit {
       this.newsServcie.getCardNewsByUserId(id)
         .subscribe(res => {
           this.userNews = res;
-          console.log('user\'s news' + JSON.stringify(this.userNews));
+          // console.log('user\'s news' + JSON.stringify(this.userNews));
         }, error => console.log(error));
     }
   }

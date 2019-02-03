@@ -24,8 +24,8 @@
             <fa-icon [icon]="commentSortIcon"></fa-icon>
             <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Sort</button>
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-              <button class="dropdown-item">First new</button>
-              <button class="dropdown-item">First popular</button>
+              <button class="dropdown-item" (click)="sortByDate()">First new</button>
+              <button class="dropdown-item" (click)="sortByLikes()">First popular</button>
             </div>
           </div>
         </div>
@@ -35,16 +35,16 @@
                     <div style="text-align:center">
                         <fa-icon class="user" [icon]="userIcon"></fa-icon>
                     </div>
-                    <textarea [(ngModel)]="currentComment" #commentForm=ngModel name="commentTextarea" class="form-control" id="commentTextarea" rows="1"></textarea>
+                    <textarea [(ngModel)]="currentComment" #commentForm=ngModel name="commentTextarea" class="form-control" id="commentTextarea" placeholder="Leave your comment" rows="1"></textarea>
                 </div>
               </div>
               <div class="float-right">
                   <button type="button" class="btn btn-light">Cancel</button>
-                  <button type="button" class="btn btn-primary" (click)="addComment()">Leave a Comment</button>
+                  <button type="button" class="btn btn-primary" [disabled]="!currentComment" (click)="addComment()">Leave a Comment</button>
               </div>
         </div>
-        <div class="row">
-          <div ngFor="let c of news.comments">
+        <div *ngIf="news.comments.length > 0" class="comments-list">
+          <div *ngFor="let c of news.comments">
             <news-comment [comment]="c"></news-comment>
           </div>
         </div>

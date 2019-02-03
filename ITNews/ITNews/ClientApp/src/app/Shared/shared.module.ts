@@ -67,6 +67,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     FormsModule,
     FontAwesomeModule,
+    BrowserModule,
     HttpClientModule,
     NgbModule.forRoot().ngModule,
     UserCardComponent,

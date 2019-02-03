@@ -1,3 +1,4 @@
+import { CommentService } from './services/comment.service';
 import { ViewNewsComponent } from './components/view-news/view-news.component';
 import { CreateNewsComponent } from './components/create-news/create-news.component';
 import { NgModule } from '@angular/core';
@@ -13,7 +14,6 @@ import { AuthGuard } from '../Shared/services/auth.guard';
 import { NewsSuccessSavingComponent } from '../News/components/success-news-saving/success-news-saving.component';
 import { NewsHeaderComponent } from '../News/components/news-header/news-header.component';
 import { NewsCommentComponent } from '../News/components/news-comment/news-comment.component';
-
 
 @NgModule({
   declarations: [
@@ -57,6 +57,9 @@ import { NewsCommentComponent } from '../News/components/news-comment/news-comme
       { path: 'news/success-create/:id', component: NewsSuccessSavingComponent },
       { path: 'news/view-news/:id', component: ViewNewsComponent}
     ])
+  ],
+  providers: [
+    CommentService
   ]
 })
 export class NewsModule { }
