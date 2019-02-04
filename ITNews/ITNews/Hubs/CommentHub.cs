@@ -16,6 +16,7 @@ namespace ITNews.Hubs
         {
             var httpContext = Context.GetHttpContext();
             string groupNameByNewsId = httpContext.Request.Query["newsId"].ToString();
+            Console.WriteLine("News ID->" + groupNameByNewsId);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupNameByNewsId);
             await base.OnConnectedAsync();
         }

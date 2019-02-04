@@ -1,0 +1,24 @@
+<div *ngIf="card" class="card news-card">
+  <div class="card-header">
+    <ul class="list-inline">
+      <li class="list-inline-item">
+          <user-card [user-card]="card.user"></user-card>
+      </li>
+      <li class="list-inline-item">
+          <small class="text-muted">Last updated {{card.modifiedAt | date}}</small>
+      </li>
+    </ul>
+    <div class="text-center">
+        <h5 class="card-title">{{ card.title }}</h5>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="card-text">{{card.description}}</p>
+  </div>
+  <div class="card-footer">
+    <a [routerLink]="['/news/view-news', card.id]" routerLinkActive="router-link-active" class="btn btn-outline-primary">Read
+        more</a>
+    <news-stat [stat]="card.newsStatistic" (changeRating)="changeRating($event)"></news-stat>
+  </div>
+</div>

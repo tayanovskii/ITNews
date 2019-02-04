@@ -44,7 +44,7 @@ export class ViewNewsComponent implements OnInit {
           console.log('Comments news-> ' + JSON.stringify(res.comments));
         }, error => console.log(error));
     }
-    this._hubConnection = new HubConnectionBuilder().withUrl(`https://localhost:5001/commentHub?newsId=${this.news.id}`).build();
+    this._hubConnection = new HubConnectionBuilder().withUrl(`https://localhost:5001/commentHub?newsId=${id}`).build();
     this._hubConnection
       .start()
       .then(() => console.log('Connection started!'))

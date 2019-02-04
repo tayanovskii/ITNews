@@ -4,7 +4,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NewsCard } from 'src/app/Shared/models/news-card';
 
 @Component({
-  selector: 'app-news-card-list',
+  // tslint:disable-next-line:component-selector
+  selector: 'news-card-list',
   templateUrl: './news-card-list.component.html',
   styleUrls: ['./news-card-list.component.css']
 })
@@ -20,10 +21,19 @@ export class NewsCardListComponent implements OnInit {
   }
 
   ngOnInit() {
-    // switch (class) {
-    //   case:
-    // }
-    // this.newsService.
+    switch (this.class) {
+      case 'latest':
+      default:
+        this.title = 'Latest News';
+        break;
+      case 'popular':
+        this.title = 'Most Popular News';
+    }
+    this.newsService.getNews()
+      .subscribe(res => {
+        console.log('News has been recieved');
+        this.news = res;
+      }, error => console.log(error));
   }
 
 }

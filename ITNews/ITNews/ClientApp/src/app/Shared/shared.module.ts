@@ -14,7 +14,6 @@ import { NewsService } from '../News/services/news.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PhotoService } from './services/photo-service';
-import { NewsCardComponent } from '../Shared/components/news-card/news-card.component';
 import { UserCardComponent } from '../Shared/components/user-card/user-card.component';
 import { NewsStatComponent } from '../Shared/components/news-stat/news-stat.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -22,7 +21,6 @@ import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    NewsCardComponent,
     UserCardComponent,
     NewsStatComponent],
   imports: [

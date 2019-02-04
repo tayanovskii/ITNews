@@ -26,7 +26,7 @@ export class NewsService {
     return this.http.get<SaveNews>(this.url + '/forEdit/' + newsId);
   }
   getNews() {
-    return this.http.get<SaveNews[]>(this.url);
+    return this.http.get<NewsCard[]>(this.url + '/listCardNews');
   }
 
   getCardNews() {}
