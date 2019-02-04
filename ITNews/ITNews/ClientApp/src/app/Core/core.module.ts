@@ -5,11 +5,13 @@ import { CommonModule } from '@angular/common';
 import { HomeComponent } from '../Core/components/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../Shared/shared.module';
+import { NewsCardListComponent } from '../Core/components/news-card-list/news-card-list.component';
 
 @NgModule({
   declarations: [
     AppNavMenuComponent,
-    HomeComponent
+    HomeComponent,
+    NewsCardListComponent
   ],
   imports: [
     SharedModule,

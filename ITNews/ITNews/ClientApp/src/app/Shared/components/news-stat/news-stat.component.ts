@@ -13,7 +13,7 @@ export class NewsStatComponent implements OnInit, OnChanges {
   @Output() changeRating: EventEmitter<any> = new EventEmitter();
   commentsIcon = faComments;
   eyeIco = faEye;
-  currentRate: number;
+  currentRate = 0;
   constructor() {
    }
   ngOnInit() {
@@ -21,7 +21,8 @@ export class NewsStatComponent implements OnInit, OnChanges {
   ngOnChanges() {
     this.currentRate = this.newsStat.rating;
   }
-  setRating(newRating: number) {
-     this.changeRating.emit(newRating);
+  setRating() {
+    console.log('Rating has been changed to ' + this.currentRate);
+    this.changeRating.emit(this.currentRate);
   }
 }

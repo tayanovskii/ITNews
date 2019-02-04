@@ -1,22 +1,32 @@
-  <ul class="list-inline news-stat">
-    <li class="list-inline-item news-rating">
-      <ngb-rating [rate]="3" [max]="5"></ngb-rating>
-      <span ngbTooltip="Number of ratings: {{ newsStat.ratingCount || 0}}" tooltipClass="visitorCount">
-         Current rating: {{ newsStat.rating |  number }}
+<ul class="list-inline news-stat">
+  <li class="list-inline-item news-rating">
+    <ng-template #t let-fill="fill">
+      <span class="star" [class.full]="fill === 100">
+        <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
       </span>
-    </li>
-    <li class="list-inline-item visitor-count">
-      <div style="text-align:center">
-        <fa-icon [icon]="eyeIco"></fa-icon>
-        <span ngbTooltip="Visitor count" tooltipClass="visitorCount">
-            {{ newsStat.visitorCount | number }}
-        </span>
-      </div>
-    </li>
-    <li class="list-inline-item comment-count">
-      <fa-icon [icon]="commentsIcon"></fa-icon>
-      <span ngbTooltip="Comment count" tooltipClass="commentCount">
-          {{ newsStat.commentCount | number }}
+    </ng-template>
+
+    <ngb-rating [(rate)]="this.newsStat.rating" [starTemplate]="t" [readonly]="true" max="5"></ngb-rating>
+    <span class="current-rating">
+        {{ newsStat.rating | number }} ({{newsStat.ratingCount || 0 | number}} votes)
+    </span>
+    <span>
+      Rate this:
+    </span>
+    <ngb-rating [(rate)]="currentRate" [starTemplate]="t" [readonly]="false" (rateChange)="setRating()" [max]="5"></ngb-rating>
+  </li>
+  <li class="list-inline-item visitor-count">
+    <div style="text-align:center">
+      <fa-icon [icon]="eyeIco"></fa-icon>
+      <span ngbTooltip="Visitor count" tooltipClass="visitorCount">
+        {{ newsStat.visitorCount | number }}
       </span>
-      </li>
-  </ul>
+    </div>
+  </li>
+  <li class="list-inline-item comment-count">
+    <fa-icon [icon]="commentsIcon"></fa-icon>
+    <span ngbTooltip="Comment count" tooltipClass="commentCount">
+      {{ newsStat.commentCount | number }}
+    </span>
+  </li>
+</ul>

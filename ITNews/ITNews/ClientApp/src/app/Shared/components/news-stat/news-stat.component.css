@@ -1,15 +1,22 @@
+
 .star {
-  font-size: 1.5rem;
-  color: #b0c4de;
+  position: relative;
+  display: inline-block;
+  font-size: 2rem;
+  color: #d3d3d3;
 }
-.filled {
+.full {
   color: #1e90ff;
 }
-.bad {
-  color: #deb0b0;
+.half {
+  position: absolute;
+  display: inline-block;
+  overflow: hidden;
+  color: #1e90ff;
 }
-.filled.bad {
-  color: #ff1e1e;
+span.current-rating {
+  margin-left: 5px;
+  margin-right: 15px;
 }
 
 .visitorCount .tooltip-inner {
