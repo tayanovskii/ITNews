@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.NewsDto
 {
     public class CreateNewsDto
     {

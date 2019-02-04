@@ -12,6 +12,7 @@ using ITNews.Configurations;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.DTO;
+using ITNews.DTO.AccountDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

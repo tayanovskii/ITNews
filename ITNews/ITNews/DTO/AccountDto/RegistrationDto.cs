@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.AccountDto
 {
     public class RegistrationDto
     {

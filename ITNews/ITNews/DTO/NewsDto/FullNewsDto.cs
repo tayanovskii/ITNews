@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ITNews.DTO.UserDto;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.NewsDto
 {
     public class FullNewsDto
     {
@@ -18,7 +17,7 @@ namespace ITNews.DTO
         public NewsStatisticDto NewsStatistic { get; set; }
         public IEnumerable<TagDto> Tags { get; set; }
         public IEnumerable<CategoryDto> Categories { get; set; }
-        public IEnumerable<CommentDto> Comments { get; set; }
+        public IEnumerable<CommentDto.CommentDto> Comments { get; set; }
         public double Rating { get; set; }
     }
 }

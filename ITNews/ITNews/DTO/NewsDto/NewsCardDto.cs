@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ITNews.DTO.UserDto;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.NewsDto
 {
     public class NewsCardDto
     {

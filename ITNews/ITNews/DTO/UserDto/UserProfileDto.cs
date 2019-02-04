@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.UserDto
 {
     public class UserProfileDto
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public UserDto User { get; set; }
+        public DTO.UserDto.UserDto User { get; set; }
         public string Avatar { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

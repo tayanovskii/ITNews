@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using ITNews.Data.Entities;
+using ITNews.DTO.UserDto;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.CommentDto
 {
     public class CommentDto
     {

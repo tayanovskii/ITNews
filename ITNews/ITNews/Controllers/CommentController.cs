@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.DTO;
+using ITNews.DTO.CommentDto;
 using ITNews.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
@@ -52,39 +54,45 @@ namespace ITNews.Controllers
         }
 
         // PUT: api/Comment/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutComment([FromRoute] int id, [FromBody] Comment comment)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutComment([FromRoute] int id, [FromBody] EditCommentDto editCommentDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    if (id != comment.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+            var editComment = await context.Comments.SingleOrDefaultAsync(comment => comment.Id == id);
 
-        //    context.Entry(comment).State = EntityState.Modified;
+            if (id != editComment.Id)
+            {
+                return BadRequest();
+            }
 
-        //    try
-        //    {
-        //        await context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!CommentExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            mapper.Map(editCommentDto, editComment);
+            editComment.ModifiedAt = DateTime.Now;
+            context.Entry(editComment).State = EntityState.Modified;
 
-        //    return NoContent();
-        //}
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CommentExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
+                }
+            }
+            context.Entry(editComment).Reference(c => c.User).Load();
+            var commentFromDataBase = mapper.Map<Comment, CommentDto>(editComment);
+            await hubContext.Clients.All.SendAsync("EditComment", commentFromDataBase);
+            return NoContent();
+        }
 
         // POST: api/Comment
         [HttpPost]
@@ -106,7 +114,7 @@ namespace ITNews.Controllers
                    
             var commentFromDataBase = mapper.Map<Comment,CommentDto>(comment);
 
-            await hubContext.Clients.All.SendAsync("AddComment", commentFromDataBase);
+            await hubContext.Clients.Group(commentFromDataBase.NewsId.ToString()).SendAsync("AddComment", commentFromDataBase);
 
             return CreatedAtRoute(new { id = comment.Id }, commentFromDataBase);
         }

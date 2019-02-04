@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.UserDto
 {
     public class UserDto
     {

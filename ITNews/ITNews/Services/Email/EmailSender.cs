@@ -1,39 +1,31 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using ITNews.Configurations;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Options;
 
 namespace ITNews.Services.Email
 {
     public class EmailSender:IEmailSender
     {
-        // Our private configuration variables
-        private readonly string host;
-        private readonly int port;
-        private readonly bool enableSSL;
-        private readonly string userName;
-        private readonly string password;
+        private readonly EmailSettings emailSettings;
 
-        // Get our parameterized configuration
-        public EmailSender(string host, int port, bool enableSSL, string userName, string password)
+        public EmailSender(IOptionsSnapshot<EmailSettings> options)
         {
-            this.host = host;
-            this.port = port;
-            this.enableSSL = enableSSL;
-            this.userName = userName;
-            this.password = password;
+            emailSettings = options.Value;
         }
 
         // Use our configuration to send the email by using SmtpClient
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var client = new SmtpClient(host, port)
+            var client = new SmtpClient(emailSettings.Host, emailSettings.Port)
             {
-                Credentials = new NetworkCredential(userName, password),
-                EnableSsl = enableSSL
+                Credentials = new NetworkCredential(emailSettings.UserEmail, emailSettings.Password),
+                EnableSsl = emailSettings.EnableSSL
             };
             return client.SendMailAsync(
-                new MailMessage(userName, email, subject, htmlMessage) { IsBodyHtml = true }
+                new MailMessage(emailSettings.UserEmail, email, subject, htmlMessage) { IsBodyHtml = true }
             );
         }
     }

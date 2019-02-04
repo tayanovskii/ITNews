@@ -52,16 +52,19 @@ namespace ITNews
                 .AddDefaultTokenProviders();
 
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSender"));
 
-            services.AddTransient<IEmailSender, EmailService>(i =>
-                new EmailService(
-                    Configuration["EmailSender:Host"],
-                    Configuration.GetValue<int>("EmailSender:Port"),
-                    Configuration.GetValue<bool>("EmailSender:EnableSSL"),
-                    Configuration["EmailSender:UserEmail"],
-                    Configuration["EmailSender:Password"]
-                )
-            );
+            services.AddTransient<IEmailSender, EmailService>();
+
+            //services.AddTransient<IEmailSender, EmailService>(i =>
+            //    new EmailService(
+            //        Configuration["EmailSender:Host"],
+            //        Configuration.GetValue<int>("EmailSender:Port"),
+            //        Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+            //        Configuration["EmailSender:UserEmail"],
+            //        Configuration["EmailSender:Password"]
+            //    )
+            //);
 
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
