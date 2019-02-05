@@ -9,7 +9,6 @@ namespace ITNews.DTO.NewsDto
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public long VisitorCount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public string MarkDown { get; set; }
@@ -18,6 +17,7 @@ namespace ITNews.DTO.NewsDto
         public IEnumerable<TagDto> Tags { get; set; }
         public IEnumerable<CategoryDto> Categories { get; set; }
         public IEnumerable<CommentDto.CommentDto> Comments { get; set; }
-        public double Rating { get; set; }
+        public bool IsNewsRatedByUser { get; set; }
+        public IEnumerable<int> CommentsLikedByUser { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.LastName, opt => opt.MapFrom(profile => profile.LastName))
                 .ForMember(dto => dto.Specialization, opt => opt.MapFrom(profile => profile.Specialization))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(profile => profile.UserId))
+                .ForMember(dto => dto.UserName, opt => opt.MapFrom(profile => profile.User.UserName))
                 .ReverseMap();
 
             CreateMap<ApplicationUser, UserMiniCardDto>()

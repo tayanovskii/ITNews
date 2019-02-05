@@ -54,22 +54,16 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(news => news.CreatedAt))
                 .ForMember(dto => dto.ModifiedAt, opt => opt.MapFrom(news => news.ModifiedAt))
                 .ForMember(dto => dto.Title, opt => opt.MapFrom(news => news.Title))
-                .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
                 .ForMember(dto => dto.UserMiniCardDto, opt => opt.MapFrom(news => news.User))
                 .ForMember(dto => dto.Comments, opt => opt.MapFrom(news => news.Comments))
                 .ForMember(dto => dto.MarkDown, opt => opt.MapFrom(news => news.MarkDown))
                 .ForMember(dto => dto.NewsStatistic, opt => opt.MapFrom(news => news))
                 .ForMember(dto => dto.Categories, opt => opt.Ignore())
                 .ForMember(dto => dto.Tags, opt => opt.Ignore())
-                .ForMember(dto => dto.Rating, opt => opt.Ignore())
                 .AfterMap((news, dto) =>
                 {
                     dto.Tags = news.NewsTags.Select(tag => new TagDto() { Id = tag.TagId, Name = tag.Tag.Name });
                     dto.Categories = news.NewsCategories.Select(category => new CategoryDto() { Id = category.CategoryId, Name = category.Category.Name });
-                    if (news.Ratings != null && news.Ratings.Any())
-                    {
-                        dto.Rating = news.Ratings.Average(rating => rating.Value);
-                    }
                 });
 
             CreateMap<News, EditNewsDto>()

@@ -37,10 +37,10 @@ namespace ITNews.Controllers
         public IEnumerable<NewsCardDto> GetCardNews()
         {
             var listNews = context.News
-                .Include(news => news.User)
+                .Include(news => news.User).ThenInclude(user => user.CommentLikes)
                 .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
                 .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
-                .Include(news => news.Comments)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings);
             var listNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listNews);
             return listNewsCardDto;
@@ -58,8 +58,8 @@ namespace ITNews.Controllers
             }
 
             var findNews = await context.News
-                .Include(news => news.User)
-                .Include(news => news.Comments)
+                .Include(news => news.User).ThenInclude(user => user.CommentLikes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
                 .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                 .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
@@ -69,7 +69,7 @@ namespace ITNews.Controllers
             {
                 return NotFound();
             }
-
+            //todo visitorCount hub
             findNews.VisitorCount++;
             await context.SaveChangesAsync();
             var findNewsDto = mapper.Map<News,FullNewsDto>(findNews);
@@ -113,8 +113,8 @@ namespace ITNews.Controllers
             }
 
             var listFindNews = context.News
-                    .Include(news => news.User)
-                    .Include(news => news.Comments)
+                    .Include(news => news.User).ThenInclude(user => user.CommentLikes)
+                    .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
                     .Include(news => news.Ratings)
                     .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                     .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
@@ -130,8 +130,8 @@ namespace ITNews.Controllers
         public IActionResult GetNewsByTad ([FromRoute] int tagId)
         {
             var listFindNews = context.News
-                .Include(news => news.User)
-                .Include(news => news.Comments)
+                .Include(news => news.User).ThenInclude(user => user.CommentLikes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
                 .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                 .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
@@ -148,8 +148,8 @@ namespace ITNews.Controllers
         public IActionResult GetNewsByCategory([FromRoute] int categoryId)
         {
             var listFindNews = context.News
-                .Include(news => news.User)
-                .Include(news => news.Comments)
+                .Include(news => news.User).ThenInclude(user => user.CommentLikes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
                 .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                 .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
