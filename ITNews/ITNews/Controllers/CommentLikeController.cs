@@ -29,43 +29,43 @@ namespace ITNews.Controllers
             this.hubContext = hubContext;
         }
 
-        // GET: api/CommentLike/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCommentLike([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// GET: api/CommentLike/5
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetCommentLike([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var commentLike = await context.CommentLikes.FindAsync(id);
-            if (commentLike == null)
-            {
-                return NotFound();
-            }
-            var commentLikeDto = mapper.Map<CommentLike,CommentLikeDto>(commentLike);
-            return Ok(commentLikeDto);
-        }
+        //    var commentLike = await context.CommentLikes.FindAsync(id);
+        //    if (commentLike == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var commentLikeDto = mapper.Map<CommentLike,CommentLikeDto>(commentLike);
+        //    return Ok(commentLikeDto);
+        //}
 
 
-        // POST: api/CommentLike
-        [HttpPost]
-        public async Task<IActionResult> PostCommentLike([FromBody] CommentLikeDto commentLikeDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            //todo correct
-            var newCommentLike = mapper.Map<CommentLikeDto,CommentLike>(commentLikeDto);
-            context.CommentLikes.Add(newCommentLike);
-            await context.SaveChangesAsync();
-            mapper.Map(newCommentLike, commentLikeDto);
-            await hubContext.Clients.Group(newCommentLike.ToString()).SendAsync("AddCommentLike", );
-            var userCountLikes = new {userId = 1, countLike = 2};
-            await hubContext.Clients.All.SendAsync("IncreaseUserCountLikes", userCountLikes);
-            return CreatedAtRoute( new { id = newCommentLike.Id }, commentLikeDto);
-        }
+        //// POST: api/CommentLike
+        //[HttpPost]
+        //public async Task<IActionResult> PostCommentLike([FromBody] CommentLikeDto commentLikeDto)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    //todo correct
+        //    var newCommentLike = mapper.Map<CommentLikeDto,CommentLike>(commentLikeDto);
+        //    context.CommentLikes.Add(newCommentLike);
+        //    await context.SaveChangesAsync();
+        //    mapper.Map(newCommentLike, commentLikeDto);
+        //    await hubContext.Clients.Group(newCommentLike.ToString()).SendAsync("AddCommentLike", );
+        //    var userCountLikes = new {userId = 1, countLike = 2};
+        //    await hubContext.Clients.All.SendAsync("IncreaseUserCountLikes", userCountLikes);
+        //    return CreatedAtRoute( new { id = newCommentLike.Id }, commentLikeDto);
+        //}
 
         //// PUT: api/CommentLike/5
         //[HttpPut("{id}")]

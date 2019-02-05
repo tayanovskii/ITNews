@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ITNews.Data.Entities;
 using ITNews.DTO;
+using ITNews.DTO.CommentLikeDto;
 
 namespace ITNews.Mapping
 {
@@ -12,10 +13,10 @@ namespace ITNews.Mapping
     {
         public CommentLikeProfile()
         {
-            CreateMap<CommentLike, CommentLikeDto>()
-                .ForMember(dto => dto.CommentId, opt => opt.MapFrom(like => like.CommentId))
-                .ForMember(dto => dto.UserId, opt => opt.MapFrom(like => like.UserId))
-                .ReverseMap();
+            //CreateMap<CommentLike, CommentLikeDto>()
+            //    .ForMember(dto => dto.CommentId, opt => opt.MapFrom(like => like.CommentId))
+            //    .ForMember(dto => dto.UserId, opt => opt.MapFrom(like => like.UserId))
+            //    .ReverseMap();
         }
     }
 }
