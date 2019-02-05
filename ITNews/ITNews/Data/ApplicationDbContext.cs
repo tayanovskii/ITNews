@@ -92,8 +92,5 @@ namespace ITNews.Data
             userProfile.Property(u => u.FirstName);
             userProfile.Property(u => u.LastName);
         }
-
-
-
     }
 }

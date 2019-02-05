@@ -56,16 +56,6 @@ namespace ITNews
 
             services.AddTransient<IEmailSender, EmailService>();
 
-            //services.AddTransient<IEmailSender, EmailService>(i =>
-            //    new EmailService(
-            //        Configuration["EmailSender:Host"],
-            //        Configuration.GetValue<int>("EmailSender:Port"),
-            //        Configuration.GetValue<bool>("EmailSender:EnableSSL"),
-            //        Configuration["EmailSender:UserEmail"],
-            //        Configuration["EmailSender:Password"]
-            //    )
-            //);
-
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
             services.AddTransient<ITagService, TagService>();
@@ -132,6 +122,7 @@ namespace ITNews
             app.UseSignalR(routes =>
             {
                 routes.MapHub<CommentHub>("/commentHub");
+                routes.MapHub<RatingHub>("/ratingHub");
             });
 
             app.UseMvc(routes =>
