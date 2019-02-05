@@ -115,6 +115,9 @@ namespace ITNews.Controllers
             var commentFromDataBase = mapper.Map<Comment,CommentDto>(comment);
 
             await hubContext.Clients.Group(commentFromDataBase.NewsId.ToString()).SendAsync("AddComment", commentFromDataBase);
+            var commentCountCurrentNews = context.Comments.Count(c => c.NewsId == commentFromDataBase.NewsId);
+            var increaseCommentCountDto = new {newsId = commentFromDataBase.NewsId, commentCount = commentCountCurrentNews};
+            await hubContext.Clients.All.SendAsync("IncreaseCommentCount", increaseCommentCountDto);
 
             return CreatedAtRoute(new { id = comment.Id }, commentFromDataBase);
         }

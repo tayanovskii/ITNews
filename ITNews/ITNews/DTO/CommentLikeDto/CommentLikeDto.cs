@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITNews.DTO
+namespace ITNews.DTO.CommentLikeDto
 {
     public class CommentLikeDto
     {
-        public int Id { get; set; }
         public int CommentId { get; set; }
-        public string UserId { get; set; }
+        public int CountLike { get; set; }
+        public int NewsId { get; set; }
     }
 }

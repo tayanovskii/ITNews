@@ -18,12 +18,6 @@ namespace ITNews.Mapping
                 .ForMember(rating => rating.UserId, opt => opt.MapFrom(dto => dto.UserId))
                 .ForAllOtherMembers(opt => opt.Ignore());
 
-            CreateMap<Rating, RatingDto>()
-                .ForMember(dto => dto.Value, opt => opt.MapFrom(rating => rating.Value))
-                .ForMember(dto => dto.NewsId, opt => opt.MapFrom(rating => rating.NewsId))
-                .ForMember(dto => dto.UserId, opt => opt.MapFrom(rating => rating.UserId))
-                .ReverseMap();
-
         }
     }
 }

@@ -69,7 +69,7 @@ namespace ITNews.Controllers
             {
                 return NotFound();
             }
-
+            //todo visitorCount hub
             findNews.VisitorCount++;
             await context.SaveChangesAsync();
             var findNewsDto = mapper.Map<News,FullNewsDto>(findNews);

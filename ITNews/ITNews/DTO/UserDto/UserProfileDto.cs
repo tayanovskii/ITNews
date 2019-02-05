@@ -6,7 +6,7 @@ namespace ITNews.DTO.UserDto
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public DTO.UserDto.UserDto User { get; set; }
+        public string UserName { get; set; }
         public string Avatar { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

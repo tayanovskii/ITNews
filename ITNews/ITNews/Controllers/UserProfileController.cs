@@ -31,7 +31,7 @@ namespace ITNews.Controllers
         [HttpGet]
         public IEnumerable<UserProfileDto> GetUserProfile()
         {
-            var listUserProfiles = context.UserProfile;
+            var listUserProfiles = context.UserProfile.Include(profile => profile.User);
             var listUserProfileDto = mapper.Map<IEnumerable<UserProfile>,IEnumerable<UserProfileDto>>(listUserProfiles);
             return listUserProfileDto;
         }
@@ -45,7 +45,9 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userProfile = await context.UserProfile.FindAsync(id);
+            var userProfile = await context.UserProfile
+                .Include(profile => profile.User)
+                .SingleOrDefaultAsync(profile => profile.Id==id);
 
             if (userProfile == null)
             {
@@ -65,7 +67,9 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userProfile = await context.UserProfile.SingleOrDefaultAsync(profile => profile.UserId == userId);
+            var userProfile = await context.UserProfile
+                .Include(profile => profile.User)
+                .SingleOrDefaultAsync(profile => profile.UserId == userId);
 
             if (userProfile == null)
             {

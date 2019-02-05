@@ -90,13 +90,17 @@ namespace ITNews.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var newRating = mapper.Map<CreateRatingDto, Rating>(createRatingDto);   
             context.Ratings.Add(newRating);
             await context.SaveChangesAsync();
-            var ratingDtoFromDataBase = mapper.Map<Rating,RatingDto>(newRating);
-            await hubContext.Clients.All.SendAsync("AddRating", ratingDtoFromDataBase);
-            return CreatedAtRoute(new { id = ratingDtoFromDataBase.Id }, ratingDtoFromDataBase);
+
+            var ratingDto = new RatingDto {NewsId = newRating.NewsId};
+            var listRatingsByNews =context.Ratings.Where(rating => rating.NewsId == newRating.NewsId);
+            ratingDto.Rating = await listRatingsByNews.AverageAsync(rating => rating.Value);
+            ratingDto.RatingCount = await listRatingsByNews.CountAsync();
+
+            await hubContext.Clients.All.SendAsync("AddRating", ratingDto);
+            return CreatedAtRoute(new { id = newRating.Id }, ratingDto);
         }
 
         // DELETE: api/Rating/5

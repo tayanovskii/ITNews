@@ -56,11 +56,14 @@ namespace ITNews.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            //todo correct
             var newCommentLike = mapper.Map<CommentLikeDto,CommentLike>(commentLikeDto);
             context.CommentLikes.Add(newCommentLike);
             await context.SaveChangesAsync();
-            await hubContext.Clients.Group(newCommentLike.Id.ToString()).SendAsync("AddCommentLike");
+            mapper.Map(newCommentLike, commentLikeDto);
+            await hubContext.Clients.Group(newCommentLike.ToString()).SendAsync("AddCommentLike", );
+            var userCountLikes = new {userId = 1, countLike = 2};
+            await hubContext.Clients.All.SendAsync("IncreaseUserCountLikes", userCountLikes);
             return CreatedAtRoute( new { id = newCommentLike.Id }, commentLikeDto);
         }
 
