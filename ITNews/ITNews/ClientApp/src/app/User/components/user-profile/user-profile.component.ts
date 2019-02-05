@@ -1,3 +1,5 @@
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/Shared/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-
-  constructor() { }
+  user: User;
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+
   }
 
 }

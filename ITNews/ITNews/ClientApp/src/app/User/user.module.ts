@@ -10,6 +10,10 @@ import { UserProfileComponent } from '../User/components/user-profile/user-profi
 import { ProfilesComponent } from '../User/components/profiles/profiles.component';
 import { MyNewsComponent } from '../User/components/my-news/my-news.component';
 import { EditProfileComponent } from '../User/components/edit-profile/edit-profile.component';
+
+export function getBaseUrl() {
+  return document.getElementsByTagName('base')[0].href;
+}
 @NgModule({
   declarations: [
     LoginComponent,
@@ -35,6 +39,12 @@ import { EditProfileComponent } from '../User/components/edit-profile/edit-profi
   exports: [
     RouterModule
   ],
-  providers: [AuthService]
+  providers: [
+    AuthService,
+    {
+      provide: 'BASE_URL',
+      useFactory: getBaseUrl
+    },
+  ]
 })
 export class UserModule { }
