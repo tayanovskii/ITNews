@@ -18,6 +18,9 @@ import { UserCardComponent } from '../Shared/components/user-card/user-card.comp
 import { NewsStatComponent } from '../Shared/components/news-stat/news-stat.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
+export function getBaseUrl() {
+  return document.getElementsByTagName('base')[0].href;
+}
 
 @NgModule({
   declarations: [
@@ -49,8 +52,12 @@ import { RouterModule } from '@angular/router';
     CategoryService,
     AuthGuard,
     {
-      provide: 'BASE_URL',
+      provide: 'BASE_URL2',
       useValue: 'https://localhost:5001/',
+    },
+    {
+      provide: 'BASE_URL',
+      useFactory: getBaseUrl
     },
     { provide: 'TOKEN',
       useValue: 'ITNews_access_token'

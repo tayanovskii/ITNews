@@ -1,4 +1,8 @@
-
+ul.news-stat {
+  border: 1px solid rgb(0, 119, 255);
+  margin-top: 30px;
+  vertical-align: middle;
+}
 .star {
   position: relative;
   display: inline-block;
@@ -25,11 +29,6 @@ span.current-rating {
 }
 .visitorCount .arrow::before {
   border-top-color: darkblue;
-}
-
-ul.news-stat {
-  border: 1px darkblue;
-  margin-top: 20px;
 }
 
 .news-rating, .visitor-count, .comment-count {

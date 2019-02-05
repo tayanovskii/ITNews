@@ -10,6 +10,7 @@ import { faComments, faEye } from '@fortawesome/free-solid-svg-icons';
 export class NewsStatComponent implements OnInit, OnChanges {
   // tslint:disable-next-line:no-input-rename
   @Input('stat') newsStat: NewsStat;
+  @Input() canVote: boolean;
   @Output() changeRating: EventEmitter<any> = new EventEmitter();
   commentsIcon = faComments;
   eyeIco = faEye;
