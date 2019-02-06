@@ -8,16 +8,16 @@ export class UserProfileService {
     @Inject('BASE_URL') private baseUrl: string,
     private http: HttpClient
   ) {
-    this.url += 'api/userProfile';
+    this.url = baseUrl + 'api/userProfile';
   }
-  getUserProfile(id: number) {
-    return this.http.get(this.url + `/${id}`);
+  getUserProfileById(id: number) {
+    return this.http.get<UserProfile>(this.url + `/${id}`);
   }
   getUserProfiles() {
-    return this.http.get(this.url);
+    return this.http.get<UserProfile[]>(this.url);
   }
   getUserProfileByUser(userId: string) {
-    return this.http.get(this.url + `/byUser/${userId}`);
+    return this.http.get<UserProfile>(this.url + `/byUser/${userId}`);
   }
   changeUserProfile(userProfile: UserProfile, id: number) {
     return this.http.put(this.url + `/${id}`, userProfile);

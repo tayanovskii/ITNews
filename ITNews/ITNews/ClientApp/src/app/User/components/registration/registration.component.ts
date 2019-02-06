@@ -27,6 +27,6 @@ export class RegistrationComponent implements OnInit {
         console.log(result);
         alert(result);
         this.router.navigate(['/']);
-      }, (error: HttpErrorResponse) => console.log('error status -> ' +  error.status));
+      }, (error: HttpErrorResponse) => console.log(error));
   }
 }
