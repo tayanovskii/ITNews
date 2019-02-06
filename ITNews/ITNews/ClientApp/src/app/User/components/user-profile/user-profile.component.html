@@ -1,4 +1,60 @@
-<p>
-  user-profile works!
-</p>
-
+<h3 class="text-center">
+  User Profile Info!
+</h3>
+<div class="row user-profile-content">
+  <div class="col">
+    <div *ngIf="userName" class="account-info">
+      <p>
+          UserName: {{ userName }}
+      </p>
+    </div>
+    <!-- <user-card [user-card]=""></user-card> -->
+  </div>
+  <div class="col">
+    <div *ngIf="profile else notExistProfile" class="card">
+      <img *ngIf="profile.avatar" class="card-img-top" [src]="profile.avatar" alt="{{ profile.userId }}">
+      <div class="card-body">
+        <h4 class="card-title">Profile Info</h4>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            First Name
+            <div class="float-right">
+              {{ profile.firstName }}
+            </div>
+          </li>
+          <li class="list-group-item">
+            Last Name
+            <div class="float-right">
+              {{ profile.lastName }}
+            </div>
+          </li>
+          <li class="list-group-item">
+            Birth Day
+            <div class="float-right">
+              {{ profile.birthDay | date:mediumDate }}
+            </div>
+          </li>
+          <li class="list-group-item">
+            Specialization
+            <div class="float-right">
+              {{ profile.specialization }}
+            </div>
+          </li>
+          <li class="list-group-item font-weight-bold">
+            Contact
+            <div class="float-right">
+              {{ cart.country}}
+            </div>
+            <div class="float-right">
+              {{ cart.city }}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <ng-template #notExistProfile>
+      <h6>Profile doesn't exist yet</h6>
+      <a class="btn btn-primary" [routerLink]="['/user/create-profile']" routerLinkActive="router-link-active">Create</a>
+    </ng-template>
+  </div>
+</div>

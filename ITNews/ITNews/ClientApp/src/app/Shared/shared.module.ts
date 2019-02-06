@@ -73,6 +73,7 @@ export function getBaseUrl() {
     FormsModule,
     FontAwesomeModule,
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     NgbModule.forRoot().ngModule,
     UserCardComponent,

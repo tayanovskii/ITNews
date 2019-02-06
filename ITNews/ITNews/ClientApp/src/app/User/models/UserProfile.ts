@@ -1,5 +1,5 @@
 interface UserProfile {
-  id: number;
+  id?: number;
   userId: string;
   firstName: string;
   lastName: string;

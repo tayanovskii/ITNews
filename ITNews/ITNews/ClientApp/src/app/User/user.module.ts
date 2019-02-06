@@ -9,7 +9,10 @@ import { ChangePasswordComponent } from '../User/components/change-password/chan
 import { UserProfileComponent } from '../User/components/user-profile/user-profile.component';
 import { ProfilesComponent } from '../User/components/profiles/profiles.component';
 import { MyNewsComponent } from '../User/components/my-news/my-news.component';
-import { EditProfileComponent } from '../User/components/edit-profile/edit-profile.component';
+import { UserProfileService } from './services/user-profile.service';
+import { CreateProfileComponent } from '../User/components/create-profile/create-profile.component';
+import { FileUploadModule } from 'primeng/fileupload';
+
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -22,15 +25,17 @@ export function getBaseUrl() {
     UserProfileComponent,
     ProfilesComponent,
     MyNewsComponent,
-    EditProfileComponent,
-    UserNewsComponent
+    UserNewsComponent,
+    CreateProfileComponent
   ],
   imports: [
     SharedModule,
+    FileUploadModule,
     RouterModule.forChild([
       { path: 'user', component: LoginComponent },
       { path: 'user/login', component: LoginComponent},
       { path: 'user/profiles/:userName', component: UserProfileComponent },
+      { path: 'user/create-profile', component: CreateProfileComponent },
       { path: 'user/user-news/:id', component: UserNewsComponent},
       { path: 'user/registration', component: RegistrationComponent},
       { path: 'user/change-password', component: ChangePasswordComponent }
@@ -41,6 +46,7 @@ export function getBaseUrl() {
   ],
   providers: [
     AuthService,
+    UserProfileService,
     {
       provide: 'BASE_URL',
       useFactory: getBaseUrl
