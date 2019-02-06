@@ -9,6 +9,5 @@ namespace ITNews.DTO.CommentLikeDto
     {
         public int CommentId { get; set; }
         public int CountLike { get; set; }
-        public int NewsId { get; set; }
     }
 }

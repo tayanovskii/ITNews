@@ -13,10 +13,11 @@ namespace ITNews.Mapping
     {
         public CommentLikeProfile()
         {
-            //CreateMap<CommentLike, CommentLikeDto>()
-            //    .ForMember(dto => dto.CommentId, opt => opt.MapFrom(like => like.CommentId))
-            //    .ForMember(dto => dto.UserId, opt => opt.MapFrom(like => like.UserId))
-            //    .ReverseMap();
+            CreateMap<CommentLike, CreateCommentLikeDto>()
+                .ForMember(dto => dto.CommentId, opt => opt.MapFrom(like => like.CommentId))
+                .ForMember(dto => dto.UserId, opt => opt.MapFrom(like => like.UserId))
+                .ReverseMap()
+                .ForAllOtherMembers(opt=>opt.Ignore());
         }
     }
 }

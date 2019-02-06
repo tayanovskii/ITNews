@@ -17,7 +17,6 @@ namespace ITNews.Mapping
                 .ForMember(rating => rating.Value, opt => opt.MapFrom(dto => dto.Value))
                 .ForMember(rating => rating.UserId, opt => opt.MapFrom(dto => dto.UserId))
                 .ForAllOtherMembers(opt => opt.Ignore());
-
         }
     }
 }

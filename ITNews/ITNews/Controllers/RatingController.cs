@@ -20,13 +20,11 @@ namespace ITNews.Controllers
     public class RatingController : ControllerBase
     {
         private readonly ApplicationDbContext context;
-        private IHubContext<RatingHub> hubContext;
         private readonly IMapper mapper;
-        public RatingController(ApplicationDbContext context, IMapper mapper, IHubContext<RatingHub> hubContext)
+        public RatingController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
-            this.hubContext = hubContext;
         }
 
         // GET: api/Rating/5
@@ -99,7 +97,6 @@ namespace ITNews.Controllers
             ratingDto.Rating = await listRatingsByNews.AverageAsync(rating => rating.Value);
             ratingDto.RatingCount = await listRatingsByNews.CountAsync();
 
-            await hubContext.Clients.All.SendAsync("AddRating", ratingDto);
             return CreatedAtRoute(new { id = newRating.Id }, ratingDto);
         }
 

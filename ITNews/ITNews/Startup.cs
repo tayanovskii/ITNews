@@ -122,7 +122,6 @@ namespace ITNews
             app.UseSignalR(routes =>
             {
                 routes.MapHub<CommentHub>("/commentHub");
-                routes.MapHub<RatingHub>("/ratingHub");
             });
 
             app.UseMvc(routes =>

@@ -32,7 +32,7 @@ namespace ITNews.Mapping
             CreateMap<News, NewsStatisticDto>()
                 .ForMember(dto => dto.VisitorCount, opt => opt.MapFrom(news => news.VisitorCount))
                 .ForMember(dto => dto.CommentCount, opt => opt.Ignore())
-                .ForMember(dto => dto.RatingCount, opt => opt.Ignore())
+                .ForMember(dto => dto.Rating, opt => opt.Ignore())
                 .ForMember(dto => dto.RatingCount, opt => opt.Ignore())
                 .AfterMap((news, dto) =>
                 {

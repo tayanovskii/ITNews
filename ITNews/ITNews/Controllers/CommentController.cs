@@ -89,8 +89,8 @@ namespace ITNews.Controllers
                 }
             }
             context.Entry(editComment).Reference(c => c.User).Load();
-            var commentFromDataBase = mapper.Map<Comment, CommentDto>(editComment);
-            await hubContext.Clients.All.SendAsync("EditComment", commentFromDataBase);
+            var commentDtoFromDataBase = mapper.Map<Comment, CommentDto>(editComment);
+            await hubContext.Clients.Group(commentDtoFromDataBase.NewsId.ToString()).SendAsync("EditComment", commentDtoFromDataBase);
             return NoContent();
         }
 
@@ -112,14 +112,11 @@ namespace ITNews.Controllers
             
             context.Entry(comment).Reference(c => c.User).Load();
                    
-            var commentFromDataBase = mapper.Map<Comment,CommentDto>(comment);
+            var commentDtoFromDataBase = mapper.Map<Comment,CommentDto>(comment);
 
-            await hubContext.Clients.Group(commentFromDataBase.NewsId.ToString()).SendAsync("AddComment", commentFromDataBase);
-            var commentCountCurrentNews = context.Comments.Count(c => c.NewsId == commentFromDataBase.NewsId);
-            var increaseCommentCountDto = new {newsId = commentFromDataBase.NewsId, commentCount = commentCountCurrentNews};
-            await hubContext.Clients.All.SendAsync("IncreaseCommentCount", increaseCommentCountDto);
+            await hubContext.Clients.Group(commentDtoFromDataBase.NewsId.ToString()).SendAsync("AddComment", commentDtoFromDataBase);
 
-            return CreatedAtRoute(new { id = comment.Id }, commentFromDataBase);
+            return CreatedAtRoute(new { id = comment.Id }, commentDtoFromDataBase);
         }
 
         // DELETE: api/Comment/5
