@@ -12,4 +12,6 @@ export interface News {
   newsStatistic: NewsStat;
   userMiniCardDto: UserProfileCard;
   comments: CommentCard[];
+  isNewsRatedByUser: boolean;
+  commentsLikedByUser: number[];
 }

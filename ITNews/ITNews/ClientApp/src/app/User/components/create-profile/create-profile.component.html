@@ -3,97 +3,100 @@
     Please, enter your profile information!
   </h3>
 </div>
-<form class="needs-validation" autocomplete="off" #f=ngForm>
-  <div class="row">
-      <div class="col-7">
-          <div class="form-row">
-              <div class="col-md mb-3">
-                <label for="firstName">First name</label>
-                <input [(ngModel)]="profile.firstName" 
-                        [ngClass]="{'is-invalid':!firstName.valid&&firstName.touched}" 
-                        #firstName="ngModel" name="firstName" type="text" class="form-control" id="firstName" placeholder="First name"
-                  required>
-                  <div class="invalid-feedback">
-                      Please enter a First Name.
-                  </div>
-              </div>
-              <div class="col-md mb-3">
-                <label for="lastName">Last name</label>
-                <input [(ngModel)]="profile.lastName" 
-                        [ngClass]="{'is-invalid':!lastName.valid&&lastName.touched}" #lastName="ngModel" 
-                        name="lastName" type="text" class="form-control" id="lastName" placeholder="Last name"
-                  required>
-                  <div class="invalid-feedback">
-                      Please enter a Last Name.
-                  </div>
-              </div>
-            </div>
+<div class="profile-information">
+  <form class="needs-validation" autocomplete="off" #f=ngForm>
+    <div class="row">
+        <div class="col-7">
             <div class="form-row">
-              <div class="col-md mb-3 form-group">
-                <label for="specialization">Specialization</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupPrepend">
-                      <div style="text-align:center">
-                        <fa-icon [icon]="specializationIcon"></fa-icon>
-                      </div>
-                    </span>
-                  </div>
-                  <input [(ngModel)]="profile.specialization" 
-                          [ngClass]="{'is-invalid':!specialization.valid&&specialization.touched}" #specialization="ngModel"
-                          name="specialization" type="text" class="form-control" id="specialization"
-                    placeholder="Specialization" required>
-                  <small>Specify your specialization. For example: Database Administrator</small>
-                  <div class="invalid-feedback">
-                    Please choose a specialization.
-                  </div>
+                <div class="col-md mb-3">
+                  <label for="firstName">First name</label>
+                  <input [(ngModel)]="profile.firstName"
+                          [ngClass]="{'is-invalid':!firstName.valid&&firstName.touched}"
+                          #firstName="ngModel" name="firstName" type="text" class="form-control" id="firstName" placeholder="First name"
+                    required>
+                    <div class="invalid-feedback">
+                        Please enter a First Name.
+                    </div>
+                </div>
+                <div class="col-md mb-3">
+                  <label for="lastName">Last name</label>
+                  <input [(ngModel)]="profile.lastName"
+                          [ngClass]="{'is-invalid':!lastName.valid&&lastName.touched}" #lastName="ngModel"
+                          name="lastName" type="text" class="form-control" id="lastName" placeholder="Last name"
+                    required>
+                    <div class="invalid-feedback">
+                        Please enter a Last Name.
+                    </div>
                 </div>
               </div>
-              <div class="col-md mb-3 form-group">
-                  <label for="validationCustomUsername">Birth Day</label>
+              <div class="form-row">
+                <div class="col-md mb-3 form-group">
+                  <label for="specialization">Specialization</label>
                   <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="profile.birthDay" ngbDatepicker #d="ngbDatepicker">
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroupPrepend">
                         <div style="text-align:center">
-                          <fa-icon [icon]="calendarIcon"></fa-icon>
+                          <fa-icon [icon]="specializationIcon"></fa-icon>
                         </div>
-                      </button>
+                      </span>
+                    </div>
+                    <input [(ngModel)]="profile.specialization"
+                            [ngClass]="{'is-invalid':!specialization.valid&&specialization.touched}" #specialization="ngModel"
+                            name="specialization" type="text" class="form-control" id="specialization"
+                      placeholder="Specialization" required>
+                    <small>Specify your specialization. For example: Database Administrator</small>
+                    <div class="invalid-feedback">
+                      Please choose a specialization.
                     </div>
                   </div>
                 </div>
-            </div>
-            <div class="form-row">
-              <div class="col-md mb-3 form-group">
-                <label for="country">Country</label>
-                <input [(ngModel)]="profile.country" name="country"
-                     [ngClass]="{'is-invalid':!country.valid&&country.touched}" #country="ngModel" 
-                    type="text" class="form-control" id="country" placeholder="Country"
-                  required>
-                <div class="invalid-feedback">
-                  Please provide a valid country.
+                <div class="col-md mb-3 form-group">
+                    <label for="validationCustomUsername">Birth Day</label>
+                    <div class="input-group">
+                      <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="profile.birthDay" ngbDatepicker #d="ngbDatepicker">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                          <div style="text-align:center">
+                            <fa-icon [icon]="calendarIcon"></fa-icon>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="form-row">
+                <div class="col-md mb-3 form-group">
+                  <label for="country">Country</label>
+                  <input [(ngModel)]="profile.country" name="country"
+                       [ngClass]="{'is-invalid':!country.valid&&country.touched}" #country="ngModel"
+                      type="text" class="form-control" id="country" placeholder="Country"
+                    required>
+                  <div class="invalid-feedback">
+                    Please provide a valid country.
+                  </div>
+                </div>
+                <div class="col-md mb-3 form-group">
+                  <label for="city">City</label>
+                  <input [(ngModel)]="profile.city"  name="city"
+                          [ngClass]="{'is-invalid':!city.valid&&city.touched}" #city="ngModel"
+                          type="text" class="form-control" id="city" placeholder="City" required>
+                  <div class="invalid-feedback">
+                    Please provide a valid city.
+                  </div>
                 </div>
               </div>
-              <div class="col-md mb-3 form-group">
-                <label for="city">City</label>
-                <input [(ngModel)]="profile.city"  name="city"
-                        [ngClass]="{'is-invalid':!city.valid&&city.touched}" #city="ngModel" 
-                        type="text" class="form-control" id="city" placeholder="City" required>
-                <div class="invalid-feedback">
-                  Please provide a valid city.
+              <button class="btn btn-primary" [disabled]="!f.valid" type="submit" (click)="saveProfile()">
+                <div style="text-align:center">
+                  <fa-icon [icon]="saveIcons"></fa-icon>
+                  Save Data
                 </div>
-              </div>
-            </div>
-            <button class="btn btn-primary" [disabled]="!f.valid" type="submit" (click)="saveProfile()">
-              <div style="text-align:center">
-                <fa-icon [icon]="saveIcons"></fa-icon>
-                Save Data
-              </div>
-            </button>
-      </div>
-      <div class="col-5">
-          <p-fileUpload name="myfile[]" url="./uploads/" multiple="multiple"
-          accept="image/*" auto="auto"></p-fileUpload>
-      </div>
-  </div>
-</form>
+              </button>
+        </div>
+        <div class="col-5">
+            <p-fileUpload name="myfile[]" url="./uploads/" multiple="multiple"
+            accept="image/*" auto="auto"></p-fileUpload>
+        </div>
+    </div>
+  </form>
+</div>
+

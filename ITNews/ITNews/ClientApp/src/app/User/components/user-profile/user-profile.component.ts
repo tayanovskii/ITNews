@@ -11,6 +11,9 @@ import { Component, OnInit } from '@angular/core';
 export class UserProfileComponent implements OnInit {
   profile: UserProfile;
   userName: string;
+  role: string;
+  email: string;
+
   userId: string;
   constructor(
     private authService: AuthService,
@@ -22,8 +25,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userId = this.authService.getUserId();
-    this.userName = this.authService.getUserName();
+    const userInfo = this.authService.getDecodeToken();
+    this.userId = userInfo.sub;
+    this.userName = userInfo.unique_name;
+    this.role = userInfo.role;
+    this.email = userInfo.email;
+
     if (this.userId) {
       this.userProfileService.getUserProfileByUser(this.userId)
         .subscribe(res => {

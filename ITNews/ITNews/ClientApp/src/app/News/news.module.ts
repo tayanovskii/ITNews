@@ -1,3 +1,4 @@
+import { CommentLikeService } from './services/comment-likes.service';
 import { CommentService } from './services/comment.service';
 import { ViewNewsComponent } from './components/view-news/view-news.component';
 import { CreateNewsComponent } from './components/create-news/create-news.component';
@@ -14,6 +15,7 @@ import { AuthGuard } from '../Shared/services/auth.guard';
 import { NewsSuccessSavingComponent } from '../News/components/success-news-saving/success-news-saving.component';
 import { NewsHeaderComponent } from '../News/components/news-header/news-header.component';
 import { NewsCommentComponent } from '../News/components/news-comment/news-comment.component';
+import { RatingService } from './services/rating.service';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import { NewsCommentComponent } from '../News/components/news-comment/news-comme
     ])
   ],
   providers: [
-    CommentService
+    CommentService,
+    RatingService,
+    CommentLikeService
   ]
 })
 export class NewsModule { }
