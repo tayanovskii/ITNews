@@ -14,7 +14,7 @@
         <div *ngIf="news" [innerHTML]="news.content"></div>
       </section>
       <section class="additionalInfo">
-        <news-stat [stat]="news.newsStatistic" [canVote]="true" (changeRating)="changeRating($event)"></news-stat>
+        <news-stat [stat]="news.newsStatistic" [canVote]="(isLoggedIn$ | async) && !news.isNewsRatedByUser" (changeRating)="changeRating($event)"></news-stat>
       </section>
       <section class="comments">
         <!-- <h3 class="text-center">Commnets</h3> -->
@@ -45,7 +45,7 @@
         </div>
         <div *ngIf="news.comments.length > 0" class="comments-list">
           <div *ngFor="let c of news.comments">
-            <news-comment [comment]="c"></news-comment>
+            <news-comment [comment]="c" [isLiked]="news.commentsLikedByUser.includes(c.id)" [canLike]="authService.isLoggedIN()" (changeLike)="changeLike($event)"></news-comment>
           </div>
         </div>
       </section>

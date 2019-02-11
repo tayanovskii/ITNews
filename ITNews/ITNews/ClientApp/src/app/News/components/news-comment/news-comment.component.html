@@ -1,21 +1,26 @@
-<div *ngIf="comment" class="comment">
-  <div class="comment-header">
-    <ul class="list-inline">
-      <li class="list-inline-item">
+<div *ngIf="comment" class="card comment">
+  <div class="card-header">
+    <div class="comment-header">
+      <ul class="list-inline align-middle">
+        <li class="list-inline-item">
           <user-card [user-card]="comment.userCard"></user-card>
-      </li>
-      <li class="list-inline-item">
-        added at {{ comment.modifiedAt | date:mediumDate}}
-      </li>
-      <li class="list-inline-item float-right">
-        <fa-icon [icon]="likeIcon" (click)="addLike()"></fa-icon>
-        <span class="like-count" >
-            {{comment.countLikes}}
-        </span>
-      </li>
-    </ul>
+        </li>
+        <li class="list-inline-item">
+          added at {{ comment.modifiedAt | date:mediumDate}}
+        </li>
+        <li class="list-inline-item float-right">
+          <div style="text-align:center" (click)="setLike()">
+            <fa-icon [icon]="icon"></fa-icon>
+            <span class="like-count">{{comment.countLikes}}
+              </span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div class="comment-content">
-    {{ comment.content }}
+  <div class="card-body comment-content">
+    <blockquote class="blockquote mb-0">
+      <p>{{ comment.content }}</p>
+    </blockquote>
   </div>
 </div>

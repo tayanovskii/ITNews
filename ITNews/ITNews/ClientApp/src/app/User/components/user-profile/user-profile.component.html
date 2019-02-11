@@ -3,10 +3,23 @@
 </h3>
 <div class="row user-profile-content">
   <div class="col">
-    <div *ngIf="userName" class="account-info">
-      <p>
-          UserName: {{ userName }}
-      </p>
+    <div *ngIf="userName" class="account-info col-6">
+        <ul class="list-group list-group">
+            <li class="list-group-item">UserName
+            <div class="float-right">
+                {{ userName }}
+            </div> </li>
+            <li *ngIf="role" class="list-group-item">Role
+                <div class="float-right">
+                    {{ role }}
+                </div>
+            </li>
+            <li *ngIf="mail" class="list-group-item">Mail
+                <div class="float-right">
+                    {{ mail }}
+                </div>
+            </li>
+          </ul>
     </div>
     <!-- <user-card [user-card]=""></user-card> -->
   </div>
