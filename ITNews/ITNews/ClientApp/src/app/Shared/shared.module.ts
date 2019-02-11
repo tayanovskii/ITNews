@@ -18,6 +18,7 @@ import { UserCardComponent } from '../Shared/components/user-card/user-card.comp
 import { NewsStatComponent } from '../Shared/components/news-stat/news-stat.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
+import { FileUploadModule } from 'primeng/fileupload';
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
 }
@@ -34,6 +35,7 @@ export function getBaseUrl() {
     BrowserModule,
     NgbModule,
     RouterModule,
+    FileUploadModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot() // ToastrModule added
     // JwtModule.forRoot({
@@ -77,6 +79,8 @@ export function getBaseUrl() {
     HttpClientModule,
     NgbModule.forRoot().ngModule,
     UserCardComponent,
+    ToastrModule,
+    FileUploadModule,
     NewsStatComponent
   ]
 })

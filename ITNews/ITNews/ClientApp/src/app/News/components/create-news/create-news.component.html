@@ -63,7 +63,7 @@
         <h4>Enter Your News Text</h4>
       </div>
       <div class="col-4">
-        <h4>Photo Downloading Module</h4>
+        <h5>Here we can download photo to your news</h5>
       </div>
     </div>
     <div class="row">
@@ -75,12 +75,8 @@
         </div>
       </div>
       <div class="col-4">
-        <form method="post" action="#" id="#">
-          <div class="form-group files">
-            <br>Upload Your File
-            <input type="file" class="form-control" multiple="yes" (change)="changeUpload()" #fileInput>
-          </div>
-        </form>
+          <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="uploadPhoto($event)"
+          accept="image/*"></p-fileUpload>
         <div *ngIf="photoPath" class="card">
           <img class="card-img-top" src="/uploads/newsPhoto/{{photoPath}}" alt="Card image cap">
           <div class="card-header">
@@ -89,7 +85,7 @@
           <div class="links card-body">
             <blockquote class="blockquote mb-0">
               <p>Copy this link to MarkDown Editor</p>
-              <footer class="blockquote-footer">{{ photoPath }} </footer>
+              <footer class="blockquote-footer">{{getBaseUrl()}}/uploads/newsPhoto/{{ photoPath }} </footer>
             </blockquote>
           </div>
         </div>

@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class PhotoService {
 
   constructor(
@@ -16,12 +14,12 @@ export class PhotoService {
   createNewsPhoto(file) {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<NewsPhoto>(this.baseUrl, formData);
+    return this.http.post<Photo>(this.baseUrl, formData);
   }
 
-  createAvatar(file) {
+  createAvatar(file, userId: string) {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<NewsPhoto>(this.baseUrl + '/avatar', formData);
+    return this.http.post<Photo>(this.baseUrl + `/${userId}`, formData);
   }
 }

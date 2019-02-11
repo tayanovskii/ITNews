@@ -1,3 +1,3 @@
-interface NewsPhoto {
+interface Photo {
   fileName: string;
 }

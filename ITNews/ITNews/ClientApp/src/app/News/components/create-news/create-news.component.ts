@@ -61,7 +61,7 @@ export class CreateNewsComponent implements OnInit {
     this.news = <SaveNews>{};
     this.news.tags = [];
     this.news.categories = [];
-    this.news.markDown = `### Markdown example`;
+    this.news.markDown = `### News `;
   }
 
   ngOnInit() {
@@ -174,16 +174,6 @@ export class CreateNewsComponent implements OnInit {
       });
     }
   }
-  changeUpload() {
-      const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
-      console.log(nativeElement.files[0].name);
-      // this.photo = nativeElement.files[0];
-      this.photoService.createNewsPhoto(nativeElement.files[0])
-        .subscribe(res => {
-          console.log(res);
-          this.photoPath = res.fileName;
-        });
-    }
 
   buildForm(markdownText) {
     this.templateForm = this.fb.group({
@@ -217,5 +207,16 @@ export class CreateNewsComponent implements OnInit {
     this.highlight();
 
     return markedOutput;
+  }
+
+  uploadPhoto(photo) {
+    this.photoService.createNewsPhoto(photo.files[0])
+    .subscribe(res => {
+      console.log('file was downloaded to path: ' + res.fileName);
+      this.photoPath = res.fileName;
+    }, error => console.log(error));
+  }
+  getBaseUrl() {
+    return document.getElementsByTagName('base')[0].href;
   }
 }

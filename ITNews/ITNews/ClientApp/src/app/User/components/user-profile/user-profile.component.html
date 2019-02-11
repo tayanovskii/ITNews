@@ -25,7 +25,7 @@
   </div>
   <div class="col">
     <div *ngIf="profile else notExistProfile" class="card">
-      <img *ngIf="profile.avatar" class="card-img-top" [src]="profile.avatar" alt="{{ profile.userId }}">
+      <img *ngIf="profile.avatar" class="card-img-top" src="/uploads/userAvatars/{{profile.avatar}}" alt="{{ profile.userId }}">
       <div class="card-body">
         <h4 class="card-title">Profile Info</h4>
         <ul class="list-group list-group-flush">

@@ -18,12 +18,12 @@ export class NewsCommentComponent implements  OnChanges {
   emptyLikeIcon = emptyThumbsUp;
   icon: any;
   constructor() {
-    this.icon = this.isLiked ? this.likeIcon : this.emptyLikeIcon;
+    this.changeLikeIcon();
    }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isLiked'] !== undefined) {
-      this.icon = this.isLiked ? this.likeIcon : this.emptyLikeIcon;
+      this.changeLikeIcon();
     }
   }
   setLike() {
@@ -31,5 +31,8 @@ export class NewsCommentComponent implements  OnChanges {
     if (this.canLike) {
       this.changeLike.emit(this.comment.id);
     }
+  }
+  private changeLikeIcon() {
+    this.icon = this.isLiked ? this.likeIcon : this.emptyLikeIcon;
   }
 }
