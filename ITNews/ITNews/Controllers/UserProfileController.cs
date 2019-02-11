@@ -89,12 +89,10 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != userProfileDto.Id)
-            {
-                return BadRequest();
-            }
-
-            var editUserProfile = mapper.Map<UserProfileDto,UserProfile>(userProfileDto);
+            var editUserProfile = await context.UserProfile.SingleOrDefaultAsync(profile => profile.Id == id);
+            if (editUserProfile == null)
+                return NotFound();
+            mapper.Map(userProfileDto, editUserProfile);
 
             context.Entry(editUserProfile).State = EntityState.Modified;
 
@@ -125,13 +123,11 @@ namespace ITNews.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var newUserProfile = mapper.Map<UserProfileDto, UserProfile>(userProfileDto);
-
             context.UserProfile.Add(newUserProfile);
             await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserProfile", new { id = newUserProfile.Id }, userProfileDto);
+            return CreatedAtAction("GetUserProfile", new { id = newUserProfile.Id });
         }
 
         // DELETE: api/UserProfile/5

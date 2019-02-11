@@ -8,17 +8,20 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AutoMapper;
 using ITNews.Configurations;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.DTO;
 using ITNews.DTO.AccountDto;
+using ITNews.DTO.UserDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -38,6 +41,7 @@ namespace ITNews.Controllers
         private readonly IConfiguration configuration;
         private readonly IEmailSender emailSender;
         private readonly PhotoSettings photoSettings;
+        private readonly IMapper mapper;
 
 
         public AccountController(
@@ -47,7 +51,8 @@ namespace ITNews.Controllers
             SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
             IOptionsSnapshot<PhotoSettings> options,
-            IEmailSender emailSender)
+            IEmailSender emailSender, IMapper mapper
+                )
         {
             this.context = context;
             this.userManager = userManager;
@@ -56,6 +61,7 @@ namespace ITNews.Controllers
             this.emailSender = emailSender;
             this.host = host;
             photoSettings = options.Value;
+            this.mapper = mapper;
         }
 
         [HttpPost]
@@ -112,18 +118,15 @@ namespace ITNews.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
-                {
-                    //TODO: Use Automapper instaed of manual binding  
-                
-                    UserName = registrationModel.UserName,
-                    Email = registrationModel.Email
-                };
-                
+                var user = mapper.Map<RegistrationDto,ApplicationUser>(registrationModel);
+
                 var identityResult = await userManager.CreateAsync(user, registrationModel.Password);
+                ;
                 
                 if (identityResult.Succeeded)
                 {
+                    user.CreatedBy = user.Id;
+                    await userManager.UpdateAsync(user);
                     await userManager.AddToRoleAsync(user, "user");  //todo constant class helper
                     var confirmationToken = await userManager.
                         GenerateEmailConfirmationTokenAsync(user);
@@ -166,25 +169,30 @@ namespace ITNews.Controllers
                 return BadRequest("Empty data in confirmation link");
             }
             var user = await userManager.FindByIdAsync(userId);
+         
+
             if (user == null)
             {
                 return NotFound();
             }
 
+             
             var identityResult = await userManager.ConfirmEmailAsync(user,token);
-
             if (identityResult.Succeeded)
             {
-                //return Ok(GetToken(user));
-                //return CreatedAtAction("Login", user);
                 var defaultAvatar = Path.Combine(host.WebRootPath, photoSettings.DefaultAvatar);
-                await context.UserProfile.AddAsync(new UserProfile()
+                var userProfile = new UserProfile()
                 {
                     UserId = user.Id,
                     Avatar = defaultAvatar
-                });
-
+                };
+                await context.UserProfile.AddAsync(userProfile);
                 await context.SaveChangesAsync();
+                user.ModifiedAt = DateTime.Now;
+                user.ModifiedBy = user.Id;
+                user.UserProfileId = userProfile.Id;
+                await userManager.UpdateAsync(user);
+
                 return Ok("Email сonfirmed. Please go to the website and login");
 
             }
@@ -227,6 +235,17 @@ namespace ITNews.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
 
+        }
+
+        // GET: api/Account
+        [HttpGet("listUsers")]
+        public IEnumerable<UserMiniCardDto> GetUsers()
+        {
+            var users = context.Users
+                .Include(user => user.UserProfile)
+                .Include(user => user.CommentLikes);
+            var listUserMiniCardDto = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserMiniCardDto>>(users);
+            return listUserMiniCardDto;
         }
 
     }
