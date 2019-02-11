@@ -123,6 +123,9 @@ namespace ITNews.Mapping
             {
                 news.NewsCategories = dto.Categories.Select(newDtoCategory => new NewsCategory() { CategoryId = newDtoCategory.Id }).ToList();
             });
+
+            CreateMap<NewsQuery, NewsQueryDto>()
+                .ReverseMap();
         }
     }
 }
