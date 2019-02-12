@@ -11,8 +11,6 @@ import { ProfilesComponent } from '../User/components/profiles/profiles.componen
 import { MyNewsComponent } from '../User/components/my-news/my-news.component';
 import { UserProfileService } from './services/user-profile.service';
 import { CreateProfileComponent } from '../User/components/create-profile/create-profile.component';
-import { FileUploadModule } from 'primeng/fileupload';
-
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -30,7 +28,6 @@ export function getBaseUrl() {
   ],
   imports: [
     SharedModule,
-    FileUploadModule,
     RouterModule.forChild([
       { path: 'user', component: LoginComponent },
       { path: 'user/login', component: LoginComponent},

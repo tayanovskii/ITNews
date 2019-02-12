@@ -93,8 +93,9 @@
               </button>
         </div>
         <div class="col-5">
-            <p-fileUpload name="myfile[]" url="./uploads/" multiple="multiple"
-            accept="image/*" auto="auto"></p-fileUpload>
+            <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="uploadPhoto($event)"
+            accept="image/*"></p-fileUpload>
+            <img *ngIf="profile.avatar" src="/uploads/userAvatars/{{profile.avatar}}" alt="avatar">
         </div>
     </div>
   </form>
