@@ -1,6 +1,6 @@
 import { SaveCommentLike } from '../models/SaveCommentLike';
 import { CommentLike } from '../models/CommentLike';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 
 @Injectable({
@@ -18,7 +18,9 @@ export class CommentLikeService {
     return this.http.post<CommentLike>(this.url, like);
   }
 
-  removeLike(likeId: number) {
-    return this.http.delete(this.url + `/${likeId}`);
+  removeLike(deletingLike: SaveCommentLike) {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), body: deletingLike };
+    return this.http.delete<CommentLike>(this.url, httpOptions);
   }
 }

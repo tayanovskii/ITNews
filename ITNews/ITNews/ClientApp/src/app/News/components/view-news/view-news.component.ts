@@ -1,3 +1,4 @@
+import { CommentLike } from './../../models/CommentLike';
 import { SaveCommentLike } from './../../models/SaveCommentLike';
 import { CommentLikeService } from './../../services/comment-likes.service';
 import { SaveRating } from './../../models/SaveRating';
@@ -108,30 +109,51 @@ export class ViewNewsComponent implements OnInit {
       }, error => console.log(error));
   }
   changeLike(commentId: number) {
-    console.log(commentId);
-    const ind = this.news.commentsLikedByUser.indexOf(commentId, 0);
-    if (ind !== -1) { // like has to be deelted
-      // this.likeService.removeLike()
-    } else { // like has to be added
-      this.news.commentsLikedByUser.push(commentId);
 
-      this.news.commentsLikedByUser.slice(ind, 1);
-      const likeObject: SaveCommentLike = {
-        commentId: commentId,
-        userId: this.authService.getUserId()
-      };
-      this.likeService.setLike(likeObject)
+    // TO-DO - use changeCountLikeForComment in NgZone
+    console.log(commentId);
+    const likeObj = <SaveCommentLike> {
+      userId: this.authService.getUserId(),
+      commentId: commentId
+    };
+    const ind = this.news.commentsLikedByUser.indexOf(commentId);
+    console.log('Changing element index in commentsLikedByUser array is ' + ind);
+    console.log('Comment Id is ' + commentId);
+    if (ind !== -1) { // like has to be deleted
+      // this.likeService.removeLike()
+      this.likeService.removeLike(likeObj)
+      .subscribe(res => {
+        this.news.commentsLikedByUser.splice(ind, 1);
+        console.log('commentsLikedByUser: ' + this.news.commentsLikedByUser);
+        const commentInd = this.news.comments.findIndex(c => c.id === res.commentId);
+          if (commentInd !== -1) {
+            this.news.comments[commentInd].countLikes = res.countLike;
+          } else {
+            console.log(`Comment with ${commentInd} doesn't exist`);
+          }
+        // this.changeCountLikeForComment(res);
+      });
+    } else { // like has to be added
+        this.likeService.setLike(likeObj)
         .subscribe(res => {
-          console.log('Like Info has been changed on the server');
-          console.log('Like Info' + JSON.stringify(res));
+          this.news.commentsLikedByUser.push(commentId);
           const commentInd = this.news.comments.findIndex(c => c.id === res.commentId);
+          if (commentInd !== -1 ) {
+            this.news.comments[commentInd].countLikes = res.countLike;
+          } else {
+            console.log(`Comment with ${commentInd} already doesn't exist`);
+          }
+          //  this.changeCountLikeForComment(res);
+        }, error => console.log(error));
+    }
+  }
+  private changeCountLikeForComment(res: CommentLike) {
+    const commentInd = this.news.comments.findIndex(c => c.id === res.commentId);
           if (commentInd) {
             this.news.comments[commentInd].countLikes = res.countLike;
           } else {
-            console.log(`Comment with ${commentInd} has been deleted`);
+            console.log(`Comment with ${commentInd} doesn't exist`);
           }
-        }, error => console.log(error));
-    }
   }
 
 }
