@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ITNews.Helpers;
 
-namespace ITNews.Data.Entities
+namespace ITNews.DTO.NewsDto
 {
-    public class NewsQuery : IQueryObject
+    public class NewsQueryDto
     {
         public string Category { get; set; }
         public string Tag { get; set; }

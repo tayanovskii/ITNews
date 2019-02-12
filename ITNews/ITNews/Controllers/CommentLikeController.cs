@@ -56,7 +56,7 @@ namespace ITNews.Controllers
             {
                 return BadRequest(ModelState);
             }
-     
+
             var newCommentLike = mapper.Map<CreateCommentLikeDto, CommentLike>(createCommentLikeDto);
             context.CommentLikes.Add(newCommentLike);
             await context.SaveChangesAsync();
@@ -68,54 +68,20 @@ namespace ITNews.Controllers
                     .Where(like => like.CommentId == newCommentLike.CommentId).CountAsync()
             };
 
-            return CreatedAtRoute(new { id = newCommentLike.Id }, commentLikeDto);
+            return CreatedAtRoute(new {id = newCommentLike.Id}, commentLikeDto);
         }
 
-        //// PUT: api/CommentLike/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutCommentLike([FromRoute] int id, [FromBody] CommentLike commentLike)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    if (id != commentLike.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    context.Entry(commentLike).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!CommentLikeExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        // DELETE: api/CommentLike/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCommentLike([FromRoute] int id)
+        // DELETE: api/CommentLike/
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCommentLike([FromBody] CreateCommentLikeDto createCommentLikeDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var commentLike = await context.CommentLikes.FindAsync(id);
+            var commentLike = await context.CommentLikes.SingleOrDefaultAsync(like =>
+                like.CommentId == createCommentLikeDto.CommentId && like.UserId == createCommentLikeDto.UserId);
             if (commentLike == null)
             {
                 return NotFound();
@@ -125,11 +91,65 @@ namespace ITNews.Controllers
             await context.SaveChangesAsync();
 
             return Ok(commentLike);
-        }
+            //}
 
-        private bool CommentLikeExists(int id)
-        {
-            return context.CommentLikes.Any(e => e.Id == id);
+            //// PUT: api/CommentLike/5
+            //[HttpPut("{id}")]
+            //public async Task<IActionResult> PutCommentLike([FromRoute] int id, [FromBody] CommentLike commentLike)
+            //{
+            //    if (!ModelState.IsValid)
+            //    {
+            //        return BadRequest(ModelState);
+            //    }
+
+            //    if (id != commentLike.Id)
+            //    {
+            //        return BadRequest();
+            //    }
+
+            //    context.Entry(commentLike).State = EntityState.Modified;
+
+            //    try
+            //    {
+            //        await context.SaveChangesAsync();
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        if (!CommentLikeExists(id))
+            //        {
+            //            return NotFound();
+            //        }
+            //        else
+            //        {
+            //            throw;
+            //        }
+            //    }
+
+            //    return NoContent();
+            //}
+
+
+            //// DELETE: api/CommentLike/5
+            //[HttpDelete("{id}")]
+            //public async Task<IActionResult> DeleteCommentLike([FromRoute] int id)
+            //{
+            //    if (!ModelState.IsValid)
+            //    {
+            //        return BadRequest(ModelState);
+            //    }
+
+            //    var commentLike = await context.CommentLikes.FindAsync(id);
+            //    if (commentLike == null)
+            //    {
+            //        return NotFound();
+            //    }
+
+            //    context.CommentLikes.Remove(commentLike);
+            //    await context.SaveChangesAsync();
+
+            //    return Ok(commentLike);
+            //}
         }
     }
+
 }
