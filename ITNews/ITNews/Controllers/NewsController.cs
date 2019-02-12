@@ -193,6 +193,15 @@ namespace ITNews.Controllers
             return Ok(listFindNewsCardDto);
         }
 
+        //[HttpGet]
+        //public async Task<QueryResultResource<NewsResource>> GetVehicles(VehicleQueryResource filterResource)
+        //{
+        //    var filter = mapper.Map<VehicleQueryResource, VehicleQuery>(filterResource);
+        //    var queryResult = await repository.GetVehicles(filter);
+
+        //    return mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult);
+        //}
+
         //// PUT: api/News/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNews([FromRoute] int id, [FromBody] EditNewsDto editNewsDto)
