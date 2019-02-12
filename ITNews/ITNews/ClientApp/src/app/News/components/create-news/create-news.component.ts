@@ -7,7 +7,6 @@ import { CategoryService } from './../../../Shared/services/category.service';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Tag } from 'src/app/Shared/models/tag';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, ignoreElements } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs/index';
 import { FormBuilder, FormGroup } from '@angular/forms';
