@@ -126,6 +126,8 @@ namespace ITNews.Mapping
 
             CreateMap<NewsQuery, NewsQueryDto>()
                 .ReverseMap();
+
+          
         }
     }
 }

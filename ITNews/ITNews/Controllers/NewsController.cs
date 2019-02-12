@@ -13,6 +13,7 @@ using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.DTO;
 using ITNews.DTO.NewsDto;
+using ITNews.Services.News;
 using ITNews.Services.Tags;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -27,14 +28,16 @@ namespace ITNews.Controllers
         private readonly IMapper mapper;
         private readonly ITagService tagService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly INewsService newsService;
 
         public NewsController(ApplicationDbContext context, IMapper mapper, ITagService tagService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, INewsService newsService)
         {
             this.context = context;
             this.mapper = mapper;
             this.tagService = tagService;
             this.userManager = userManager;
+            this.newsService = newsService;
         }
 
         // GET: api/News
@@ -81,7 +84,6 @@ namespace ITNews.Controllers
             {
                 return NotFound();
             }
-            //todo return  public bool IsNewsRatedByUser { get; set; }  public IEnumerable<int> CommentsLikedByUser { get; set; }
 
             findNews.VisitorCount++;
             await context.SaveChangesAsync();
@@ -193,14 +195,14 @@ namespace ITNews.Controllers
             return Ok(listFindNewsCardDto);
         }
 
-        //[HttpGet]
-        //public async Task<QueryResultResource<NewsResource>> GetVehicles(VehicleQueryResource filterResource)
-        //{
-        //    var filter = mapper.Map<VehicleQueryResource, VehicleQuery>(filterResource);
-        //    var queryResult = await repository.GetVehicles(filter);
+        [HttpGet]
+        public async Task<QueryResultDto<NewsCardDto>> GetVehicles(NewsQueryDto filterResource)
+        {
+            var filter = mapper.Map<NewsQueryDto, NewsQuery>(filterResource);
+            var queryResult = await newsService.GetNews(filter);
 
-        //    return mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult);
-        //}
+            return mapper.Map<QueryResult<News>, QueryResultDto<NewsCardDto>>(queryResult);
+        }
 
         //// PUT: api/News/5
         [HttpPut("{id}")]
