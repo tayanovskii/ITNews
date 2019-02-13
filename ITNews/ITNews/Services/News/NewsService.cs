@@ -34,13 +34,21 @@ namespace ITNews.Services.News
             {
                 ["VisitorCount"] = news => news.VisitorCount,
                 ["ModifiedAt"] = news => news.ModifiedAt,
-                //["Rating"] = news=> news.Ratings
-               
+                ["Rating"] = news =>  news.Ratings.Average(rating => rating.Value)
             };
-            query = query.ApplyOrdering(queryObj, columnsMap);
-
+           
+            if (queryObj.SortBy == "Rating")
+            {
+                var queryWithNotNullRatings = query.Where(news => news.Ratings != null && news.Ratings.Any());
+                var sortedQueryWithNotNullRatings = queryWithNotNullRatings.ApplyOrdering(queryObj, columnsMap);
+                query = sortedQueryWithNotNullRatings.Concat(query.Except(queryWithNotNullRatings));
+            }
+            else
+            {
+                query = query.ApplyOrdering(queryObj, columnsMap);
+            }
+            
             result.TotalItems = await query.CountAsync();
-            ;
 
             query = query.ApplyPaging(queryObj);
 

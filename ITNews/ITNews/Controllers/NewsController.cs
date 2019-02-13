@@ -196,7 +196,7 @@ namespace ITNews.Controllers
         }
 
         [HttpGet]
-        public async Task<QueryResultDto<NewsCardDto>> GetVehicles(NewsQueryDto filterResource)
+        public async Task<QueryResultDto<NewsCardDto>> GetVehicles([FromQuery] NewsQueryDto filterResource)
         {
             var filter = mapper.Map<NewsQueryDto, NewsQuery>(filterResource);
             var queryResult = await newsService.GetNews(filter);
