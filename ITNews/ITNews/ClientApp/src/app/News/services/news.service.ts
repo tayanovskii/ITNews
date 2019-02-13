@@ -1,12 +1,14 @@
+import { QueryResult } from './../models/QueryResult';
+import { QueryBuildHelper } from './../../Shared/helpers/QueryBuildHelper';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { SaveNews } from '../models/SaveNews';
 import { News } from '../models/News';
 import { NewsCard } from 'src/app/Shared/models/news-card';
+import { NewsQuery } from '../models/NewsQuery';
 
-@Injectable({
-  providedIn: 'root'
-})
+
+@Injectable()
 export class NewsService {
   url: string;
   constructor(private http: HttpClient,
@@ -25,10 +27,9 @@ export class NewsService {
   getForEdit(newsId: number) {
     return this.http.get<SaveNews>(this.url + '/forEdit/' + newsId);
   }
-  getNews() {
-    return this.http.get<NewsCard[]>(this.url + '/listCardNews');
+  getNews(queryObj: NewsQuery) {
+    return this.http.get<QueryResult>(this.url + '?' + QueryBuildHelper.getQuery(queryObj));
   }
-
   getCardNews() {}
   getCardNewsByUserId(userId: string) {
     return this.http.get<NewsCard[]>(this.url + `/ByUser/` + userId);

@@ -24,7 +24,7 @@
     <!-- <user-card [user-card]=""></user-card> -->
   </div>
   <div class="col">
-    <div *ngIf="profile else notExistProfile" class="card">
+    <div *ngIf="profile else notExistProfile" class="card" style="width: 18rem;">
       <img *ngIf="profile.avatar" class="card-img-top" src="/uploads/userAvatars/{{profile.avatar}}" alt="{{ profile.userId }}">
       <div class="card-body">
         <h4 class="card-title">Profile Info</h4>

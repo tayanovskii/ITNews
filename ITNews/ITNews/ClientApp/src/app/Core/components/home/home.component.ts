@@ -6,10 +6,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-  constructor() { }
+  page;
+  pageSize;
+  totalItems;
+  constructor() {
+    // by default
+    this.page = 1;
+    this.pageSize = 5;
+    this.totalItems = 20;
+   }
 
   ngOnInit() {
-  }
 
+  }
+  changeTotalItems($event) {
+    this.totalItems = $event;
+  }
 }

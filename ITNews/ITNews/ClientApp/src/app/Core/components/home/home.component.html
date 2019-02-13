@@ -3,7 +3,19 @@
 </h1>
 <div class="row">
   <div class="col">
-      <news-card-list [class]="latest"></news-card-list>
+      <news-card-list [page]="page" [pageSize]="pageSize" (totalItem)="changeTotalItems($event)" class="latest"></news-card-list>
   </div>
-  <div class="col"></div>
+  <div class="col">
+    <news-card-list [page]="page" [pageSize]="pageSize" (totalItem)="changeTotalItems($event)" class="mostViewed"></news-card-list>
+  </div>
 </div>
+<div class="row paginator">
+  <div>
+      <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="totalItems">
+    </ngb-pagination>
+  </div>
+</div>
+
