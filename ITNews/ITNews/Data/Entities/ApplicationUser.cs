@@ -15,6 +15,7 @@ namespace ITNews.Data.Entities
         public DateTime? ModifiedAt { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
+        public bool UserBlocked { get; set; }
         public Language Language { get; set; }
         public IEnumerable<News> News { get; set; }
         public IEnumerable<CommentLike> CommentLikes { get; set; }

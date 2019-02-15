@@ -38,9 +38,9 @@ namespace ITNews.Controllers
         private readonly IHostingEnvironment host;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IConfiguration configuration;
         private readonly IEmailSender emailSender;
         private readonly PhotoSettings photoSettings;
+        private readonly TokenSettings tokenSettings;
         private readonly IMapper mapper;
 
 
@@ -49,18 +49,18 @@ namespace ITNews.Controllers
             IHostingEnvironment host,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration,
-            IOptionsSnapshot<PhotoSettings> options,
+            IOptionsSnapshot<PhotoSettings> photoSettings,
+            IOptionsSnapshot<TokenSettings> tokenSettings,
             IEmailSender emailSender, IMapper mapper
                 )
         {
             this.context = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.configuration = configuration;
             this.emailSender = emailSender;
             this.host = host;
-            photoSettings = options.Value;
+            this.photoSettings = photoSettings.Value;
+            this.tokenSettings = tokenSettings.Value;
             this.mapper = mapper;
         }
 
@@ -84,10 +84,16 @@ namespace ITNews.Controllers
 
                 var result = await signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password,
                     isPersistent: false, lockoutOnFailure: false);
+                //if (result.IsLockedOut)
+                //{
+                //    return StatusCode(StatusCodes.Status403Forbidden);
+                //}
+
                 if (result.Succeeded)
                 {
                     return Ok(GetToken(user));
                 }
+                
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Wrong username or login");
@@ -110,6 +116,7 @@ namespace ITNews.Controllers
             return Ok(GetToken(user));
         }
 
+   
 
         [HttpPost]
         [Route("register")]
@@ -160,6 +167,26 @@ namespace ITNews.Controllers
 
         }
 
+        [HttpPost("blockUser/{userId}")]
+        public async Task<IActionResult> BlockUser([FromRoute] string userId)
+        {
+            var blockedUser = await userManager.FindByIdAsync(userId);
+            if (blockedUser == null) return NotFound();
+            blockedUser.UserBlocked = true;
+            await userManager.UpdateAsync(blockedUser);
+            return Ok(userId);
+        }
+
+        [HttpPost("unBlockUser/{userId}")]
+        public async Task<IActionResult> UnBlockUser([FromRoute] string userId)
+        {
+            var unBlockedUser = await userManager.FindByIdAsync(userId);
+            if (unBlockedUser == null) return NotFound();
+            unBlockedUser.UserBlocked = false;
+            await userManager.UpdateAsync(unBlockedUser);
+            return Ok(userId);
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -205,10 +232,9 @@ namespace ITNews.Controllers
         }
 
 
-        private string GetToken(ApplicationUser user)
+        private async Task<string> GetToken(ApplicationUser user)
         {
             var utcNow = DateTime.UtcNow;
-            //??? or use var identity = new ClaimsIdentity(new[]{new Claim..})
             var claims = new List<Claim>
             {
                         new Claim(JwtRegisteredClaimNames.Sub, user.Id),
@@ -217,20 +243,21 @@ namespace ITNews.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, utcNow.ToString()),
             };
-            var userRoles = userManager.GetRolesAsync(user).Result;
+            var userRoles = await userManager.GetRolesAsync(user);
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim("role", role));
             }
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("Tokens:Key")));
+            claims.Add(new Claim("userBlocked", user.UserBlocked.ToString()));
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key));
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             var jwt = new JwtSecurityToken(
                 signingCredentials: signingCredentials,
                 claims: claims,
                 notBefore: utcNow,
-                expires: utcNow.AddDays(configuration.GetValue<int>("Tokens:Lifetime")),
-                audience: configuration.GetValue<string>("Tokens:Audience"),
-                issuer: configuration.GetValue<string>("Tokens:Issuer")
+                expires: utcNow.AddDays(tokenSettings.Lifetime),
+                audience: tokenSettings.Audience,
+                issuer: tokenSettings.Issuer
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -247,6 +274,39 @@ namespace ITNews.Controllers
             var listUserMiniCardDto = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserMiniCardDto>>(users);
             return listUserMiniCardDto;
         }
+
+        //[HttpPost("lockUser/{userId},{forDays}")]
+        //public async Task<IActionResult> LockUserAccount([FromRoute] string userId, int? forDays)
+        //{
+        //    var lockedUser = await userManager.FindByIdAsync(userId);
+        //    if (lockedUser == null) return NotFound();
+        //    var result = await userManager.SetLockoutEnabledAsync(lockedUser, true);
+        //    if (result.Succeeded)
+        //    {
+        //        if (forDays.HasValue)
+        //        {
+        //            await userManager.SetLockoutEndDateAsync(lockedUser, DateTimeOffset.UtcNow.AddDays(forDays.Value));
+        //        }
+        //        else
+        //        {
+        //            await userManager.SetLockoutEndDateAsync(lockedUser, DateTimeOffset.MaxValue);
+        //        }
+        //    }
+        //    return Ok(userId);
+        //}
+
+        //[HttpPost("unLockUser/{userId}")]
+        //public async Task<IActionResult> UnLockUserAccount([FromRoute] string userId)
+        //{
+        //    var unLockedUser = await userManager.FindByIdAsync(userId);
+        //    if (unLockedUser == null) return NotFound();
+        //    var result = await userManager.SetLockoutEnabledAsync(unLockedUser, false);
+        //    if (result.Succeeded)
+        //    {
+        //        await userManager.ResetAccessFailedCountAsync(unLockedUser);
+        //    }
+        //    return Ok(userId);
+        //}
 
     }
 }

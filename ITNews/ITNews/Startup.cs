@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ITNews
@@ -54,6 +55,9 @@ namespace ITNews
 
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSender"));
+            var tokenSection = Configuration.GetSection("Token");
+            services.Configure<TokenSettings>(tokenSection);
+            services.Configure<RolesSettings>(Configuration.GetSection("Roles"));
 
             services.AddTransient<IEmailSender, EmailService>();
 
@@ -61,6 +65,8 @@ namespace ITNews
             services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<INewsService, NewsService>();
+
+            var tokenSettings = tokenSection.Get<TokenSettings>();
 
             services.AddAuthentication(opts =>
                 {
@@ -75,9 +81,9 @@ namespace ITNews
                     cfg.SaveToken = true;
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidIssuer = Configuration["Tokens:Issuer"],
-                        ValidAudience = Configuration["Tokens:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+                        ValidIssuer = tokenSettings.Issuer,
+                        ValidAudience = tokenSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key)),
                         ClockSkew = TimeSpan.Zero,
                         RequireExpirationTime = true,
                         ValidateIssuer = true,
