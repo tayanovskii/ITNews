@@ -1,0 +1,19 @@
+.news-title-info {
+  text-decoration: none;
+  font-weight: 500;
+  font-family: 'Fira Sans', sans-serif;
+  display: inline-block;
+  width: 100%;
+  color: #444;
+  vertical-align: top;
+  white-space: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  margin: 0;
+}
+
+.news-comment {
+  text-decoration: none;
+  color: #444;
+}
