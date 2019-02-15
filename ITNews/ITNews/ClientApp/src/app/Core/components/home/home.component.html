@@ -1,21 +1,46 @@
 <h1>
   News
 </h1>
-<div class="row">
-  <div class="col">
-      <news-card-list [page]="page" [pageSize]="pageSize" (totalItem)="changeTotalItems($event)" class="latest"></news-card-list>
-  </div>
-  <div class="col">
-    <news-card-list [page]="page" [pageSize]="pageSize" (totalItem)="changeTotalItems($event)" class="mostViewed"></news-card-list>
+<div class="container">
+  <div class="row">
+    <div class="col-9">
+      <div class="row">
+        <news-card-list [page]="page" [pageSize]="pageSize" (totalItem)="changeTotalItems($event)" class="latest">
+        </news-card-list>
+      </div>
+      <div class="row paginator">
+        <div class="col">
+          <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalItems">
+          </ngb-pagination>
+        </div>
+        <div class="col">
+            <div class="float-right">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text"> Page Size: </label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01" (change)="changePageSize($event.target.value)">
+                      <!-- <option selected>{{ pageSize }}</option> -->
+                      <option *ngFor="let size of pageSizeArray" value="{{size}}" >{{size}}</option>
+                    </select>
+                  </div>
+              </div>
+        </div>
+      </div>
+    </div>
+    <div class="col sidebar">
+      <div class="most-viewed-card">
+        <div class="most-viewed-header">
+          <h3>Most Viewed</h3>
+        </div>
+        <div *ngIf="mostViewedNews.length > 0" class="most-viewed-content">
+            <ul class="content-list-most-viewed">
+              <li *ngFor="let n of mostViewedNews" class="list-item-most-viewed">
+                <mini-news-card [news]="n"></mini-news-card>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div class="row paginator">
-  <div>
-      <ngb-pagination
-      [(page)]="page"
-      [pageSize]="pageSize"
-      [collectionSize]="totalItems">
-    </ngb-pagination>
-  </div>
-</div>
-

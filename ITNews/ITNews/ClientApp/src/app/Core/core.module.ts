@@ -7,13 +7,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../Shared/shared.module';
 import { NewsCardListComponent } from '../Core/components/news-card-list/news-card-list.component';
 import { NewsCardComponent } from '../Core/components/news-card/news-card.component';
+import { MiniNewsCardComponent } from '../Core/components/mini-news-card/mini-news-card.component';
 
 @NgModule({
   declarations: [
     AppNavMenuComponent,
     HomeComponent,
     NewsCardComponent,
-    NewsCardListComponent
+    NewsCardListComponent,
+    MiniNewsCardComponent
   ],
   imports: [
     SharedModule,

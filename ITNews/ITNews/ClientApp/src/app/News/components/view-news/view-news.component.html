@@ -16,7 +16,7 @@
       <section class="additionalInfo">
         <news-stat [stat]="news.newsStatistic" [canVote]="(isLoggedIn$ | async) && !news.isNewsRatedByUser" (changeRating)="changeRating($event)"></news-stat>
       </section>
-      <section class="comments">
+      <section class="comments" fragment="comments">
         <!-- <h3 class="text-center">Commnets</h3> -->
         <div class="comment-enter-header input-group">
           <h5>{{ news.comments.length }} comments</h5>

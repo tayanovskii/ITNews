@@ -1,0 +1,25 @@
+<div class="mini-news-card">
+  <a [routerLink]="['/news/view-news', news.id]" routerLinkActive="router-link-active" class="news-title-info">
+    {{ news.title }}
+  </a>
+  <div class="news-info">
+    <ul class=list-inline>
+        <li class="list-inline-item visitor-count">
+            <div style="text-align:center">
+              <fa-icon [icon]="eyeIco"></fa-icon>
+              <span ngbTooltip="Visitor count" tooltipClass="visitorCount">
+                {{ news.newsStatistic.visitorCount | number }}
+              </span>
+            </div>
+          </li>
+          <li class="list-inline-item comment-count">
+            <a [routerLink]="['/news/view-news', news.id, {fragment: 'comments'}]" routerLinkActive="router-link-active" class="news-comment">
+                <fa-icon [icon]="commentsIcon"></fa-icon>
+            <span ngbTooltip="Comment count" tooltipClass="commentCount">
+              {{ news.newsStatistic.commentCount | number }}
+            </span>
+            </a>
+        </li>
+    </ul>
+  </div>
+</div>

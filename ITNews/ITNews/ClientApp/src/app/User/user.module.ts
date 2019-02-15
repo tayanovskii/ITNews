@@ -8,7 +8,6 @@ import { RegistrationComponent } from '../User/components/registration/registrat
 import { ChangePasswordComponent } from '../User/components/change-password/change-password.component';
 import { UserProfileComponent } from '../User/components/user-profile/user-profile.component';
 import { ProfilesComponent } from '../User/components/profiles/profiles.component';
-import { MyNewsComponent } from '../User/components/my-news/my-news.component';
 import { UserProfileService } from './services/user-profile.service';
 import { CreateProfileComponent } from '../User/components/create-profile/create-profile.component';
 
@@ -22,7 +21,6 @@ export function getBaseUrl() {
     ChangePasswordComponent,
     UserProfileComponent,
     ProfilesComponent,
-    MyNewsComponent,
     UserNewsComponent,
     CreateProfileComponent
   ],
