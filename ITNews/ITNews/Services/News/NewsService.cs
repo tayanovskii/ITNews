@@ -22,13 +22,15 @@ namespace ITNews.Services.News
             var result = new QueryResult<Data.Entities.News>();
 
             var query = context.News
-                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
-                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
-                .Include(news => news.User)
-                .Include(news => news.Ratings)
-                .AsQueryable();
+                    .Include(news => news.User).ThenInclude(user => user.CommentLikes)
+                    .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
+                    .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                    .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
+                    .Include(news => news.Ratings)
+                    .AsQueryable();
 
             query = query.ApplyFiltering(queryObj);
+           
 
             var columnsMap = new Dictionary<string, Expression<Func<Data.Entities.News, object>>>()
             {
@@ -36,17 +38,9 @@ namespace ITNews.Services.News
                 ["ModifiedAt"] = news => news.ModifiedAt,
                 ["Rating"] = news =>  news.Ratings.Average(rating => rating.Value)
             };
-           
-            if (queryObj.SortBy == "Rating")
-            {
-                var queryWithNotNullRatings = query.Where(news => news.Ratings != null && news.Ratings.Any());
-                var sortedQueryWithNotNullRatings = queryWithNotNullRatings.ApplyOrdering(queryObj, columnsMap);
-                query = sortedQueryWithNotNullRatings.Concat(query.Except(queryWithNotNullRatings));
-            }
-            else
-            {
-                query = query.ApplyOrdering(queryObj, columnsMap);
-            }
+
+
+            query = query.ApplyOrdering(queryObj, columnsMap);
             
             result.TotalItems = await query.CountAsync();
 

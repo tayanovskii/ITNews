@@ -35,6 +35,7 @@ namespace ITNews.Helpers
             {
                 
                BlenderMode = PixelBlenderMode.Src
+                
               
             };
             // mutating in here as we already have a cloned original

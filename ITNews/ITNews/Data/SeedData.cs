@@ -2,34 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITNews.Configurations;
 using ITNews.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace ITNews.Data
 {
     public static class SeedData
     {
-        public static async Task InitializeAsync(
-            IServiceProvider services)
+        public static async Task InitializeAsync(IServiceProvider services)
         {
             var configuration = services.GetRequiredService<IConfiguration>();
+
+            var rolesSettings = configuration.GetSection("Roles").Get<RolesSettings>();
+            var adminSettings = configuration.GetSection("AdminAccount").Get<AdminSettings>();
+
             var roleManager = services
                 .GetRequiredService<RoleManager<IdentityRole>>();
-            await CreateRolesAsync(roleManager, configuration);
+            await CreateRolesAsync(roleManager, rolesSettings);
 
             var userManager = services
                 .GetRequiredService<UserManager<ApplicationUser>>();
-            await CreateAdminAsync(userManager, configuration);
+            await CreateAdminAsync(userManager, adminSettings);
 
         }
 
         private static async Task CreateRolesAsync(
-            RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+            RoleManager<IdentityRole> roleManager, RolesSettings rolesSettings)
         {
-            var roles = new List<string> {configuration["AdminAccount:role"], "user"};
+            var roles = rolesSettings.ListOfRoles;
 
             foreach (var role in roles)
             {
@@ -41,16 +46,19 @@ namespace ITNews.Data
         }
 
         private static async Task CreateAdminAsync(
-            UserManager<ApplicationUser> userManager, IConfiguration configuration)
+            UserManager<ApplicationUser> userManager, AdminSettings adminSettings)
         {
-            var nameAdmin = configuration["AdminAccount:username"];
-            var passwordAdmin = configuration["AdminAccount:password"];
-            var emailAdmin = configuration["AdminAccount:email"];
-            var roleAdmin = configuration["AdminAccount:role"];
+            //var nameAdmin = configuration["AdminAccount:username"];
+            //var passwordAdmin = configuration["AdminAccount:password"];
+            //var emailAdmin = configuration["AdminAccount:email"];
+            //var roleAdmin = configuration["AdminAccount:role"];
 
-            //var admin = await userManager.Users
-            //    .Where(x => x.UserName == nameAdmin)
-            //    .SingleOrDefaultAsync();
+            var nameAdmin = adminSettings.UserName;
+            var passwordAdmin = adminSettings.Password;
+            var emailAdmin = adminSettings.Email;
+            var roleAdmin = adminSettings.Role;
+
+
 
             var admin = await userManager.FindByNameAsync(nameAdmin);
 
@@ -59,10 +67,10 @@ namespace ITNews.Data
             admin = new ApplicationUser
             {
                 UserName = nameAdmin,
-                Email = emailAdmin
+                Email = emailAdmin,
+                LockoutEnabled = false
             };
-            //await userManager.CreateAsync(
-            //    admin, passwordAdmin);
+
             var result = userManager.CreateAsync(admin, passwordAdmin).Result;
             if (result.Succeeded)
             {

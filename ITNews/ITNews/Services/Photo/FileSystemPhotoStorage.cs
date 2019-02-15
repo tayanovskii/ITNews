@@ -34,12 +34,13 @@ namespace ITNews.Services.Photo
             if (!Directory.Exists(uploadsFolderPath))
                 Directory.CreateDirectory(uploadsFolderPath);
 
-            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            //var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var fileName = Guid.NewGuid() + ".png";
             var filePath = Path.Combine(uploadsFolderPath, fileName);
 
             using (var img = Image.Load(file.OpenReadStream()))
             {
-                using (Image<Rgba32> destRound = img.Clone(x => x.ConvertToAvatar(new Size(200, 200), 100)))
+                using (Image<Rgba32> destRound = img.Clone(x => x.ConvertToAvatar(new Size(200, 200), 100).BackgroundColor(Rgba32.Transparent)))
                 {
                     destRound.Save(filePath);
                 }
