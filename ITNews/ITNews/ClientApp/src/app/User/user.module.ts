@@ -10,6 +10,7 @@ import { UserProfileComponent } from '../User/components/user-profile/user-profi
 import { ProfilesComponent } from '../User/components/profiles/profiles.component';
 import { UserProfileService } from './services/user-profile.service';
 import { CreateProfileComponent } from '../User/components/create-profile/create-profile.component';
+import {InputEditorModule, DateEditorModule} from 'angular-inline-editors';
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
@@ -26,6 +27,8 @@ export function getBaseUrl() {
   ],
   imports: [
     SharedModule,
+    InputEditorModule.forRoot(),
+    DateEditorModule.forRoot(),
     RouterModule.forChild([
       { path: 'user', component: LoginComponent },
       { path: 'user/login', component: LoginComponent},

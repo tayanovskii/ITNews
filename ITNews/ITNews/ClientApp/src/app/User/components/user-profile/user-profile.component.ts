@@ -39,5 +39,11 @@ export class UserProfileComponent implements OnInit {
         }, error => console.log(error));
     }
   }
-
+  sampleClick() {
+    console.log('New Value for FirstName: ' + this.profile.firstName);
+    this.userProfileService.changeUserProfile(this.profile, this.profile.id)
+    .subscribe(res => {
+      console.log('Updated profile -> ' + JSON.stringify(this.profile));
+    }, error => console.log(error));
+  }
 }
