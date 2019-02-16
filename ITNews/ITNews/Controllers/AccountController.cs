@@ -84,14 +84,10 @@ namespace ITNews.Controllers
 
                 var result = await signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password,
                     isPersistent: false, lockoutOnFailure: false);
-                //if (result.IsLockedOut)
-                //{
-                //    return StatusCode(StatusCodes.Status403Forbidden);
-                //}
 
                 if (result.Succeeded)
                 {
-                    return Ok(GetToken(user));
+                    return Ok(await GetToken(user));
                 }
                 
                 else

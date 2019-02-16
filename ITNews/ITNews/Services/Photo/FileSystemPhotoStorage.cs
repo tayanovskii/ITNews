@@ -35,7 +35,7 @@ namespace ITNews.Services.Photo
                 Directory.CreateDirectory(uploadsFolderPath);
 
             //var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-            var fileName = Guid.NewGuid() + ".png";
+            var fileName = Guid.NewGuid() + ".png";    //for transparent background photo must have .png extension
             var filePath = Path.Combine(uploadsFolderPath, fileName);
 
             using (var img = Image.Load(file.OpenReadStream()))
