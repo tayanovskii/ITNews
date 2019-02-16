@@ -13,7 +13,7 @@
         </ul>
         <div *ngIf="news" [innerHTML]="news.content"></div>
       </section>
-      <section class="additionalInfo">
+      <section class="additionalInfo" *ngIf="news.newsStatistic">
         <news-stat [stat]="news.newsStatistic" [canVote]="(isLoggedIn$ | async) && !news.isNewsRatedByUser" (changeRating)="changeRating($event)"></news-stat>
       </section>
       <section class="comments" fragment="comments">
