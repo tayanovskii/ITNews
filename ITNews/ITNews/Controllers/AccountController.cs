@@ -203,7 +203,7 @@ namespace ITNews.Controllers
             var identityResult = await userManager.ConfirmEmailAsync(user,token);
             if (identityResult.Succeeded)
             {
-                var defaultAvatar = Path.Combine(host.WebRootPath, photoSettings.DefaultAvatar);
+                var defaultAvatar = photoSettings.DefaultAvatar;
                 var userProfile = new UserProfile()
                 {
                     UserId = user.Id,
@@ -270,6 +270,27 @@ namespace ITNews.Controllers
             var listUserMiniCardDto = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserMiniCardDto>>(users);
             return listUserMiniCardDto;
         }
+
+        // DELETE: api/Account/5
+        //[HttpDelete("{userId}")]
+        //public async Task<IActionResult> DeleteAccount([FromRoute] int userId)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var news = await context.News.FindAsync(id);
+        //    if (news == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    context.News.Remove(news);
+        //    await context.SaveChangesAsync();
+
+        //    return Ok(news);
+        //}
 
         //[HttpPost("lockUser/{userId},{forDays}")]
         //public async Task<IActionResult> LockUserAccount([FromRoute] string userId, int? forDays)
