@@ -85,6 +85,7 @@ namespace ITNews.Controllers
                 var result = await signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password,
                     isPersistent: false, lockoutOnFailure: false);
 
+
                 if (result.Succeeded)
                 {
                     return Ok(await GetToken(user));
@@ -272,25 +273,19 @@ namespace ITNews.Controllers
         }
 
         // DELETE: api/Account/5
-        //[HttpDelete("{userId}")]
-        //public async Task<IActionResult> DeleteAccount([FromRoute] int userId)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteAccount([FromRoute] string userId)
+        {
+            var deletedUser = await userManager.FindByIdAsync(userId);
+            if (deletedUser == null) return NotFound();
 
-        //    var news = await context.News.FindAsync(id);
-        //    if (news == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var identityResult = await userManager.DeleteAsync(deletedUser);
+            
+            if (!identityResult.Succeeded) return BadRequest(ModelState);
 
-        //    context.News.Remove(news);
-        //    await context.SaveChangesAsync();
+            return Ok(deletedUser.Id);
 
-        //    return Ok(news);
-        //}
+        }
 
         //[HttpPost("lockUser/{userId},{forDays}")]
         //public async Task<IActionResult> LockUserAccount([FromRoute] string userId, int? forDays)

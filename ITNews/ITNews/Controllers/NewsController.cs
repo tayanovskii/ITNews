@@ -306,7 +306,7 @@ namespace ITNews.Controllers
             context.News.Remove(news);
             await context.SaveChangesAsync();
 
-            return Ok(news);
+            return Ok(news.Id);
         }
 
         private bool NewsExists(int id)

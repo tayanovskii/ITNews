@@ -24,7 +24,8 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.Specialization, opt => opt.MapFrom(profile => profile.Specialization))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(profile => profile.UserId))
                 .ForMember(dto => dto.Id, opt => opt.MapFrom(profile => profile.Id))
-                .ForMember(dto => dto.UserName, opt => opt.MapFrom(profile => profile.User.UserName));
+                .ForMember(dto => dto.UserName, opt => opt.MapFrom(profile => profile.User.UserName))
+                .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(profile => profile.User.CreatedAt));
 
 
             CreateMap<UserProfileDto, UserProfile>()
@@ -36,8 +37,6 @@ namespace ITNews.Mapping
                 .ForMember(profile => profile.LastName, opt => opt.MapFrom(dto => dto.LastName))
                 .ForMember(profile => profile.Specialization, opt => opt.MapFrom(dto => dto.Specialization))
                 .ForMember(profile => profile.Id, opt => opt.Ignore());
-
-               
 
 
             CreateMap<ApplicationUser, UserMiniCardDto>()

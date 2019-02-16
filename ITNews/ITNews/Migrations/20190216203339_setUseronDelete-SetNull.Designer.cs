@@ -4,14 +4,16 @@ using ITNews.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITNews.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190216203339_setUseronDelete-SetNull")]
+    partial class setUseronDeleteSetNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -417,8 +419,7 @@ namespace ITNews.Migrations
 
                     b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.CommentLike", b =>
@@ -430,8 +431,7 @@ namespace ITNews.Migrations
 
                     b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("CommentLikes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.News", b =>
@@ -477,8 +477,7 @@ namespace ITNews.Migrations
 
                     b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("Ratings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ITNews.Data.Entities.UserProfile", b =>

@@ -55,8 +55,8 @@ namespace ITNews.Data
 
 
             var user = builder.Entity<ApplicationUser>();
-            user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId);
-            user.HasOne(u => u.UserProfile).WithOne(up => up.User).HasForeignKey<UserProfile>(up => up.UserId);
+            user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId).OnDelete(DeleteBehavior.SetNull);
+            user.HasOne(u => u.UserProfile).WithOne(up => up.User).HasForeignKey<UserProfile>(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
 
             var news = builder.Entity<News>();
             news.HasKey(n => n.Id);
@@ -68,19 +68,21 @@ namespace ITNews.Data
             rating.HasKey(r => r.Id);
             rating.Property(r => r.Value).IsRequired();
             rating.HasOne(r => r.News).WithMany(n => n.Ratings).HasForeignKey(r=>r.NewsId);
-            rating.HasOne(r => r.User).WithMany(u => u.Ratings).HasForeignKey(r=>r.UserId);
+            rating.HasOne(r => r.User).WithMany(u => u.Ratings).HasForeignKey(r=>r.UserId).OnDelete(DeleteBehavior.SetNull);
 
             var comment = builder.Entity<Comment>();
             comment.HasKey(c => c.Id);
             comment.Property(c => c.Content).IsRequired();
             comment.HasOne(c => c.News).WithMany(n => n.Comments).HasForeignKey(c=>c.NewsId);
             comment.HasMany(c => c.Likes).WithOne(l => l.Comment).HasForeignKey(cl=>cl.CommentId);
-            comment.HasOne(c => c.User).WithMany(u => u.Comments).HasForeignKey(c=>c.UserId);
+            comment.HasOne(c => c.User).WithMany(u => u.Comments).HasForeignKey(c=>c.UserId).OnDelete(DeleteBehavior.SetNull);
+            //comment.HasOne(c => c.ModifiedByUser).WithMany().HasForeignKey(c => c.ModifiedBy)
+            //    .OnDelete(DeleteBehavior.SetNull);
 
             var commentLike = builder.Entity<CommentLike>();
             commentLike.HasKey(cl => cl.Id);
             commentLike.HasOne(cl => cl.Comment).WithMany(c => c.Likes).HasForeignKey(cl=>cl.CommentId);
-            commentLike.HasOne(cl => cl.User).WithMany(u => u.CommentLikes).HasForeignKey(cl=>cl.UserId);
+            commentLike.HasOne(cl => cl.User).WithMany(u => u.CommentLikes).HasForeignKey(cl=>cl.UserId).OnDelete(DeleteBehavior.SetNull);
 
             var language = builder.Entity<Language>();
             language.HasKey(l => l.Id);
