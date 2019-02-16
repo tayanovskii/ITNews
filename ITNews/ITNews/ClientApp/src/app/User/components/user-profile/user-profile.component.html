@@ -1,91 +1,77 @@
 <h3 class="text-center">
-  User Profile Info!
+  {{userName}} profile page
 </h3>
 <div class="row user-profile-content">
   <div class="col">
-    <div *ngIf="userName" class="account-info col-6">
-      <ul class="list-group list-group">
-        <li class="list-group-item">UserName
+    <div *ngIf="userName" class="account-info">
+      <img *ngIf="profile && profile.avatar" class="img-thumbnail" src="/uploads/userAvatars/{{profile.avatar}}" alt="{{ userId }}">
+      <ul class="list-group" style="width: 25rem;">
+        <li class="list-group-item">UserName:
           <div class="float-right">
             {{ userName }}
           </div>
         </li>
-        <li *ngIf="role" class="list-group-item">Role
+        <li *ngIf="role" class="list-group-item">Role:
           <div class="float-right">
             {{ role }}
           </div>
         </li>
-        <li *ngIf="mail" class="list-group-item">Mail
+        <li *ngIf="email" class="list-group-item">Email:
           <div class="float-right">
-            {{ mail }}
+            {{ email }}
           </div>
         </li>
       </ul>
     </div>
+    <div>
+      <a [routerLink]="['/']" routerLinkActive="router-link-active" class="mt-2 btn btn-outline-secondary">
+        <div style="text-align:center">
+            <fa-icon [icon]="backIcon"></fa-icon>
+        </div>
+        To main page</a>
+    </div>
     <!-- <user-card [user-card]=""></user-card> -->
   </div>
   <div class="col">
-    <div *ngIf="profile else notExistProfile" class="card" style="width: 25rem;">
-      <!-- <img *ngIf="profile.avatar" class="card-img-top" src="/uploads/userAvatars/{{profile.avatar}}" alt="{{ profile.userId }}"> -->
-      <div class="card-body">
-        <h4 class="card-title">Profile Info</h4>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="firstName-addon1">First Name:</span>
-              </div>
-              <input-editor class="mx-auto" id="firstName" [(ngModel)]="profile.firstName" type="text" placeholder="Enter First Name"
-                (onSave)="sampleClick()"></input-editor>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="lastName-addon1">Last Name:</span>
-              </div>
-              <input-editor class="mx-auto" id="lastName" [(ngModel)]="profile.lastName" type="text" placeholder="Enter Last Name"
-                (onSave)="sampleClick()"></input-editor>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="birthDay-addon1">Birth Day:</span>
-              </div>
-              <date-editor class="mx-auto float-right" [(ngModel)]="profile.birthDay" placeholder="Enter a Date" format="shortDate">
-              </date-editor>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="specialization-addon">Specialization:</span>
-              </div>
-              <input-editor class="mx-auto float-right" id="specialization" [(ngModel)]="profile.specialization" type="text"
-                placeholder="Enter Your Specialization" (onSave)="sampleClick()"></input-editor>
-            </div>
-          </li>
-          <li class="list-group-item font-weight-bold">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="specialization-addon">City:</span>
-              </div>
-              <input-editor class="mx-auto float-right" id="city" [(ngModel)]="profile.city" type="text" placeholder="Enter Your Specialization"
-                (onSave)="sampleClick()"></input-editor>
-            </div>
-          </li>
-          <li class="list-group-item font-weight-bold">
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="specialization-addon">Country:</span>
-                </div>
-                <input-editor class="mx-auto float-right" id="country" [(ngModel)]="profile.country" type="text"
-                  placeholder="Enter Your Specialization" (onSave)="sampleClick()"></input-editor>
-              </div>
-            </li>
-        </ul>
-      </div>
+    <div *ngIf="profile else notExistProfile">
+        <table class="table">
+            <thead>
+              <th>Profile info</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>First Name:</td>
+                <td><input-editor class="mx-auto float-right" id="firstName" [(ngModel)]="profile.firstName" type="text" placeholder="Enter First Name"
+                  (onSave)="saveProfile()"></input-editor></td>
+              </tr>
+              <tr>
+                <td>Last Name:</td>
+                <td><input-editor class="mx-auto float-right" id="lastName" [(ngModel)]="profile.lastName" type="text" placeholder="Enter Last Name"
+                  (onSave)="saveProfile()"></input-editor></td>
+              </tr>
+              <tr>
+                <td>Birth Day:</td>
+                <td><date-editor class="mx-auto float-right" [(ngModel)]="profile.birthDay" placeholder="Enter a Date" (onSave)="saveProfile()" format="mediumDate" >
+                  </date-editor></td>
+              </tr>
+              <tr>
+                <td>Specialization:</td>
+                <td><input-editor class="mx-auto float-right" id="specialization" [(ngModel)]="profile.specialization" type="text"
+                  (onSave)="saveProfile()"></input-editor></td>
+              </tr>
+              <tr>
+                <td>City:</td>
+                <td><input-editor class="mx-auto float-right" id="city" [(ngModel)]="profile.city" type="text"
+                  (onSave)="saveProfile()"></input-editor></td>
+              </tr>
+              <tr>
+                <td>Country:</td>
+                <td><input-editor class="mx-auto float-right" id="country" [(ngModel)]="profile.country" type="text"
+                  (onSave)="saveProfile()"></input-editor></td>
+              </tr>
+            </tbody>
+          </table>
     </div>
     <ng-template #notExistProfile>
       <h6>Profile doesn't exist yet</h6>

@@ -2,6 +2,8 @@ import { UserProfileService } from './../../services/user-profile.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/Shared/services/auth.service';
 import { Component, OnInit } from '@angular/core';
+import { faUndoAlt } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-user-profile',
@@ -13,7 +15,7 @@ export class UserProfileComponent implements OnInit {
   userName: string;
   role: string;
   email: string;
-
+  backIcon = faUndoAlt;
   userId: string;
   constructor(
     private authService: AuthService,
@@ -39,7 +41,7 @@ export class UserProfileComponent implements OnInit {
         }, error => console.log(error));
     }
   }
-  sampleClick() {
+  saveProfile() {
     console.log('New Value for FirstName: ' + this.profile.firstName);
     this.userProfileService.changeUserProfile(this.profile, this.profile.id)
     .subscribe(res => {
