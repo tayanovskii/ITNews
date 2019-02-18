@@ -44,6 +44,7 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.CountLikes, opt => opt.MapFrom(user => user.CommentLikes.Count()))
                 .ForMember(dto => dto.UserId, opt => opt.MapFrom(user => user.Id))
                 .ForMember(dto => dto.UserName, opt => opt.MapFrom(user => user.UserName));
+               
 
             CreateMap<RegistrationDto, ApplicationUser>()
                 .ForMember(user => user.UserName, opt => opt.MapFrom(dto => dto.UserName))
@@ -54,6 +55,13 @@ namespace ITNews.Mapping
                     user.ModifiedAt = user.CreatedAt;
                 });
 
+            CreateMap<ApplicationUser, ManageUserDto>()
+                .ForMember(dto => dto.UserId, opt=>opt.MapFrom(user => user.Id))
+                .ForMember(dto => dto.UserName, opt => opt.MapFrom(user => user.UserName))
+                .ForMember(dto => dto.UserBlocked, opt => opt.MapFrom(user => user.UserBlocked))
+                .ForMember(dto => dto.CountLikes, opt => opt.MapFrom(user => user.CommentLikes.Count()))
+                .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(user => user.CreatedAt))
+                .ForAllOtherMembers(opt=>opt.Ignore());
 
         }
     }

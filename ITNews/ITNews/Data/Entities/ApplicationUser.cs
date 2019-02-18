@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -17,9 +18,11 @@ namespace ITNews.Data.Entities
         public string ModifiedBy { get; set; }
         public bool UserBlocked { get; set; }
         public Language Language { get; set; }
+        //[InverseProperty("ModifiedByUser")]
         public IEnumerable<News> News { get; set; }
         public IEnumerable<CommentLike> CommentLikes { get; set; }
         public IEnumerable<Rating> Ratings { get; set; }
+        //[InverseProperty("ModifiedByUser")]
         public IEnumerable<Comment> Comments { get; set; }
 
     }

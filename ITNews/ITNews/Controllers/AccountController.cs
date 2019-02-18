@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace ITNews.Controllers
         private readonly ApplicationDbContext context;
         private readonly IHostingEnvironment host;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IEmailSender emailSender;
         private readonly PhotoSettings photoSettings;
@@ -48,6 +50,7 @@ namespace ITNews.Controllers
             ApplicationDbContext context,
             IHostingEnvironment host,
             UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
             IOptionsSnapshot<PhotoSettings> photoSettings,
             IOptionsSnapshot<TokenSettings> tokenSettings,
@@ -55,6 +58,7 @@ namespace ITNews.Controllers
                 )
         {
             this.context = context;
+            this.roleManager = roleManager;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.emailSender = emailSender;
@@ -261,7 +265,7 @@ namespace ITNews.Controllers
 
         }
 
-        // GET: api/Account
+        // GET: api/Account/listUsers
         [HttpGet("listUsers")]
         public IEnumerable<UserMiniCardDto> GetUsers()
         {
@@ -270,6 +274,26 @@ namespace ITNews.Controllers
                 .Include(user => user.CommentLikes);
             var listUserMiniCardDto = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserMiniCardDto>>(users);
             return listUserMiniCardDto;
+        }
+
+        // GET: api/Account/availableRoles
+        [HttpGet("availableRoles")]
+        public List<IdentityRole> GetAvailableRoles()
+        {
+            var roleManagerRoles = roleManager.Roles.ToList();
+            return roleManagerRoles;
+        }
+
+        // GET: api/Account/ManageUsers
+        [HttpGet("manageUsers")]
+        public IEnumerable<ManageUserDto> GetManageUsers()
+        {
+            
+            var users = context.Users
+                .Include(user => user.UserProfile)
+                .Include(user => user.CommentLikes);
+            var listManageUsers = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ManageUserDto>>(users);
+            return listManageUsers;
         }
 
         // DELETE: api/Account/5

@@ -75,9 +75,7 @@ namespace ITNews.Data
             comment.Property(c => c.Content).IsRequired();
             comment.HasOne(c => c.News).WithMany(n => n.Comments).HasForeignKey(c=>c.NewsId);
             comment.HasMany(c => c.Likes).WithOne(l => l.Comment).HasForeignKey(cl=>cl.CommentId);
-            comment.HasOne(c => c.User).WithMany(u => u.Comments).HasForeignKey(c=>c.UserId).OnDelete(DeleteBehavior.SetNull);
-            //comment.HasOne(c => c.ModifiedByUser).WithMany().HasForeignKey(c => c.ModifiedBy)
-            //    .OnDelete(DeleteBehavior.SetNull);
+            comment.HasOne(c => c.User).WithMany(u => u.Comments).HasForeignKey(c => c.UserId).OnDelete(DeleteBehavior.SetNull);
 
             var commentLike = builder.Entity<CommentLike>();
             commentLike.HasKey(cl => cl.Id);

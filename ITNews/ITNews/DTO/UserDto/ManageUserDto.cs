@@ -12,7 +12,6 @@ namespace ITNews.DTO.UserDto
         public string UserId { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CountLikes { get; set; }
-        public int CommentLikes { get; set; }
-        public IEnumerable<string> Role { get; set; }
+        public IEnumerable<string> Roles { get; set; }
     }
 }
