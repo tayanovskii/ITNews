@@ -3,6 +3,8 @@ import { NewsQuery } from './../../../News/models/NewsQuery';
 import { NewsCard } from 'src/app/Shared/models/news-card';
 import { NewsService } from './../../../News/services/news.service';
 import { Component, OnInit } from '@angular/core';
+import { CloudOptions, CloudData } from 'angular-tag-cloud-module';
+import { TagService } from 'src/app/Shared/services/tag.service';
 
 @Component({
   selector: 'app-home',
@@ -16,8 +18,22 @@ export class HomeComponent implements OnInit {
   pageSizeArray;
   pageSizeForMostViewsd;
   mostViewedNews: NewsCard[];
+  // tag cloud options
+  options: CloudOptions = {
+    // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value
+    width : 1,
+    height : 400,
+    overflow: true,
+  };
+  cloudData: CloudData[] = [
+    { text: 'weight-5', weight: 8 , color: 'yellow'},
+    { text: 'weight-7', weight: 7 },
+    { text: 'weight-9', weight: 9 }
+    // ...
+  ];
   constructor(
-    private newsService: NewsService
+    private newsService: NewsService,
+    private tagService: TagService
   ) {
     // by default
     this.page = 1;

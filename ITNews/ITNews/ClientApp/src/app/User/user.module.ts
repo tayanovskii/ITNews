@@ -34,6 +34,7 @@ export function getBaseUrl() {
       { path: 'user/login', component: LoginComponent},
       { path: 'user/profiles/:userName', component: UserProfileComponent },
       { path: 'user/create-profile', component: CreateProfileComponent },
+      { path: 'user/edit-profile', component: CreateProfileComponent },
       { path: 'user/user-news/:id', component: UserNewsComponent},
       { path: 'user/registration', component: RegistrationComponent},
       { path: 'user/change-password', component: ChangePasswordComponent }
