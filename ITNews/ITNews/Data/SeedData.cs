@@ -68,7 +68,9 @@ namespace ITNews.Data
             {
                 UserName = nameAdmin,
                 Email = emailAdmin,
-                LockoutEnabled = false
+                LockoutEnabled = false,
+                CreatedAt =  DateTime.Now,
+                UserBlocked = false
             };
 
             var result = userManager.CreateAsync(admin, passwordAdmin).Result;

@@ -103,7 +103,9 @@ namespace ITNews.Controllers
 
             return BadRequest(ModelState);
         }
- 
+
+
+
 
         [Authorize]
         [HttpPost]
@@ -271,7 +273,8 @@ namespace ITNews.Controllers
         {
             var users = context.Users
                 .Include(user => user.UserProfile)
-                .Include(user => user.CommentLikes);
+                .Include(user => user.Comments).ThenInclude(comment => comment.Likes);
+
             var listUserMiniCardDto = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserMiniCardDto>>(users);
             return listUserMiniCardDto;
         }
@@ -280,8 +283,9 @@ namespace ITNews.Controllers
         [HttpGet("availableRoles")]
         public List<IdentityRole> GetAvailableRoles()
         {
-            var roleManagerRoles = roleManager.Roles.ToList();
-            return roleManagerRoles;
+            var identityRoles = roleManager.Roles.ToList();
+            //var identityRoles = context.Roles.ToList();
+            return identityRoles;
         }
 
         // GET: api/Account/ManageUsers
@@ -290,10 +294,18 @@ namespace ITNews.Controllers
         {
             
             var users = context.Users
-                .Include(user => user.UserProfile)
-                .Include(user => user.CommentLikes);
-            var listManageUsers = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ManageUserDto>>(users);
-            return listManageUsers;
+                .Include(user=> user.Comments)
+                .ThenInclude(comment => comment.Likes);
+
+
+            var listManageUserDto = new List<ManageUserDto>();
+            foreach (var user in users)
+            {
+                var manageUserDto = mapper.Map<ApplicationUser, ManageUserDto>(user);
+                manageUserDto.Roles = userManager.GetRolesAsync(user).Result;
+                listManageUserDto.Add(manageUserDto);
+            }
+            return listManageUserDto;
         }
 
         // DELETE: api/Account/5
@@ -309,6 +321,14 @@ namespace ITNews.Controllers
 
             return Ok(deletedUser.Id);
 
+        }
+
+        [HttpPost]
+        [Route("logout")]
+        public IActionResult Logout()
+        {
+            if (signInManager.SignOutAsync().IsCompleted) return Ok();
+            return BadRequest(ModelState);
         }
 
         //[HttpPost("lockUser/{userId},{forDays}")]

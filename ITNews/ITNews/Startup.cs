@@ -10,6 +10,7 @@ using ITNews.Services.Email;
 using ITNews.Services.News;
 using ITNews.Services.Photo;
 using ITNews.Services.Tags;
+using ITNews.Services.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -65,6 +66,7 @@ namespace ITNews
             services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<INewsService, NewsService>();
+            services.AddTransient<IUserService, UserService>();
 
             var tokenSettings = tokenSection.Get<TokenSettings>();
 

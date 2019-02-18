@@ -24,6 +24,19 @@ namespace ITNews.Helpers
             return query;
         }
 
+
+        public static IQueryable<ApplicationUser> ApplyFiltering(this IQueryable<ApplicationUser> query, UserQuery queryObj)
+        {
+            if (queryObj.UserBlocked.HasValue)
+                query = query.Where(user => user.UserBlocked == queryObj.UserBlocked.Value);
+
+            //if (queryObj.Role != null)
+            //    query = query.Where(user => user);
+
+
+            return query;
+        }
+
         public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, IQueryObject queryObj, Dictionary<string, Expression<Func<T, object>>> columnsMap)
         {
             if (IsNullOrWhiteSpace(queryObj.SortBy) || !columnsMap.ContainsKey(queryObj.SortBy))
