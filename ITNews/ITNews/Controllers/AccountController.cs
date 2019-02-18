@@ -290,22 +290,24 @@ namespace ITNews.Controllers
 
         // GET: api/Account/ManageUsers
         [HttpGet("manageUsers")]
-        public IEnumerable<ManageUserDto> GetManageUsers()
+        public IEnumerable<ApplicationUser> GetManageUsers()
         {
-            
-            var users = context.Users
-                .Include(user=> user.Comments)
-                .ThenInclude(comment => comment.Likes);
+            var applicationUsers = userManager.GetUsersInRoleAsync("admin").Result.AsQueryable().ToList();
+
+            //var users = context.Users
+            //    .Include(user=> user.Comments)
+            //    .ThenInclude(comment => comment.Likes);
 
 
-            var listManageUserDto = new List<ManageUserDto>();
-            foreach (var user in users)
-            {
-                var manageUserDto = mapper.Map<ApplicationUser, ManageUserDto>(user);
-                manageUserDto.Roles = userManager.GetRolesAsync(user).Result;
-                listManageUserDto.Add(manageUserDto);
-            }
-            return listManageUserDto;
+            //var listManageUserDto = new List<ManageUserDto>();
+            //foreach (var user in users)
+            //{
+            //    var manageUserDto = mapper.Map<ApplicationUser, ManageUserDto>(user);
+            //    manageUserDto.Roles = userManager.GetRolesAsync(user).Result;
+            //    listManageUserDto.Add(manageUserDto);
+            //}
+            //var manageUserDtos = mapper.Map<IQueryable<ApplicationUser>, IQueryable<ManageUserDto>>(applicationUsers);
+            return applicationUsers;
         }
 
         // DELETE: api/Account/5

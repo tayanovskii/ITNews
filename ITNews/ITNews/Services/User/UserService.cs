@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ITNews.Data;
 using ITNews.Data.Entities;
 using ITNews.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +15,12 @@ namespace ITNews.Services.User
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext context;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         public async Task<QueryResult<ApplicationUser>> GetUsers(UserQuery queryObj)
@@ -27,7 +30,15 @@ namespace ITNews.Services.User
             var query = context.Users.Include(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .AsQueryable();
 
-            query = query.ApplyFiltering(queryObj);
+            if (queryObj.Role != null)
+            {
+                var usersInRoleAsync = await userManager.GetUsersInRoleAsync(queryObj.Role);
+                query = usersInRoleAsync.AsQueryable().Include(user => user.Comments).ThenInclude(comment => comment.Likes);
+            }
+
+            if (queryObj.UserBlocked.HasValue)
+                query = query.Where(user => user.UserBlocked == queryObj.UserBlocked.Value);
+          
 
 
             var columnsMap = new Dictionary<string, Expression<Func<ApplicationUser, object>>>()
@@ -48,14 +59,5 @@ namespace ITNews.Services.User
             return result;
         }
 
-        //public int GetUserCountLikes(ApplicationUser user)
-        //{
-        //    var countLikes = context.CommentLikes.Select(like => like.CommentId).Intersect(user.Comments.Select(comment => comment.Id)).Count();
-        //    user.Comments.Where(comment => comment.Id == contextCommentLikes.)
-        //    foreach (var applicationUser in users)
-        //    {
-        //        applicationUser.Comments.
-        //    }
-        //}
     }
 }
