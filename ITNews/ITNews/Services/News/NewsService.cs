@@ -17,7 +17,7 @@ namespace ITNews.Services.News
         {
             this.context = context;
         }
-        public async Task<QueryResult<Data.Entities.News>> GetNews(NewsQuery queryObj)
+        public async Task<QueryResult<Data.Entities.News>> GetNewsAsync(NewsQuery queryObj)
         {
             var result = new QueryResult<Data.Entities.News>();
 

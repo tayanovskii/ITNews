@@ -8,6 +8,6 @@ namespace ITNews.Services.News
 {
     public interface INewsService
     {
-        Task<QueryResult<Data.Entities.News>> GetNews(NewsQuery queryObj);
+        Task<QueryResult<Data.Entities.News>> GetNewsAsync(NewsQuery queryObj);
     }
 }
