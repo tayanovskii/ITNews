@@ -350,7 +350,7 @@ namespace ITNews.Controllers
 
             var userRoles = await userManager.GetRolesAsync(changedUser);
             var editedRoles = manageUserDto.Roles;
-            if (editedRoles==null) return BadRequest();
+            if (editedRoles==null) return BadRequest("User must have even though role!!!");
             var removedRoles = userRoles.Except(editedRoles).ToList();
             if (removedRoles.Any())
             {
