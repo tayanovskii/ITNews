@@ -137,7 +137,7 @@ namespace ITNews.Controllers
                 {
                     user.CreatedBy = user.Id;
                     await userManager.UpdateAsync(user);
-                    await userManager.AddToRoleAsync(user, "user");  //todo constant class helper
+                    await userManager.AddToRoleAsync(user, "reader");  //todo constant class helper
                     var confirmationToken = await userManager.
                         GenerateEmailConfirmationTokenAsync(user);
 
@@ -284,7 +284,6 @@ namespace ITNews.Controllers
         public List<IdentityRole> GetAvailableRoles()
         {
             var identityRoles = roleManager.Roles.ToList();
-            //var identityRoles = context.Roles.ToList();
             return identityRoles;
         }
 
@@ -305,6 +304,42 @@ namespace ITNews.Controllers
                 listManageUserDto.Add(manageUserDto);
             }
             return listManageUserDto;
+        }
+
+        // PUT: api/Account/userId
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> PutManageUsers([FromRoute] string userId, [FromBody] ManageUserDto manageUserDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);  
+            }
+
+            var changedUser = await userManager.FindByIdAsync(userId);
+            if (changedUser == null) return NotFound();
+
+            changedUser.ModifiedAt = DateTime.Now;
+            if (ClaimsPrincipal.Current != null)
+            {
+                changedUser.ModifiedBy = userManager.GetUserAsync(ClaimsPrincipal.Current).Result.Id;
+            }
+            changedUser.UserBlocked = manageUserDto.UserBlocked;
+
+            var userRoles = await userManager.GetRolesAsync(changedUser);
+            var editedRoles = manageUserDto.Roles;
+            var removedRoles = userRoles.Except(editedRoles).ToList();
+            if (removedRoles.Any())
+            {
+                await userManager.RemoveFromRolesAsync(changedUser, removedRoles);
+            }
+
+            var addedRoles = manageUserDto.Roles.Except(userRoles).ToList();
+            if (addedRoles.Any())
+            {
+                await userManager.AddToRolesAsync(changedUser, addedRoles);
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Account/5

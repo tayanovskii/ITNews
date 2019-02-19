@@ -81,6 +81,8 @@ namespace ITNews.Mapping
             //})
             .ForAllOtherMembers(opt => opt.Ignore());
 
+        
+
         }
     }
 }
