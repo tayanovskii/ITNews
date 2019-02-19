@@ -286,9 +286,9 @@ namespace ITNews.Controllers
 
         // GET: api/Account/availableRoles
         [HttpGet("availableRoles")]
-        public List<IdentityRole> GetAvailableRoles()
+        public IEnumerable<string> GetAvailableRoles()
         {
-            var identityRoles = roleManager.Roles.ToList();
+            var identityRoles = roleManager.Roles.Select(role => role.Name);
             return identityRoles;
         }
 
@@ -350,6 +350,7 @@ namespace ITNews.Controllers
 
             var userRoles = await userManager.GetRolesAsync(changedUser);
             var editedRoles = manageUserDto.Roles;
+            if (editedRoles==null) return BadRequest();
             var removedRoles = userRoles.Except(editedRoles).ToList();
             if (removedRoles.Any())
             {
