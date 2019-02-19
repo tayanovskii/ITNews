@@ -23,7 +23,7 @@ namespace ITNews.Services.User
             this.userManager = userManager;
         }
 
-        public async Task<QueryResult<ApplicationUser>> GetUsers(UserQuery queryObj)
+        public async Task<QueryResult<ApplicationUser>> GetUsersAsync(UserQuery queryObj)
         {
             var result = new QueryResult<ApplicationUser>();
 
@@ -50,11 +50,11 @@ namespace ITNews.Services.User
 
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();
+            result.TotalItems = query.Count();
 
             query = query.ApplyPaging(queryObj);
 
-            result.Items = await query.ToListAsync();
+            result.Items =  query.ToList();
 
             return result;
         }

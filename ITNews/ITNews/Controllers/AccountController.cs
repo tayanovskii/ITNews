@@ -15,6 +15,7 @@ using ITNews.Data.Entities;
 using ITNews.DTO;
 using ITNews.DTO.AccountDto;
 using ITNews.DTO.UserDto;
+using ITNews.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,6 +45,7 @@ namespace ITNews.Controllers
         private readonly PhotoSettings photoSettings;
         private readonly TokenSettings tokenSettings;
         private readonly IMapper mapper;
+        private readonly IUserService userService;
 
 
         public AccountController(
@@ -54,7 +56,9 @@ namespace ITNews.Controllers
             SignInManager<ApplicationUser> signInManager,
             IOptionsSnapshot<PhotoSettings> photoSettings,
             IOptionsSnapshot<TokenSettings> tokenSettings,
-            IEmailSender emailSender, IMapper mapper
+            IEmailSender emailSender,
+            IMapper mapper,
+            IUserService userService
                 )
         {
             this.context = context;
@@ -66,6 +70,7 @@ namespace ITNews.Controllers
             this.photoSettings = photoSettings.Value;
             this.tokenSettings = tokenSettings.Value;
             this.mapper = mapper;
+            this.userService = userService;
         }
 
         [HttpPost]
@@ -281,9 +286,9 @@ namespace ITNews.Controllers
 
         // GET: api/Account/availableRoles
         [HttpGet("availableRoles")]
-        public List<IdentityRole> GetAvailableRoles()
+        public IEnumerable<string> GetAvailableRoles()
         {
-            var identityRoles = roleManager.Roles.ToList();
+            var identityRoles = roleManager.Roles.Select(role => role.Name);
             return identityRoles;
         }
 
@@ -304,6 +309,24 @@ namespace ITNews.Controllers
                 listManageUserDto.Add(manageUserDto);
             }
             return listManageUserDto;
+        }
+
+        // GET: api/Account/QueryManageUsers
+        [HttpGet("queryManageUsers")]
+        public async Task<QueryResultDto<ManageUserDto>> GetQueryManageUsers([FromQuery] UserQueryDto filterResource)
+        {
+            var filter = mapper.Map<UserQueryDto, UserQuery>(filterResource);
+            var queryResult = await userService.GetUsersAsync(filter);
+
+
+            var resultDto = mapper.Map<QueryResult<ApplicationUser>, QueryResultDto<ManageUserDto>>(queryResult);
+            foreach (var userDto in resultDto.Items)
+            {
+
+                userDto.Roles = await userManager.GetRolesAsync(await userManager.FindByIdAsync(userDto.UserId));
+            }
+
+            return resultDto;
         }
 
         // PUT: api/Account/userId
@@ -327,6 +350,7 @@ namespace ITNews.Controllers
 
             var userRoles = await userManager.GetRolesAsync(changedUser);
             var editedRoles = manageUserDto.Roles;
+            if (editedRoles==null) return BadRequest("User must have even though role!!!");
             var removedRoles = userRoles.Except(editedRoles).ToList();
             if (removedRoles.Any())
             {
@@ -339,7 +363,9 @@ namespace ITNews.Controllers
                 await userManager.AddToRolesAsync(changedUser, addedRoles);
             }
 
-            return NoContent();
+            var changedUserDto = mapper.Map<ApplicationUser,ManageUserDto>(changedUser);
+
+            return Ok(changedUserDto);
         }
 
         // DELETE: api/Account/5

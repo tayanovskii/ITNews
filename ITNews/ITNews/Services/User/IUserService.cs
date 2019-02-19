@@ -8,6 +8,6 @@ namespace ITNews.Services.User
 {
     public interface IUserService
     {
-        Task<QueryResult<ApplicationUser>> GetUsers(UserQuery queryObj);
+        Task<QueryResult<ApplicationUser>> GetUsersAsync(UserQuery queryObj);
     }
 }

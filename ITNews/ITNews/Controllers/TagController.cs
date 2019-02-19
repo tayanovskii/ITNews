@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using ITNews.DTO;
 using ITNews.Data;
 using ITNews.Data.Entities;
+using ITNews.DTO.Tag;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ITNews.Controllers
@@ -56,6 +57,25 @@ namespace ITNews.Controllers
 
             var tagDto = mapper.Map<Tag,TagDto>(tag);
             return Ok(tagDto);
+        }
+
+        // GET: api/Tag/5
+        [AllowAnonymous]
+        [HttpGet("tagsCloud")]
+        public IActionResult GetTagsCloud()
+        {
+            var allTags = context.Tags;
+
+            var tagsClouds = mapper.Map<IEnumerable<Tag>, IEnumerable<TagsCloud>>(allTags);
+
+            var newsTags = context.NewsTags.AsQueryable();
+
+            foreach (var tagsCloud in tagsClouds)
+            {
+                tagsCloud.EntryCount = newsTags.Count(nt => nt.TagId == tagsCloud.Id);
+            }
+
+            return Ok(tagsClouds);
         }
 
         [AllowAnonymous]

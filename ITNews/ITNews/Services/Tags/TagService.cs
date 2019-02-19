@@ -31,18 +31,21 @@ namespace ITNews.Services.Tags
             //input TagID = 0 denote that it`s a new tag and we need to add it to database
             foreach (var tagDto in newTagDto)
             {
+                var tagByName = await GetTagByName(tagDto.Name);
                 if (tagDto.Id == 0)
                 {
-                    var tagByName = GetTagByName(tagDto.Name).Result;
-                    if (tagByName != null)
+                    var checkedTag = tagByName;
+                    if (checkedTag != null)
                     {
-                        newTagsDto.Add(new TagDto(){Id = tagByName.Id, Name = tagByName.Name});
+                        newTagsDto.Add(new TagDto(){Id = checkedTag.Id, Name = checkedTag.Name});
                         continue;
                     }
                     newTagsDtoToSaveDataBase.Add(tagDto);
                     continue;
                 }
-                newTagsDto.Add(tagDto);
+
+                var tagByNameDto = mapper.Map<Tag,TagDto>(tagByName);
+                newTagsDto.Add(tagByNameDto);
             }
 
             var newTags = mapper.Map<IEnumerable<TagDto>, IEnumerable<Tag>>(newTagsDtoToSaveDataBase);
@@ -61,9 +64,8 @@ namespace ITNews.Services.Tags
 
         public async Task<Tag> GetTagByName(string name)
         {
-            var findTag = await context.Tags.FirstOrDefaultAsync(tag => tag.Name == name);
+            var findTag = await context.Tags.SingleOrDefaultAsync(tag => tag.Name == name);
             return findTag;
-
         }
     }
 }

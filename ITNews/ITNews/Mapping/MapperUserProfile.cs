@@ -81,7 +81,8 @@ namespace ITNews.Mapping
             //})
             .ForAllOtherMembers(opt => opt.Ignore());
 
-        
+            CreateMap<UserQuery, UserQueryDto>()
+                .ReverseMap();
 
         }
     }
