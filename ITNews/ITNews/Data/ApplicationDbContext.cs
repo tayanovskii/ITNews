@@ -58,6 +58,7 @@ namespace ITNews.Data
             user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId).OnDelete(DeleteBehavior.SetNull);
             user.HasOne(u => u.UserProfile).WithOne(up => up.User).HasForeignKey<UserProfile>(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
 
+
             var news = builder.Entity<News>();
             news.HasKey(n => n.Id);
             news.Property(n => n.Content).IsRequired();

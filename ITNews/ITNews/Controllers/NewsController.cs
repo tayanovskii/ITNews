@@ -204,7 +204,7 @@ namespace ITNews.Controllers
             return mapper.Map<QueryResult<News>, QueryResultDto<NewsCardDto>>(queryResult);
         }
 
-        //// PUT: api/News/5
+        // PUT: api/News/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNews([FromRoute] int id, [FromBody] EditNewsDto editNewsDto)
         {

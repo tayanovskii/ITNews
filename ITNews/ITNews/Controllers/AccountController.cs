@@ -103,7 +103,9 @@ namespace ITNews.Controllers
 
             return BadRequest(ModelState);
         }
- 
+
+
+
 
         [Authorize]
         [HttpPost]
@@ -135,7 +137,7 @@ namespace ITNews.Controllers
                 {
                     user.CreatedBy = user.Id;
                     await userManager.UpdateAsync(user);
-                    await userManager.AddToRoleAsync(user, "user");  //todo constant class helper
+                    await userManager.AddToRoleAsync(user, "reader");  //todo constant class helper
                     var confirmationToken = await userManager.
                         GenerateEmailConfirmationTokenAsync(user);
 
@@ -271,7 +273,8 @@ namespace ITNews.Controllers
         {
             var users = context.Users
                 .Include(user => user.UserProfile)
-                .Include(user => user.CommentLikes);
+                .Include(user => user.Comments).ThenInclude(comment => comment.Likes);
+
             var listUserMiniCardDto = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserMiniCardDto>>(users);
             return listUserMiniCardDto;
         }
@@ -280,20 +283,63 @@ namespace ITNews.Controllers
         [HttpGet("availableRoles")]
         public List<IdentityRole> GetAvailableRoles()
         {
-            var roleManagerRoles = roleManager.Roles.ToList();
-            return roleManagerRoles;
+            var identityRoles = roleManager.Roles.ToList();
+            return identityRoles;
         }
 
         // GET: api/Account/ManageUsers
         [HttpGet("manageUsers")]
         public IEnumerable<ManageUserDto> GetManageUsers()
         {
-            
             var users = context.Users
-                .Include(user => user.UserProfile)
-                .Include(user => user.CommentLikes);
-            var listManageUsers = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ManageUserDto>>(users);
-            return listManageUsers;
+                .Include(user => user.Comments)
+                .ThenInclude(comment => comment.Likes);
+
+
+            var listManageUserDto = new List<ManageUserDto>();
+            foreach (var user in users)
+            {
+                var manageUserDto = mapper.Map<ApplicationUser, ManageUserDto>(user);
+                manageUserDto.Roles = userManager.GetRolesAsync(user).Result;
+                listManageUserDto.Add(manageUserDto);
+            }
+            return listManageUserDto;
+        }
+
+        // PUT: api/Account/userId
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> PutManageUsers([FromRoute] string userId, [FromBody] ManageUserDto manageUserDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);  
+            }
+
+            var changedUser = await userManager.FindByIdAsync(userId);
+            if (changedUser == null) return NotFound();
+
+            changedUser.ModifiedAt = DateTime.Now;
+            if (ClaimsPrincipal.Current != null)
+            {
+                changedUser.ModifiedBy = userManager.GetUserAsync(ClaimsPrincipal.Current).Result.Id;
+            }
+            changedUser.UserBlocked = manageUserDto.UserBlocked;
+
+            var userRoles = await userManager.GetRolesAsync(changedUser);
+            var editedRoles = manageUserDto.Roles;
+            var removedRoles = userRoles.Except(editedRoles).ToList();
+            if (removedRoles.Any())
+            {
+                await userManager.RemoveFromRolesAsync(changedUser, removedRoles);
+            }
+
+            var addedRoles = manageUserDto.Roles.Except(userRoles).ToList();
+            if (addedRoles.Any())
+            {
+                await userManager.AddToRolesAsync(changedUser, addedRoles);
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Account/5
@@ -309,6 +355,14 @@ namespace ITNews.Controllers
 
             return Ok(deletedUser.Id);
 
+        }
+
+        [HttpPost]
+        [Route("logout")]
+        public IActionResult Logout()
+        {
+            if (signInManager.SignOutAsync().IsCompleted) return Ok();
+            return BadRequest(ModelState);
         }
 
         //[HttpPost("lockUser/{userId},{forDays}")]

@@ -115,15 +115,11 @@ namespace ITNews.Migrations
 
                     b.Property<string>("ModifiedBy");
 
-                    b.Property<string>("ModifiedByUserId1");
-
                     b.Property<int>("NewsId");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ModifiedByUserId1");
 
                     b.HasIndex("NewsId");
 
@@ -185,8 +181,6 @@ namespace ITNews.Migrations
 
                     b.Property<string>("ModifiedBy");
 
-                    b.Property<string>("ModifiedByUserId");
-
                     b.Property<string>("Title")
                         .IsRequired();
 
@@ -195,8 +189,6 @@ namespace ITNews.Migrations
                     b.Property<long>("VisitorCount");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ModifiedByUserId");
 
                     b.HasIndex("UserId");
 
@@ -296,7 +288,7 @@ namespace ITNews.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("UserProfile");
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -418,10 +410,6 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("ITNews.Data.Entities.Comment", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.ApplicationUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId1");
-
                     b.HasOne("ITNews.Data.Entities.News", "News")
                         .WithMany("Comments")
                         .HasForeignKey("NewsId")
@@ -448,10 +436,6 @@ namespace ITNews.Migrations
 
             modelBuilder.Entity("ITNews.Data.Entities.News", b =>
                 {
-                    b.HasOne("ITNews.Data.Entities.ApplicationUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId");
-
                     b.HasOne("ITNews.Data.Entities.ApplicationUser", "User")
                         .WithMany("News")
                         .HasForeignKey("UserId")
