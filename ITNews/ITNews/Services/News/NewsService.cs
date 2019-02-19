@@ -36,12 +36,16 @@ namespace ITNews.Services.News
             {
                 ["VisitorCount"] = news => news.VisitorCount,
                 ["ModifiedAt"] = news => news.ModifiedAt,
-                ["Rating"] = news =>  news.Ratings.Average(rating => rating.Value)
+                ["Rating"] = news => news.Ratings.Average(rating => rating.Value)
             };
 
 
+            if (queryObj.SortBy == "Rating")
+            {
+                query = query.Where(news => news.Ratings!=null && news.Ratings.Any());
+            }
+
             query = query.ApplyOrdering(queryObj, columnsMap);
-            
             result.TotalItems = await query.CountAsync();
 
             query = query.ApplyPaging(queryObj);

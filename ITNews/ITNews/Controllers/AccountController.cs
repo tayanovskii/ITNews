@@ -363,7 +363,9 @@ namespace ITNews.Controllers
                 await userManager.AddToRolesAsync(changedUser, addedRoles);
             }
 
-            return NoContent();
+            var changedUserDto = mapper.Map<ApplicationUser,ManageUserDto>(changedUser);
+
+            return Ok(changedUserDto);
         }
 
         // DELETE: api/Account/5
