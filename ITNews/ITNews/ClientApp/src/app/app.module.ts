@@ -1,3 +1,4 @@
+import { AdminModule } from './Admin/admin.module';
 import { AuthService } from './Shared/services/auth.service';
 import { HomeComponent } from './Core/components/home/home.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,6 +24,7 @@ import { NewsModule } from './News/news.module';
     SharedModule,
     UserModule,
     NewsModule,
+    AdminModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
       { path: 'create-news', component: CreateNewsComponent }

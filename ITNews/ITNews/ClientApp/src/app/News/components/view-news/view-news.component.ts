@@ -122,7 +122,7 @@ export class ViewNewsComponent implements OnInit {
     if (ind !== -1) { // like has to be deleted
       // this.likeService.removeLike()
       this.likeService.removeLike(likeObj)
-      .subscribe(res => {
+    .subscribe(res => {
         this.news.commentsLikedByUser.splice(ind, 1);
         console.log('commentsLikedByUser: ' + this.news.commentsLikedByUser);
         const commentInd = this.news.comments.findIndex(c => c.id === res.commentId);

@@ -8,6 +8,7 @@ import { SharedModule } from '../Shared/shared.module';
 import { NewsCardListComponent } from '../Core/components/news-card-list/news-card-list.component';
 import { NewsCardComponent } from '../Core/components/news-card/news-card.component';
 import { MiniNewsCardComponent } from '../Core/components/mini-news-card/mini-news-card.component';
+import { TagCloudModule } from 'angular-tag-cloud-module';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { MiniNewsCardComponent } from '../Core/components/mini-news-card/mini-ne
   ],
   imports: [
     SharedModule,
+    TagCloudModule,
     RouterModule.forChild([])
   ],
   exports: [

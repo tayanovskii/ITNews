@@ -30,6 +30,7 @@
     "@ngui/auto-complete": "^2.0.0",
     "angular-inline-editors": "^2.0.4",
     "angular-markdown-editor": "^2.0.2",
+    "angular-tag-cloud-module": "^3.3.0",
     "angular2-image-upload": "^1.0.0-rc.2",
     "bootstrap": "^4.2.1",
     "core-js": "^2.5.4",

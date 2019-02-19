@@ -54,10 +54,6 @@ export function getBaseUrl() {
     CategoryService,
     AuthGuard,
     {
-      provide: 'BASE_URL2',
-      useValue: 'https://localhost:5001/',
-    },
-    {
       provide: 'BASE_URL',
       useFactory: getBaseUrl
     },
