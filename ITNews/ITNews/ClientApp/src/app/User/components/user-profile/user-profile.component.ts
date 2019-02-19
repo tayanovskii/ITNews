@@ -1,5 +1,5 @@
 import { UserProfileService } from './../../services/user-profile.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
 import { AuthService } from 'src/app/Shared/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { faUndoAlt } from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +12,7 @@ import { faUndoAlt } from '@fortawesome/free-solid-svg-icons';
 })
 export class UserProfileComponent implements OnInit {
   profile: UserProfile;
+  myProfileMode: boolean;
   userName: string;
   role: string;
   email: string;
@@ -23,15 +24,27 @@ export class UserProfileComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private userProfileService: UserProfileService
   ) {
+    this.myProfileMode = false;
+    this.activatedRoute.snapshot.url.forEach(element => {
+      if (element.path === 'my-profile') {
+        this.myProfileMode = true;
+        return;
+      }
+    });
     // this.profile = <UserProfile>{};
   }
 
   ngOnInit() {
-    const userInfo = this.authService.getDecodeToken();
-    this.userId = userInfo.sub;
-    this.userName = userInfo.unique_name;
-    this.role = userInfo.role;
-    this.email = userInfo.email;
+    let userInfo = null;
+    if (this.myProfileMode) {
+      userInfo = this.authService.getDecodeToken();
+      this.userId = userInfo.sub;
+      this.userName = userInfo.unique_name;
+      this.role = userInfo.role;
+      this.email = userInfo.email;
+    } else {
+      this.userId = this.activatedRoute.snapshot.paramMap.get('userId');
+    }
 
     if (this.userId) {
       this.userProfileService.getUserProfileByUser(this.userId)

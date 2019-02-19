@@ -32,7 +32,8 @@ export function getBaseUrl() {
     RouterModule.forChild([
       { path: 'user', component: LoginComponent },
       { path: 'user/login', component: LoginComponent},
-      { path: 'user/profiles/:userName', component: UserProfileComponent },
+      { path: 'user/my-profile', component: UserProfileComponent },
+      { path: 'user/profiles/:userId', component: UserProfileComponent },
       { path: 'user/create-profile', component: CreateProfileComponent },
       { path: 'user/edit-profile', component: CreateProfileComponent },
       { path: 'user/user-news/:id', component: UserNewsComponent},

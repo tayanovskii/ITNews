@@ -1,3 +1,5 @@
+import { Role } from './Role';
+
 export class ManageUser {
   userBlocked: boolean;
   userName: string;

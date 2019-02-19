@@ -1,5 +1,5 @@
 <h3 class="text-center">
-  {{userName}} profile page
+  {{ profile?.userName }} profile page
 </h3>
 <div class="row user-profile-content">
   <div class="col">
@@ -75,7 +75,7 @@
     </div>
     <ng-template #notExistProfile>
       <h6>Profile doesn't exist yet</h6>
-      <a class="btn btn-primary" [routerLink]="['/user/create-profile']" routerLinkActive="router-link-active">Create</a>
+      <a *ngIf="myProfileMode" class="btn btn-primary" [routerLink]="['/user/create-profile']" routerLinkActive="router-link-active">Create</a>
     </ng-template>
   </div>
 </div>

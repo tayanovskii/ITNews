@@ -16,9 +16,9 @@ export class ManageUserService {
     return this.http.get<ManageUser[]>(this.url + '/manageUsers');
   }
   changeUserProfile(user: ManageUser) {
-    return this.http.put(this.url, user);
+    return this.http.put(this.url + `/${user.userId}`, user);
   }
-  deleteUserProfile(id: number) {
-    return this.http.delete(this.url + `/${id}`);
+  deleteUserProfile(userId: string) {
+    return this.http.delete(this.url + `/${userId}`);
   }
 }

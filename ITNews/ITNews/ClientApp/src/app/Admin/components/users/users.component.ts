@@ -17,6 +17,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class UsersComponent implements OnInit {
   users: ManageUser[];
   roles: Role[];
+
   // icons:
   trashIcon = faTrashAlt;
   deleteUserIcon = faUserMinus;
@@ -32,6 +33,7 @@ export class UsersComponent implements OnInit {
     this.users = [];
     this.users.forEach(user => {
       user.roles = [];
+
     });
   }
 
@@ -42,7 +44,35 @@ export class UsersComponent implements OnInit {
       this.users = res[0],
       this.roles = res[1]
     }, error => console.log(error))
-
   }
-
+  lockUser(userId: string) {
+    let user = this.users.find(u => u.userId === userId);
+    user.userBlocked  =  !user.userBlocked;
+    this.userService.changeUserProfile(user)
+    .subscribe(res => console.log(`User ${user.userName} has been updated`),
+      error => console.log(error));
+  }
+  deleteUser(userId: string) {
+    if (confirm('Are you sure you want to delete user?')) {
+      this.userService.deleteUserProfile(userId)
+      .subscribe(res =>
+        {
+          console.log(`User with ${userId} id has been deleted`);
+          const ind = this.users.findIndex(u => u.userId === userId);
+          this.users.splice(ind, 1);
+        });
+    }
+  }
+  changeRoles(userId: string, role: Role) {
+    const user = this.users.find(u => u.userId === userId);
+    if (user.roles.includes(role.name)) {
+      const roleInd = user.roles.findIndex(r => r === role.name);
+      user.roles.splice(roleInd, 1);
+    } else {
+      user.roles.push(role.name);
+    }
+    this.userService.changeUserProfile(user)
+    .subscribe(res => console.log('User has been updated'),
+    error => console.log(error));
+  }
 }

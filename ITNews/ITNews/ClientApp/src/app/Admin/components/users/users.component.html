@@ -24,14 +24,15 @@
         </ul>
       </td>
       <td>
-        <button class="btn btn-outline-secondary">Blocked
+        <button class="btn btn-outline-secondary" (click)="lockUser(user.userId)">
+          {{ user.userBlocked ? 'Unlock' : 'Block' }}
           <fa-icon [icon]="blockUserIcon"></fa-icon>
         </button>
-        <a *ngIf="user.userName" class="btn btn-outline-info" [routerLink]="['/user/profiles', user?.userName]"
+        <a *ngIf="user.userId" class="btn btn-outline-info" [routerLink]="['/user/profiles', user?.userId]"
           routerLinkActive="router-link-active">View
           <fa-icon [icon]="viewUserIcon"></fa-icon>
         </a>
-        <button class="btn btn-outline-danger">Delete
+        <button class="btn btn-outline-danger" (click)="deleteUser(user.userId)">Delete
           <fa-icon [icon]="deleteUserIcon"></fa-icon>
         </button>
         <div ngbDropdown class="d-inline-block">
@@ -39,7 +40,8 @@
             <fa-icon [icon]="editUserIcon"></fa-icon>
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownRoles">
-            <button *ngFor="let role of roles" class="dropdown-item">Assign to {{ role.name }}</button>
+            <button *ngFor="let role of roles" class="dropdown-item" (click)="changeRoles(user.userId, role)">
+              {{ (user.roles.includes(role.name)) ? 'Remove ' : 'Assign to'}} {{ role.name }} role</button>
           </div>
         </div>
       </td>
