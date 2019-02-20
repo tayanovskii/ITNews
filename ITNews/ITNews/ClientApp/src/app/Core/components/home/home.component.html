@@ -3,7 +3,7 @@
 </h1>
 <div class="container">
   <div class="row">
-    <div class="col-8">
+    <div class="col-md-8">
       <div class="row">
         <news-card-list [page]="page" [pageSize]="pageSize" (totalItem)="changeTotalItems($event)" class="latest">
         </news-card-list>
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="col sidebar">
+    <div class="col-md-4 sidebar">
       <div class="most-viewed-card">
         <div class="most-viewed-header">
           <h3>Most Viewed</h3>
@@ -43,10 +43,13 @@
       </div>
       <div>
         <angular-tag-cloud
+        *ngIf="cloudData.length > 0"
             [data]="cloudData"
             [width]="options.width"
             [height]="options.height"
-            [overflow]="options.overflow">
+            [overflow]="options.overflow"
+            [zoomOnHover]="zoomOnHoverOptions"
+            (clicked)="showTag($event)">
         </angular-tag-cloud>
       </div>
     </div>

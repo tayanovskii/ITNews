@@ -64,7 +64,7 @@ namespace ITNews.Migrations
 
                     b.Property<bool>("SoftDeleted")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -187,7 +187,7 @@ namespace ITNews.Migrations
 
                     b.Property<bool>("SoftDeleted")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Title")
                         .IsRequired();
