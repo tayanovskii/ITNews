@@ -297,16 +297,32 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            var news = await context.News.FindAsync(id);
-            if (news == null)
+            var deletedNews = await context.News.FindAsync(id);
+            if (deletedNews == null)
             {
                 return NotFound();
             }
 
-            context.News.Remove(news);
-            await context.SaveChangesAsync();
+            //context.News.Remove(news);
+            //await context.SaveChangesAsync();
+            deletedNews.SoftDeleted = true;
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!NewsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+                }
+            }
 
-            return Ok(news.Id);
+            return Ok(deletedNews.Id);
         }
 
         private bool NewsExists(int id)

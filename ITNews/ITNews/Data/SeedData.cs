@@ -48,19 +48,14 @@ namespace ITNews.Data
         private static async Task CreateAdminAsync(
             UserManager<ApplicationUser> userManager, AdminSettings adminSettings)
         {
-            //var nameAdmin = configuration["AdminAccount:username"];
-            //var passwordAdmin = configuration["AdminAccount:password"];
-            //var emailAdmin = configuration["AdminAccount:email"];
-            //var roleAdmin = configuration["AdminAccount:role"];
 
             var nameAdmin = adminSettings.UserName;
             var passwordAdmin = adminSettings.Password;
             var emailAdmin = adminSettings.Email;
             var roleAdmin = adminSettings.Role;
 
-
-
             var admin = await userManager.FindByNameAsync(nameAdmin);
+            var admin2 = await userManager.FindByEmailAsync(emailAdmin);
 
             if (admin != null) return;
 
@@ -70,7 +65,8 @@ namespace ITNews.Data
                 Email = emailAdmin,
                 LockoutEnabled = false,
                 CreatedAt =  DateTime.Now,
-                UserBlocked = false
+                UserBlocked = false,
+                EmailConfirmed = true
             };
 
             var result = userManager.CreateAsync(admin, passwordAdmin).Result;

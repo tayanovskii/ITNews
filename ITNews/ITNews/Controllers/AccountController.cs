@@ -375,9 +375,11 @@ namespace ITNews.Controllers
             var deletedUser = await userManager.FindByIdAsync(userId);
             if (deletedUser == null) return NotFound();
 
-            var identityResult = await userManager.DeleteAsync(deletedUser);
-            
-            if (!identityResult.Succeeded) return BadRequest(ModelState);
+            //var identityResult = await userManager.DeleteAsync(deletedUser);
+            deletedUser.SoftDeleted = true;
+
+            var identityResult = await userManager.UpdateAsync(deletedUser);
+            if (!identityResult.Succeeded) return BadRequest(identityResult.Errors);
 
             return Ok(deletedUser.Id);
 
