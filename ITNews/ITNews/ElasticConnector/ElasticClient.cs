@@ -19,7 +19,7 @@ namespace ITNews.ElasticConnector
         //    var connectionPool = new StaticConnectionPool(nodes);
         //    var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming();
         //    var elasticClient = new ElasticClient(connectionSettings);
-            
+
         //    return elasticClient;
         //}
     }

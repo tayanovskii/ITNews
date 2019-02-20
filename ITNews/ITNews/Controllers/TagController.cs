@@ -61,14 +61,14 @@ namespace ITNews.Controllers
 
         // GET: api/Tag/5
         [AllowAnonymous]
-        [HttpGet("tagsCloud")]
-        public IActionResult GetTagsCloud()
+        [HttpGet("tagsCloud/{countTags:int?}")]
+        public IActionResult GetTagsCloud([FromRoute] int countTags=10)
         {
             var allTags = context.Tags;
 
             var tagsClouds = mapper.Map<IEnumerable<Tag>, IEnumerable<TagsCloud>>(allTags);
 
-            var newsTags = context.NewsTags.AsQueryable();
+            var newsTags = context.NewsTags.Take(countTags).AsQueryable();
 
             foreach (var tagsCloud in tagsClouds)
             {
