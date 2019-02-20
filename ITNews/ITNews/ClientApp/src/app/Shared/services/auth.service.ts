@@ -10,7 +10,7 @@ export class AuthService {
   private url: string;
   isLoggedIn: Subject<boolean> = new BehaviorSubject<boolean>(this.isLoggedIN());
   userName: Subject<string> = new BehaviorSubject<string>(this.getUserName());
-
+  isAdmin: Subject<boolean> = new BehaviorSubject<boolean>(this.isUserAdmin());
 
   constructor(
     private http: HttpClient,
@@ -76,6 +76,18 @@ export class AuthService {
     }
     public isLoggedIN(): boolean {
       return this.getAuth() ? true : false;
+    }
+    public isUserAdmin(): boolean {
+      const decodedToken = this.getDecodeToken();
+      if (decodedToken) {
+        decodedToken.role.forEach(r => {
+          if (r.toLowerCase().includes('admin')) {
+            return true;
+          }
+        });
+        // return decodedToken.role.includes('admin');
+      }
+      return false;
     }
     public getAuth(): string | null {
       const token = localStorage.getItem(this.tokenKey);

@@ -7,6 +7,6 @@ interface DecodedToken {
   nbf: number;
   exp: number;
   iss: string;
-  role: string;
+  role: string[];
   aud: string;
 }
