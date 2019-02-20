@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Tag } from '../models/tag';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
+import { TagCloud } from '../models/CloudTag';
 
 @Injectable()
 export class TagService {
@@ -25,7 +26,13 @@ export class TagService {
          return res;
        }, catchError(error => error)));
    }
-
+   getTagsForCloud() {
+    return this.http.get<TagCloud[]>(this.url + '/tagsCloud').pipe(
+      map(res => {
+        console.log('tags from service: ' + JSON.stringify(res));
+        return res;
+      }, catchError(error => error)));
+  }
    getTagsByPart(tagPart: string) {
       return this.http.get<Tag[]>(this.url + '/byPart/' + tagPart);
    }

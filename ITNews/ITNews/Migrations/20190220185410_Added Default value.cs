@@ -2,7 +2,7 @@
 
 namespace ITNews.Migrations
 {
-    public partial class AddedDefaultValueforSoftDeletingField : Migration
+    public partial class AddedDefaultvalue : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,14 +10,14 @@ namespace ITNews.Migrations
                 name: "SoftDeleted",
                 table: "News",
                 nullable: false,
-                defaultValue: true,
+                defaultValue: false,
                 oldClrType: typeof(bool));
 
             migrationBuilder.AlterColumn<bool>(
                 name: "SoftDeleted",
                 table: "AspNetUsers",
                 nullable: false,
-                defaultValue: true,
+                defaultValue: false,
                 oldClrType: typeof(bool));
         }
 
@@ -28,14 +28,14 @@ namespace ITNews.Migrations
                 table: "News",
                 nullable: false,
                 oldClrType: typeof(bool),
-                oldDefaultValue: true);
+                oldDefaultValue: false);
 
             migrationBuilder.AlterColumn<bool>(
                 name: "SoftDeleted",
                 table: "AspNetUsers",
                 nullable: false,
                 oldClrType: typeof(bool),
-                oldDefaultValue: true);
+                oldDefaultValue: false);
         }
     }
 }

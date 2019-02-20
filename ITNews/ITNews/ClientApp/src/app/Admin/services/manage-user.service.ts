@@ -21,4 +21,10 @@ export class ManageUserService {
   deleteUserProfile(userId: string) {
     return this.http.delete(this.url + `/${userId}`);
   }
+  lockUser(userId: string) {
+    return this.http.post(this.url + `/blockUser/${userId}`, {});
+  }
+  unLockUser(userId: string) {
+    return this.http.post(this.url + `/unBlockUser/${userId}`, {});
+  }
 }

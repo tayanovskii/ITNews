@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITNews.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190220182620_Added Default Value for Soft Deleting Field")]
-    partial class AddedDefaultValueforSoftDeletingField
+    [Migration("20190220185410_Added Default value")]
+    partial class AddedDefaultvalue
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,7 +66,7 @@ namespace ITNews.Migrations
 
                     b.Property<bool>("SoftDeleted")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -189,7 +189,7 @@ namespace ITNews.Migrations
 
                     b.Property<bool>("SoftDeleted")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Title")
                         .IsRequired();

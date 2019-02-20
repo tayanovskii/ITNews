@@ -14,6 +14,6 @@ export class RolesService {
     this.url = baseUrl + 'api/account';
   }
   getRoles() {
-    return this.http.get<Role[]>(this.url + '/availableRoles');
+    return this.http.get<string[]>(this.url + '/availableRoles');
   }
 }

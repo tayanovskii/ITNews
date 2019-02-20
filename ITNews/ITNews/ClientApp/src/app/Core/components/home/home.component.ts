@@ -3,8 +3,9 @@ import { NewsQuery } from './../../../News/models/NewsQuery';
 import { NewsCard } from 'src/app/Shared/models/news-card';
 import { NewsService } from './../../../News/services/news.service';
 import { Component, OnInit } from '@angular/core';
-import { CloudOptions, CloudData } from 'angular-tag-cloud-module';
+import { CloudOptions, CloudData, ZoomOnHoverOptions } from 'angular-tag-cloud-module';
 import { TagService } from 'src/app/Shared/services/tag.service';
+import { text } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'app-home',
@@ -18,19 +19,20 @@ export class HomeComponent implements OnInit {
   pageSizeArray;
   pageSizeForMostViewsd;
   mostViewedNews: NewsCard[];
-  // tag cloud options
+  // tag cloud options and data
+  cloudData: CloudData[] = [];
   options: CloudOptions = {
     // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value
     width : 1,
-    height : 400,
+    height : 600,
     overflow: true,
   };
-  cloudData: CloudData[] = [
-    { text: 'weight-5', weight: 8 , color: 'yellow'},
-    { text: 'weight-7', weight: 7 },
-    { text: 'weight-9', weight: 9 }
-    // ...
-  ];
+  zoomOnHoverOptions: ZoomOnHoverOptions = {
+    scale: 1.3, // Elements will become 130 % of current zize on hover
+    transitionTime: 0.2, // it will take 1.2 seconds until the zoom level defined in scale property has been reached
+    delay: 0.5 // Zoom will take affect after 0.8 seconds
+  };
+
   constructor(
     private newsService: NewsService,
     private tagService: TagService
@@ -43,6 +45,13 @@ export class HomeComponent implements OnInit {
     this.mostViewedNews = <NewsCard[]>{};
     this.pageSizeArray = ArrayHelpers.array_range(5, 11);
     console.log(this.pageSizeArray);
+    this.tagService.getTagsForCloud()
+    .subscribe(res => {
+        res.forEach(t => {
+        console.log(JSON.stringify(t));
+        this.cloudData.push(<CloudData>{ text: t.name, weight: t.entryCount, color: 'dark-blue' });
+      });
+    });
   }
 
   ngOnInit() {
@@ -61,5 +70,7 @@ export class HomeComponent implements OnInit {
   changePageSize(newPageSize) {
     this.pageSize = newPageSize;
   }
-
+  showTag($event) {
+    console.log(JSON.stringify($event));
+  }
 }
