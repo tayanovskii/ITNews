@@ -57,6 +57,7 @@ namespace ITNews.Data
             var user = builder.Entity<ApplicationUser>();
             user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId).OnDelete(DeleteBehavior.SetNull);
             user.HasOne(u => u.UserProfile).WithOne(up => up.User).HasForeignKey<UserProfile>(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
+            user.Property(n  => n.SoftDeleted).HasDefaultValue(true);
             user.HasQueryFilter(n => !n.SoftDeleted);
 
             var news = builder.Entity<News>();
@@ -64,6 +65,7 @@ namespace ITNews.Data
             news.Property(n => n.Content).IsRequired();
             news.Property(n => n.Description).IsRequired();
             news.Property(n => n.Title).IsRequired();
+            news.Property(n  => n.SoftDeleted).HasDefaultValue(true);
             news.HasQueryFilter(n => !n.SoftDeleted);
 
             var rating = builder.Entity<Rating>();
