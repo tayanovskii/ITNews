@@ -23,6 +23,7 @@ namespace ITNews.Data.Entities
         public IEnumerable<Rating> Ratings { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
         
+        public bool SoftDeleted { get; set; }
 
     }
 }

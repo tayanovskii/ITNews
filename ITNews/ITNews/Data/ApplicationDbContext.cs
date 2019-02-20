@@ -57,13 +57,14 @@ namespace ITNews.Data
             var user = builder.Entity<ApplicationUser>();
             user.HasMany(u => u.News).WithOne(n => n.User).HasForeignKey(n => n.UserId).OnDelete(DeleteBehavior.SetNull);
             user.HasOne(u => u.UserProfile).WithOne(up => up.User).HasForeignKey<UserProfile>(up => up.UserId).OnDelete(DeleteBehavior.Cascade);
-
+            user.HasQueryFilter(n => !n.SoftDeleted);
 
             var news = builder.Entity<News>();
             news.HasKey(n => n.Id);
             news.Property(n => n.Content).IsRequired();
             news.Property(n => n.Description).IsRequired();
             news.Property(n => n.Title).IsRequired();
+            news.HasQueryFilter(n => !n.SoftDeleted);
 
             var rating = builder.Entity<Rating>();
             rating.HasKey(r => r.Id);
