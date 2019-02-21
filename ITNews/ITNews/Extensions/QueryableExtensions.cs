@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using ITNews.Data.Entities;
-using static System.String;
 
-namespace ITNews.Helpers
+namespace ITNews.Extensions
 {
     public static class QueryableExtensions
     {
@@ -27,7 +25,7 @@ namespace ITNews.Helpers
 
         public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, IQueryObject queryObj, Dictionary<string, Expression<Func<T, object>>> columnsMap)
         {
-            if (IsNullOrWhiteSpace(queryObj.SortBy) || !columnsMap.ContainsKey(queryObj.SortBy))
+            if (String.IsNullOrWhiteSpace(queryObj.SortBy) || !columnsMap.ContainsKey(queryObj.SortBy))
                 return query;
 
             if (queryObj.IsSortAscending)

@@ -15,7 +15,6 @@ namespace ITNews.Data.Entities
         public long VisitorCount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        //public ApplicationUser ModifiedByUser { get; set; }
         public string ModifiedBy { get; set; }
         public ApplicationUser User { get; set; }
         public string UserId { get; set; }

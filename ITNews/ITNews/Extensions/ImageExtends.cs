@@ -5,7 +5,7 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using SixLabors.Shapes;
 
-namespace ITNews.Helpers
+namespace ITNews.Extensions
 {
     public static class ImageExtends
     {
