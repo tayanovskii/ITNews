@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   pageSize;
   totalItems;
   pageSizeArray;
-  pageSizeForMostViewsd;
+  pageSizeForMostViewed;
   mostViewedNews: NewsCard[];
   // tag cloud options and data
   cloudData: CloudData[] = [];
@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
     this.page = 1;
     this.pageSize = 5;
     this.totalItems = 20;
-    this.pageSizeForMostViewsd = 10;
+    this.pageSizeForMostViewed = 10;
     this.mostViewedNews = <NewsCard[]>{};
     this.pageSizeArray = ArrayHelpers.array_range(5, 11);
     console.log(this.pageSizeArray);
@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.newsService.getNews(<NewsQuery>{
       sortBy: 'VisitorCount',
-      pageSize: this.pageSizeForMostViewsd,
+      pageSize: this.pageSizeForMostViewed,
       page: this.page
     }).subscribe(res => {
       this.mostViewedNews = res.items;

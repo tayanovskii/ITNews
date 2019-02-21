@@ -21,7 +21,7 @@ export class AuthService {
       this.url = baseUrl + 'api/account';
     }
 
-    public login(loginData: LoginModel): Observable<boolean> {
+    login(loginData: LoginModel): Observable<boolean> {
       return this.http.post<string>(this.url + '/login', loginData)
         .pipe(
           map(result => {
@@ -41,7 +41,7 @@ export class AuthService {
           })));
 
     }
-    public registerWithoutConfirmation(newUser: RegistrationModel): Observable<boolean> {
+    registerWithoutConfirmation(newUser: RegistrationModel): Observable<boolean> {
       return this.http.post<string>(this.url + '/register', newUser)
         .pipe(
           map(result => {
@@ -57,7 +57,7 @@ export class AuthService {
             return throwError(error);
           }));
     }
-    public registerWithConfirmation(newUser: RegistrationModel) {
+    registerWithConfirmation(newUser: RegistrationModel) {
       return this.http.post<string>(this.url + '/register', newUser)
         .pipe(
           map(result => {
@@ -70,18 +70,25 @@ export class AuthService {
           }));
     }
 
-    public logout(): boolean {
+    logout(): boolean {
       this.setAuth(null);
       return true;
     }
-    public isLoggedIN(): boolean {
+    isLoggedIN(): boolean {
       return this.getAuth() ? true : false;
     }
-    public isUserAdmin(): boolean {
+    isUserAdmin(): boolean {
+      return this.isUserInRole('admin');
+    }
+    isUserWriter(): boolean {
+      return this.isUserInRole('writer');
+    }
+
+    private isUserInRole(roleName: string): boolean {
       const decodedToken = this.getDecodeToken();
       if (decodedToken) {
         decodedToken.role.forEach(r => {
-          if (r.toLowerCase().includes('admin')) {
+          if (r.toLowerCase().includes(roleName)) {
             return true;
           }
         });
@@ -117,14 +124,14 @@ export class AuthService {
       }
       return true;
     }
-    public getUserName(): string | null {
+    getUserName(): string | null {
       const decodedToken = this.getDecodeToken();
       if (decodedToken) {
         return decodedToken.unique_name;
       }
       return null;
     }
-    public getUserId(): string {
+    getUserId(): string {
       const decodedToken = this.getDecodeToken();
       if (decodedToken) {
         return decodedToken.sub;

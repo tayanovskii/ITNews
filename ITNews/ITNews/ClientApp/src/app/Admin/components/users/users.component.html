@@ -1,50 +1,129 @@
-<p>
-  users works!
-</p>
-<table class="table table-striped table-responsive">
-  <thead>
-    <th>#</th>
-    <th>User Name</th>
-    <th>Created Date</th>
-    <th>Likes Count</th>
-    <th>Roles</th>
-    <th>Actions</th>
-  </thead>
-  <tbody>
-    <tr *ngFor="let user of users; let i=index">
-      <td>{{ i }}</td>
-      <td>{{ user.userName }}</td>
-      <td>{{ user.createdAt | date:mediumDate}}</td>
-      <td>{{ user.countLikes}} </td>
-      <td>
-        <ul *ngIf="user.roles && user.roles.length > 0">
-          <li *ngFor="let role of user.roles">
-            {{ role }}
-          </li>
-        </ul>
-      </td>
-      <td>
-        <button class="btn btn-outline-secondary" (click)="lockUser(user.userId)">
-          {{ user.userBlocked ? 'Unlock' : 'Block' }}
-          <fa-icon [icon]="blockUserIcon"></fa-icon>
-        </button>
-        <a *ngIf="user.userId" class="btn btn-outline-info" [routerLink]="['/user/profiles', user?.userId]"
-          routerLinkActive="router-link-active">View
-          <fa-icon [icon]="viewUserIcon"></fa-icon>
-        </a>
-        <button class="btn btn-outline-danger" (click)="deleteUser(user.userId)">Delete
-          <fa-icon [icon]="deleteUserIcon"></fa-icon>
-        </button>
-        <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-primary" id="dropdownRoles" ngbDropdownToggle>Change Role
-            <fa-icon [icon]="editUserIcon"></fa-icon>
-          </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownRoles">
-            <button *ngFor="let role of roles" class="dropdown-item" (click)="changeRoles(user.userId, role)">
-              {{ (user.roles.includes(role)) ? 'Remove ' : 'Assign to'}} {{ role }} role</button>
+<div class="container">
+  <div class="row filter-area">
+    <div class="col-md-6 row">
+      <div class="col">
+          <div class="d-inline-block" ngbDropdown #myDropFilterField="ngbDropdown">
+              <button class="btn btn-outline-primary mr-2" id="choosingFilterField" ngbDropdownToggle >Filter By</button>
+              <div ngbDropdownMenu aria-labelledby="choosingFilterField">
+                <button (click)="changeFilter('')" class="dropdown-item">All</button>
+                <button (click)="changeFilter('status')" class="dropdown-item">By User Status</button>
+                <button (click)="changeFilter('role')" class="dropdown-item">By User Role</button>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="d-inline-block" ngbDropdown #myDropFilter="ngbDropdown">
+              <button [disabled]="!filterBy" class="btn btn-outline-primary mr-2" id="choosingFilter" ngbDropdownToggle >Select Filter</button>
+              <div *ngIf="filterBy==='role'" ngbDropdownMenu aria-labelledby="choosingFilter">
+                 <button (click)="resetFilter()" class="dropdown-item">Select Filter..</button>
+                 <button *ngFor="let role of roles" (click)="filterUserByRole(role)" class="dropdown-item">{{role}}</button>
+              </div>
+              <div *ngIf="filterBy==='status'" ngbDropdownMenu aria-labelledby="choosingFilter">
+                  <button (click)="resetFilter()" class="dropdown-item">Select Filter..</button>
+                  <button (click)="filterUserByStatus('true')" class="dropdown-item">Locked</button>
+                  <button (click)="filterUserByStatus('false')" class="dropdown-item">Unlocked</button>
+               </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="row users-table">
+    <table class="table table-striped table-responsive">
+      <thead>
+        <th>#</th>
+        <th (click)="sortUsers('UserName')">User Name
+          <fa-icon *ngIf="!query.isSortAscending && query.sortBy == 'UserName'" [icon]="sortAlphaDown"></fa-icon>
+          <fa-icon *ngIf="query.isSortAscending && query.sortBy == 'UserName'" [icon]="sortAlphaUp"></fa-icon>
+        </th>
+        <th (click)="sortUsers('CreatedAt')">Created Date
+          <fa-icon *ngIf="!query.isSortAscending && query.sortBy == 'CreatedAt'" [icon]="sortAmountDown"></fa-icon>
+          <fa-icon *ngIf="query.isSortAscending && query.sortBy == 'CreatedAt'" [icon]="sortAmountUp"></fa-icon>
+        </th>
+        <th (click)="sortUsers('CountLikes')">Likes Count
+          <fa-icon *ngIf="!query.isSortAscending && query.sortBy == 'CountLikes'" [icon]="sortAmountDown"></fa-icon>
+          <fa-icon *ngIf="query.isSortAscending && query.sortBy == 'CountLikes'" [icon]="sortAmountUp"></fa-icon>
+        </th>
+        <th>Roles</th>
+        <th>Actions</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i=index">
+          <td>{{ i }}</td>
+          <td> {{ user.userName }}</td>
+          <td>{{ user.createdAt | date:mediumDate}}</td>
+          <td>{{ user.countLikes}} </td>
+          <td>
+            <ul *ngIf="user.roles && user.roles.length > 0">
+              <li *ngFor="let role of user.roles">
+                {{ role }}
+              </li>
+            </ul>
+          </td>
+          <td>
+            <button class="btn btn-outline-secondary" (click)="lockUser(user.userId)">
+              {{ user.userBlocked ? 'Unlock' : 'Block' }}
+              <fa-icon [icon]="blockUserIcon"></fa-icon>
+            </button>
+            <a *ngIf="user.userId" class="btn btn-outline-info" [routerLink]="['/user/profiles', user?.userId]"
+              routerLinkActive="router-link-active">View
+              <fa-icon [icon]="viewUserIcon"></fa-icon>
+            </a>
+            <button class="btn btn-outline-danger" (click)="deleteUser(user.userId, content)">Delete
+              <fa-icon [icon]="deleteUserIcon"></fa-icon>
+            </button>
+            <div ngbDropdown class="d-inline-block">
+              <button class="btn btn-outline-primary" id="dropdownRoles" ngbDropdownToggle>Change Role
+                <fa-icon [icon]="editUserIcon"></fa-icon>
+              </button>
+              <div ngbDropdownMenu aria-labelledby="dropdownRoles">
+                <button *ngFor="let role of roles" class="dropdown-item" (click)="changeRoles(user.userId, role)">
+                  {{ (user.roles.includes(role)) ? 'Remove ' : 'Assign to'}} {{ role }} role</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row paginator">
+      <div class="col">
+        <ngb-pagination
+            [(page)]="query.page"
+            [pageSize]="query.pageSize"
+            [collectionSize]="totalItems"
+            (pageChange)="updateUserList($event)">
+        </ngb-pagination>
+      </div>
+      <div class="col">
+        <div class="float-right">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text"> Page Size: </label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01" (change)="changePageSize($event.target.value)">
+              <!-- <option selected>{{ pageSize }}</option> -->
+              <option *ngFor="let size of pageSizeArray" value="{{size}}">{{size}}</option>
+            </select>
           </div>
         </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+      </div>
+  </div>
+</div>
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">User Account deletion</h4>
+        <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Are you sure you want to delete this user?</strong></p>
+        <p>All information associated to this user profile will be permanently deleted.
+          <span class="text-danger">This operation can not be undone.</span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Ok click')">Ok</button>
+      </div>
+  </ng-template>

@@ -8,7 +8,8 @@ import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [
     DashboardComponent,
-    UsersComponent],
+    UsersComponent
+    ],
   imports: [
     SharedModule,
     RouterModule.forChild([
