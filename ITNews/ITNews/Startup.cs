@@ -4,6 +4,7 @@ using AutoMapper;
 using ITNews.Configurations;
 using ITNews.Data;
 using ITNews.Data.Entities;
+using ITNews.Extensions;
 using ITNews.Hubs;
 using ITNews.Services;
 using ITNews.Services.Email;
@@ -97,6 +98,9 @@ namespace ITNews
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddAutoMapper();
+
+            services.AddElasticSearch(Configuration);
+
             services.AddSignalR(hubOptions =>
             {
                 hubOptions.EnableDetailedErrors = true;

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ITNews.Data;
 using ITNews.Data.Entities;
-using ITNews.Helpers;
+using ITNews.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
