@@ -35,6 +35,29 @@ namespace ITNews.Controllers
             return listCategoryDto;
         }
 
+        // GET: api/Category/CountNews
+        [HttpGet("/countNews/{newsId}")]
+        public async Task<IActionResult> CountNews([FromRoute] int newsId)
+        {
+            var currentNews = await context.News
+                .Include(news => news.NewsCategories)
+                .ThenInclude(nc => nc.Category)
+                .SingleOrDefaultAsync(news => news.Id==newsId);
+
+            if (currentNews == null)
+            {
+                return NotFound();
+            }
+
+            var allNewsCategories = context.NewsCategories;
+            var resultCountNews = currentNews.NewsCategories.Select(nc => new
+            {
+                Name = nc.Category.Name,
+                Count = allNewsCategories.Count(category => category.CategoryId == nc.CategoryId)
+            });
+            return Ok(resultCountNews);
+        }
+
         // GET: api/Category/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory([FromRoute] int id)
@@ -51,7 +74,7 @@ namespace ITNews.Controllers
                 return NotFound();
             }
 
-            var categoryDto = mapper.Map<Category,CategoryDto>(category);   
+            var categoryDto = mapper.Map<Category, CategoryDto>(category);
             return Ok(categoryDto);
         }
 
