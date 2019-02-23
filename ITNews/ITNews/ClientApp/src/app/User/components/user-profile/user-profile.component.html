@@ -43,32 +43,33 @@
               <tr>
                 <td>First Name:</td>
                 <td><input-editor class="mx-auto float-right" id="firstName" [(ngModel)]="profile.firstName" type="text" placeholder="Enter First Name"
-                  (onSave)="saveProfile()"></input-editor></td>
+                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
               </tr>
               <tr>
                 <td>Last Name:</td>
                 <td><input-editor class="mx-auto float-right" id="lastName" [(ngModel)]="profile.lastName" type="text" placeholder="Enter Last Name"
-                  (onSave)="saveProfile()"></input-editor></td>
+                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
               </tr>
               <tr>
                 <td>Birth Day:</td>
-                <td><date-editor class="mx-auto float-right" [(ngModel)]="profile.birthDay" placeholder="Enter a Date" (onSave)="saveProfile()" format="mediumDate" >
+                <td><date-editor class="mx-auto float-right" [(ngModel)]="profile.birthDay" placeholder="Enter a Date"
+                  (onSave)="saveProfile()" disabled="{{isCanChange()}}" format="mediumDate" >
                   </date-editor></td>
               </tr>
               <tr>
                 <td>Specialization:</td>
                 <td><input-editor class="mx-auto float-right" id="specialization" [(ngModel)]="profile.specialization" type="text"
-                  (onSave)="saveProfile()"></input-editor></td>
+                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
               </tr>
               <tr>
                 <td>City:</td>
                 <td><input-editor class="mx-auto float-right" id="city" [(ngModel)]="profile.city" type="text"
-                  (onSave)="saveProfile()"></input-editor></td>
+                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
               </tr>
               <tr>
                 <td>Country:</td>
                 <td><input-editor class="mx-auto float-right" id="country" [(ngModel)]="profile.country" type="text"
-                  (onSave)="saveProfile()"></input-editor></td>
+                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
               </tr>
             </tbody>
           </table>

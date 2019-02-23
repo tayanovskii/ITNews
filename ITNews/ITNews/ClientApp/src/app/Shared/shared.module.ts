@@ -1,3 +1,4 @@
+import { WriterRoleGuard } from './services/writer-role.guard';
 import { AuthGuard } from './services/auth.guard';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from './services/category.service';
@@ -19,6 +20,7 @@ import { NewsStatComponent } from '../Shared/components/news-stat/news-stat.comp
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { FileUploadModule } from 'primeng/fileupload';
+import { OtherUserGuard } from './services/other-user.guard';
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
 }
@@ -52,7 +54,9 @@ export function getBaseUrl() {
     TagService,
     PhotoService,
     CategoryService,
+    OtherUserGuard,
     AuthGuard,
+    WriterRoleGuard,
     {
       provide: 'BASE_URL',
       useFactory: getBaseUrl

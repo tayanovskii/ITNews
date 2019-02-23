@@ -36,7 +36,7 @@ namespace ITNews.Controllers
         }
 
         // GET: api/Category/CountNews
-        [HttpGet("/countNews/{newsId}")]
+        [HttpGet("countNews/{newsId}")]
         public async Task<IActionResult> CountNews([FromRoute] int newsId)
         {
             var currentNews = await context.News

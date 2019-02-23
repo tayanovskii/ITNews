@@ -12,7 +12,9 @@ import { faUserCircle, faSortAlphaDown } from '@fortawesome/free-solid-svg-icons
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { SaveNews } from '../../models/SaveNews';
 import { AuthService } from 'src/app/Shared/services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { CategoryService } from 'src/app/Shared/services/category.service';
+import { CategoryStatistic } from 'src/app/Shared/models/CategoryStatistic';
 @Component({
   selector: 'app-view-news',
   templateUrl: './view-news.component.html',
@@ -23,6 +25,7 @@ export class ViewNewsComponent implements OnInit {
     tags: [],
     categories: []
   };
+  categories: CategoryStatistic[];
   userIcon = faUserCircle;
   commentSortIcon = faSortAlphaDown;
   currentComment = '';
@@ -35,7 +38,8 @@ export class ViewNewsComponent implements OnInit {
     private commentService: CommentService,
     private authService: AuthService,
     private ratingService: RatingService,
-    private likeService: CommentLikeService
+    private likeService: CommentLikeService,
+    private categoryService: CategoryService
   ) {
     // this.news = <News>{};
     // this.news.tags = [];
@@ -46,14 +50,22 @@ export class ViewNewsComponent implements OnInit {
     this.isLoggedIn$ = this.authService.isLoggedIn;
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
-      this.newsService.getNewsById(id)
-        .subscribe(res => {
-          this.news = res;
-          console.log(this.news.userMiniCardDto);
-          // console.log('Full news for view-news component -> ' + JSON.stringify(res));
-          console.log('Comments news-> ' + JSON.stringify(res.comments));
-        }, error => console.log(error));
+      forkJoin(this.newsService.getNewsById(id),
+      this.categoryService.getCountNewsForCategories(id))
+      .subscribe(res => {
+        this.news = res[0];
+        if (!this.authService.isLoggedIN()) {
+          this.news.commentsLikedByUser = [];
+        }
+        this.categories = res[1];
+      }, error => console.log(error));
+
+      // this.newsService.getNewsById(id)
+      //   .subscribe(res => {
+      //     this.news = res;
+      //   }, error => console.log(error));
     }
+
     this._hubConnection = new HubConnectionBuilder().withUrl(`https://localhost:5001/commentHub?newsId=${id}`).build();
     this._hubConnection
       .start()

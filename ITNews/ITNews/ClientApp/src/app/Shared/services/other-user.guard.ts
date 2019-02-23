@@ -5,9 +5,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, Activ
 import { Observable } from 'rxjs';
 import { News } from 'src/app/News/models/News';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class OtherUserGuard implements CanActivate {
   news: News;
   constructor(
@@ -20,16 +18,21 @@ export class OtherUserGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     const newsId = +this.activatedRoute.snapshot.paramMap.get('id');
+    console.log('Othe User Guard works');
     if (newsId) {
       this.newsService.getNewsById(newsId)
       .subscribe(res => {
         this.news = res;
-        if (this.authService.getUserId() === this.news.userMiniCardDto.userId) {
+        console.log('UserId: ', this.authService.getUserId());
+        console.log('UserId from News: ', this.news.userMiniCardDto.userId);
+        if (this.authService.getUserId() === this.news.userMiniCardDto.userId
+          || this.authService.isUserAdmin()) {
           return true;
         }
         return false;
       });
+    } else {
+      return false;
     }
-    return false;
   }
 }

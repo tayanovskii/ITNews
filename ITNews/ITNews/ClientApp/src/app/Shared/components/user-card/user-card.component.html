@@ -1,7 +1,7 @@
 <ng-container *ngIf="userCard">
   <ul class="list-inline news-user-header">
       <li class="list-inline-item user-name">
-        <a  [routerLink]="['/user/profiles', userCard.userName]" routerLinkActive="router-link-active" >
+        <a  [routerLink]="['/user/profiles', userCard.userId]" routerLinkActive="router-link-active" >
           <img src="" alt="">
           <span class="glyphicon-user">{{ userCard.userName }}</span>
         </a>

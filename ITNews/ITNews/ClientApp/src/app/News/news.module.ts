@@ -16,6 +16,8 @@ import { NewsSuccessSavingComponent } from '../News/components/success-news-savi
 import { NewsHeaderComponent } from '../News/components/news-header/news-header.component';
 import { NewsCommentComponent } from '../News/components/news-comment/news-comment.component';
 import { RatingService } from './services/rating.service';
+import { OtherUserGuard } from '../Shared/services/other-user.guard';
+import { WriterRoleGuard } from '../Shared/services/writer-role.guard';
 
 @NgModule({
   declarations: [
@@ -53,8 +55,8 @@ import { RatingService } from './services/rating.service';
     // MarkdownModule.forRoot({ loader: HttpClient }),
     NguiAutoCompleteModule,
     RouterModule.forChild([
-      { path: 'news/edit/:id', component: CreateNewsComponent, canActivate: [AuthGuard] },
-      { path: 'news/create', component: CreateNewsComponent, canActivate: [AuthGuard] },
+      { path: 'news/edit/:id', component: CreateNewsComponent, canActivate: [AuthGuard, OtherUserGuard] },
+      { path: 'news/create', component: CreateNewsComponent, canActivate: [AuthGuard, WriterRoleGuard]  },
       { path: 'news/success-edit/:id', component: NewsSuccessSavingComponent },
       { path: 'news/success-create/:id', component: NewsSuccessSavingComponent },
       { path: 'news/view-news/:id', component: ViewNewsComponent}

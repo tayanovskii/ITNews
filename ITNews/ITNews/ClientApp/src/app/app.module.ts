@@ -11,6 +11,7 @@ import { CreateNewsComponent } from './News/components/create-news/create-news.c
 import { UserModule } from './User/user.module';
 import { SharedModule } from './Shared/shared.module';
 import { NewsModule } from './News/news.module';
+import { NoAccessComponent } from './Core/components/no-access/no-access.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { NewsModule } from './News/news.module';
     AdminModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
-      { path: 'create-news', component: CreateNewsComponent }
+      { path: 'create-news', component: CreateNewsComponent },
+      { path: 'no-access', component: NoAccessComponent }
     ])
   ],
   providers: [],

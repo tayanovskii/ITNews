@@ -51,8 +51,13 @@ export class UserProfileComponent implements OnInit {
         .subscribe(res => {
           this.profile = res;
           console.log('Got profile from server: ' + JSON.stringify(this.profile));
+          console.log('User is admin->' + this.authService.isUserAdmin());
+          console.log('This profile is current user\'s profile->' + (this.authService.getUserId() === this.profile.userId));
         }, error => console.log(error));
     }
+  }
+  isCanChange(): boolean {
+    return !(this.authService.isUserAdmin() || this.authService.getUserId() === this.profile.userId);
   }
   saveProfile() {
     console.log('New Value for FirstName: ' + this.profile.firstName);
