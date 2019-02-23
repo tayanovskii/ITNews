@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ using ITNews.Services.News;
 using ITNews.Services.Tags;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Nest;
+using static System.String;
 
 namespace ITNews.Controllers
 {
@@ -29,15 +32,17 @@ namespace ITNews.Controllers
         private readonly ITagService tagService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly INewsService newsService;
+        private readonly IElasticClient elasticClient;
 
         public NewsController(ApplicationDbContext context, IMapper mapper, ITagService tagService,
-            UserManager<ApplicationUser> userManager, INewsService newsService)
+            UserManager<ApplicationUser> userManager, INewsService newsService, IElasticClient elasticClient)
         {
             this.context = context;
             this.mapper = mapper;
             this.tagService = tagService;
             this.userManager = userManager;
             this.newsService = newsService;
+            this.elasticClient = elasticClient;
         }
 
         // GET: api/News
@@ -57,8 +62,6 @@ namespace ITNews.Controllers
             var listNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listNews);
             return listNewsCardDto;
         }
-
-        //Todo search news by content!!!
 
         // GET: api/News/5
         [HttpGet("{id}")]
@@ -204,6 +207,56 @@ namespace ITNews.Controllers
             return mapper.Map<QueryResult<News>, QueryResultDto<NewsCardDto>>(queryResult);
         }
 
+        //[Route("/News/search")]
+        [HttpGet("search")]
+        public async Task<IActionResult> Find([FromQuery] NewsSearchQueryDto newsQuery)
+        {
+            if (newsQuery.Page <= 0)
+                newsQuery.Page = 1;
+
+            if (newsQuery.PageSize <= 0)
+                newsQuery.PageSize = 10;
+
+            Expression<Func<SearchDescriptor<News>, ISearchRequest>> searchExpression= s =>
+                s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
+                    .From((newsQuery.Page - 1) * newsQuery.PageSize)
+                    .Size(newsQuery.PageSize);
+            //Func<SearchDescriptor<News>, ISearchRequest> searchFunction = s =>
+            //    s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
+            //        .From((newsQuery.Page - 1) * newsQuery.PageSize)
+            //        .Size(newsQuery.PageSize);
+
+            //Expression<Func<News, object>> sortField = s => s.CreatedAt;
+            //Expression<Func<SearchDescriptor<News>, ISearchRequest>> resultExpression = null;
+            //if (!IsNullOrEmpty(newsQuery.SortBy))
+            //{
+            //    Expression<Func<SearchDescriptor<News>, ISearchRequest>> sortExpression;
+
+            //    if (newsQuery.IsSortAscending)
+            //    {
+            //        sortExpression = descriptor => descriptor.Sort(sortDescriptor =>
+            //            sortDescriptor.Field(fieldDescriptor =>
+            //                fieldDescriptor.Field(sortField).Order(SortOrder.Ascending)));
+
+
+            //    }
+            //    else
+            //    {
+            //        sortExpression = descriptor => descriptor.Sort(sortDescriptor =>
+            //            sortDescriptor.Field(fieldDescriptor =>
+            //                fieldDescriptor.Field(sortField).Order(SortOrder.Descending)));
+            //    }
+
+            //    resultExpression = Expression.Lambda<Func<SearchDescriptor<News>, ISearchRequest>>(Expression.AndAlso(searchExpression, sortExpression));
+            //}
+
+
+            var response = await elasticClient.SearchAsync<News>(
+                searchExpression.Compile());
+
+            return Ok(response.Documents);
+        }
+
         // PUT: api/News/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNews([FromRoute] int id, [FromBody] EditNewsDto editNewsDto)
@@ -254,6 +307,8 @@ namespace ITNews.Controllers
                 }
             }
 
+            await elasticClient.UpdateAsync<News>(editNews, u => u.Doc(editNews));
+
             return NoContent();
         }
 
@@ -284,8 +339,24 @@ namespace ITNews.Controllers
             news.ModifiedBy = news.UserId;
             context.News.Add(news);
             await context.SaveChangesAsync();
+            await elasticClient.IndexDocumentAsync(news);
             //return Ok();
             return CreatedAtAction("GetFullNews", new {id = news.Id});
+        }
+
+        [HttpGet("/search/reindex")]
+        public async Task<IActionResult> ReIndex()
+        {
+            await elasticClient.DeleteByQueryAsync<News>(q => q.MatchAll());
+
+            var allNews = await context.News.ToListAsync();
+
+            foreach (var news in allNews)
+            {
+                await elasticClient.IndexDocumentAsync(news);
+            }
+
+            return Ok($"{allNews.Count} news reindexed");
         }
 
         // DELETE: api/News/5
@@ -321,7 +392,7 @@ namespace ITNews.Controllers
                     return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
                 }
             }
-
+            await elasticClient.DeleteAsync<News>(deletedNews);
             return Ok(deletedNews.Id);
         }
 

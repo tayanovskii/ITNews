@@ -34,10 +34,11 @@ namespace ITNews.Extensions
             settings
                 .DefaultMappingFor<News>(m => m
                     .Ignore(n => n.Ratings)
+                    .Ignore(n => n.User)
+                    .Ignore(n => n.NewsCategories)
+                    .Ignore(n => n.NewsTags)
+                    .Ignore(n => n.Comments)
                     .PropertyName(n => n.Id, "id")
-                )
-                .DefaultMappingFor<Comment>(m => m
-                    .PropertyName(c => c.Id, "id")
                 );
         }
 
@@ -46,10 +47,7 @@ namespace ITNews.Extensions
             var createIndexResponse = client.CreateIndex(indexName, c => c
                 .Mappings(ms => ms
                     .Map<News>(n => n
-                        .AutoMap<ApplicationUser>()
-                        .AutoMap<NewsCategory>()
-                        .AutoMap<NewsTag>()
-                        .AutoMap<Comment>())));
+                        .AutoMap())));
 
         }
     }
