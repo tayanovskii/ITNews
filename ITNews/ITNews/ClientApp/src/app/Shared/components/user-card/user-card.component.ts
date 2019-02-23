@@ -15,7 +15,6 @@ export class UserCardComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
   ngOnChanges() {
-
   }
 
 

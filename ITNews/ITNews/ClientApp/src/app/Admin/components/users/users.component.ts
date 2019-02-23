@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/Shared/services/auth.service';
 import { ManageUserQuery } from './../../models/ManageUserQuery';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -23,7 +24,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users: ManageUser[];
+users: ManageUser[];
   roles: string[];
   query: ManageUserQuery;
   pageSizeArray = [10, 15, 20, 25, 30];
@@ -45,7 +46,8 @@ export class UsersComponent implements OnInit {
     private userService: ManageUserService,
     private roleService: RolesService,
     private router: Router,
-    private _modalService: NgbModal
+    private _modalService: NgbModal,
+    private authService: AuthService
   ) {
     this.users = [];
     this.users.forEach(user => {

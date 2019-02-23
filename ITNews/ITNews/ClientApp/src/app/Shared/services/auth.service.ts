@@ -87,14 +87,16 @@ export class AuthService {
     private isUserInRole(roleName: string): boolean {
       const decodedToken = this.getDecodeToken();
       if (decodedToken) {
-        decodedToken.role.forEach(r => {
-          if (r.toLowerCase().includes(roleName)) {
+        for (const r of decodedToken.role) {
+          if (r.toLowerCase().includes(roleName) || r.toLowerCase() === roleName) {
             return true;
           }
-        });
+        }
+        return false;
         // return decodedToken.role.includes('admin');
+      } else {
+         return false;
       }
-      return false;
     }
     public getAuth(): string | null {
       const token = localStorage.getItem(this.tokenKey);

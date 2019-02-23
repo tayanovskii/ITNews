@@ -44,7 +44,8 @@
           <fa-icon *ngIf="query.isSortAscending && query.sortBy == 'CountLikes'" [icon]="sortAmountUp"></fa-icon>
         </th>
         <th>Roles</th>
-        <th>Actions</th>
+        <th>View</th>
+        <th *ngIf="authService.isUserAdmin()">Actions</th>
       </thead>
       <tbody>
         <tr *ngFor="let user of users; let i=index">
@@ -60,14 +61,16 @@
             </ul>
           </td>
           <td>
+            <a *ngIf="user.userId" class="btn btn-outline-info" [routerLink]="['/user/profiles', user?.userId]"
+            routerLinkActive="router-link-active">View
+            <fa-icon [icon]="viewUserIcon"></fa-icon>
+          </a>
+          </td>
+          <td *ngIf="authService.isUserAdmin()">
             <button class="btn btn-outline-secondary" (click)="lockUser(user.userId)">
               {{ user.userBlocked ? 'Unlock' : 'Block' }}
               <fa-icon [icon]="blockUserIcon"></fa-icon>
             </button>
-            <a *ngIf="user.userId" class="btn btn-outline-info" [routerLink]="['/user/profiles', user?.userId]"
-              routerLinkActive="router-link-active">View
-              <fa-icon [icon]="viewUserIcon"></fa-icon>
-            </a>
             <button class="btn btn-outline-danger" (click)="deleteUser(user.userId, content)">Delete
               <fa-icon [icon]="deleteUserIcon"></fa-icon>
             </button>

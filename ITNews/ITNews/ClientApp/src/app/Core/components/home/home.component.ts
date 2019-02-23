@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   options: CloudOptions = {
     // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value
     width : 1,
-    height : 600,
+    height : 400,
     overflow: true,
   };
   zoomOnHoverOptions: ZoomOnHoverOptions = {
