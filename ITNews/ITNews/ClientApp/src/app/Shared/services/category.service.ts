@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { Category } from '../models/category';
+import { CategoryStatistic } from '../models/CategoryStatistic';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CategoryService {
   private url: string;
 
@@ -22,9 +21,11 @@ export class CategoryService {
      return this.http.get<Category[]>(this.url);
    }
    getCategoryByNews(newsId: string) {
-    return this.http.get<Category[]>(this.url + 'byNews');
+    return this.http.get<Category[]>(this.url + '/byNews');
    }
-
+   getCountNewsForCategories(newsId: number) {
+      return this.http.get<CategoryStatistic[]>(this.url + `/countNews/${newsId}`);
+   }
    createCategory(tagName: string) {
      return this.http.post<Category>(this.url, tagName);
    }

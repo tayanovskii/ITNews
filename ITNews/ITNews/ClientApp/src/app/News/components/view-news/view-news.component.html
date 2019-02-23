@@ -40,7 +40,7 @@
               </div>
               <div class="float-right">
                   <button type="button" class="btn btn-light">Cancel</button>
-                  <button type="button" class="btn btn-primary" [disabled]="!currentComment" (click)="addComment()">Leave a Comment</button>
+                  <button type="button" class="btn btn-primary" [disabled]="!(currentComment || authService.isLoggedIN())" (click)="addComment()">Leave a Comment</button>
               </div>
         </div>
         <div *ngIf="news.comments.length > 0" class="comments-list">
@@ -52,10 +52,10 @@
     </div>
     <div class="col-3 sidebar">
       <h4>Categories related to this news</h4>
-      <ul class="list-group">
-        <li *ngFor="let c of news.categories" class="list-group-item d-flex justify-content-between align-items-center">
+      <ul class="list-group" ngbTooltip="Count Of News related to this category" tooltipClass="newsCount">
+        <li *ngFor="let c of categories" class="list-group-item d-flex justify-content-between align-items-center">
           {{ c.name }}
-          <span class="badge badge-primary badge-pill">{{c.id}}</span>
+          <span class="badge badge-primary badge-pill">{{c.count}}</span>
         </li>
       </ul>
     </div>
