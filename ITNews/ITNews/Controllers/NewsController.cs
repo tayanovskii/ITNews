@@ -222,7 +222,7 @@ namespace ITNews.Controllers
                      .From((newsQuery.Page - 1) * newsQuery.PageSize)
                      .Size(newsQuery.PageSize);
 
-            Expression<Func<News, object>> sortField = s => s.CreatedAt;
+            Expression<Func<News, object>> sortField = news => news.CreatedAt;
 
             if (!IsNullOrEmpty(newsQuery.SortBy))
             {

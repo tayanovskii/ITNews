@@ -38,6 +38,10 @@ namespace ITNews.Extensions
                     .Ignore(n => n.NewsCategories)
                     .Ignore(n => n.NewsTags)
                     .Ignore(n => n.Comments)
+                    .Ignore(news => news.MarkDown)
+                    .Ignore(news => news.ModifiedBy)
+                    .Ignore(news => news.SoftDeleted)
+                    .Ignore(news => news.VisitorCount)
                     .PropertyName(n => n.Id, "id")
                 );
         }
