@@ -68,17 +68,17 @@ namespace ITNews.Mapping
                 .ForMember(dto => dto.UserName, opt => opt.MapFrom(user => user.UserName))
                 .ForMember(dto => dto.UserBlocked, opt => opt.MapFrom(user => user.UserBlocked))
                 .ForMember(dto => dto.CreatedAt, opt => opt.MapFrom(user => user.CreatedAt))
-                .ForMember(dto => dto.CountLikes,
-                    opt => opt.MapFrom(user => user.Comments.Sum(comment => comment.Likes.Count())))
-            //.ForMember(dto => dto.CountLikes, opt => opt.Ignore())
-            //.AfterMap((user, dto) =>
-            //{
-            //    dto.CountLikes = 0;
-            //    foreach (var comment in user.Comments)
-            //    {
-            //        dto.CountLikes += comment.Likes.Count();
-            //    }
-            //})
+            //.ForMember(dto => dto.CountLikes,
+            //    opt => opt.MapFrom(user => user.Comments.Sum(comment => comment.Likes.Count())))
+            .ForMember(dto => dto.CountLikes, opt => opt.Ignore())
+                .AfterMap((user, dto) =>
+                {
+                    dto.CountLikes = 0;
+                        foreach (var comment in user.Comments)
+                        {
+                                dto.CountLikes += comment.Likes.Count();
+                        }
+                })
             .ForAllOtherMembers(opt => opt.Ignore());
 
             CreateMap<UserQuery, UserQueryDto>()

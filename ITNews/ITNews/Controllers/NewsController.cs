@@ -51,7 +51,7 @@ namespace ITNews.Controllers
         public IEnumerable<NewsCardDto> GetCardNews()
         {
             var listNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.NewsTags)
                 .ThenInclude(tag => tag.Tag)
                 .Include(news => news.NewsCategories)
@@ -73,7 +73,7 @@ namespace ITNews.Controllers
             }
 
             var findNews = await context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
@@ -143,7 +143,7 @@ namespace ITNews.Controllers
             }
 
             var listFindNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
@@ -163,7 +163,7 @@ namespace ITNews.Controllers
         public IActionResult GetNewsByTad([FromRoute] int tagId)
         {
             var listFindNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
@@ -183,7 +183,7 @@ namespace ITNews.Controllers
         public IActionResult GetNewsByCategory([FromRoute] int categoryId)
         {
             var listFindNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
@@ -217,41 +217,37 @@ namespace ITNews.Controllers
             if (newsQuery.PageSize <= 0)
                 newsQuery.PageSize = 10;
 
-            Expression<Func<SearchDescriptor<News>, ISearchRequest>> searchExpression= s =>
-                s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
-                    .From((newsQuery.Page - 1) * newsQuery.PageSize)
-                    .Size(newsQuery.PageSize);
-            //Func<SearchDescriptor<News>, ISearchRequest> searchFunction = s =>
-            //    s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
-            //        .From((newsQuery.Page - 1) * newsQuery.PageSize)
-            //        .Size(newsQuery.PageSize);
+            Expression<Func<SearchDescriptor<News>, ISearchRequest>> searchExpression = s =>
+                 s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
+                     .From((newsQuery.Page - 1) * newsQuery.PageSize)
+                     .Size(newsQuery.PageSize);
 
-            //Expression<Func<News, object>> sortField = s => s.CreatedAt;
-            //Expression<Func<SearchDescriptor<News>, ISearchRequest>> resultExpression = null;
-            //if (!IsNullOrEmpty(newsQuery.SortBy))
-            //{
-            //    Expression<Func<SearchDescriptor<News>, ISearchRequest>> sortExpression;
+            Expression<Func<News, object>> sortField = news => news.CreatedAt;
 
-            //    if (newsQuery.IsSortAscending)
-            //    {
-            //        sortExpression = descriptor => descriptor.Sort(sortDescriptor =>
-            //            sortDescriptor.Field(fieldDescriptor =>
-            //                fieldDescriptor.Field(sortField).Order(SortOrder.Ascending)));
+            if (!IsNullOrEmpty(newsQuery.SortBy))
+            {
+                if (newsQuery.IsSortAscending)
+                {
 
+                    searchExpression = s =>
+                        s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
+                            .From((newsQuery.Page - 1) * newsQuery.PageSize)
+                            .Size(newsQuery.PageSize).Sort(sortDescriptor =>
+                        sortDescriptor.Field(fieldDescriptor =>
+                            fieldDescriptor.Field(sortField).Order(SortOrder.Ascending)));
+                }
+                else
+                {
+                    searchExpression = s =>
+                        s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
+                            .From((newsQuery.Page - 1) * newsQuery.PageSize)
+                            .Size(newsQuery.PageSize).Sort(sortDescriptor =>
+                                sortDescriptor.Field(fieldDescriptor =>
+                                    fieldDescriptor.Field(sortField).Order(SortOrder.Descending)));
+                }
+            }
 
-            //    }
-            //    else
-            //    {
-            //        sortExpression = descriptor => descriptor.Sort(sortDescriptor =>
-            //            sortDescriptor.Field(fieldDescriptor =>
-            //                fieldDescriptor.Field(sortField).Order(SortOrder.Descending)));
-            //    }
-
-            //    resultExpression = Expression.Lambda<Func<SearchDescriptor<News>, ISearchRequest>>(Expression.AndAlso(searchExpression, sortExpression));
-            //}
-
-
-            var response = await elasticClient.SearchAsync<News>(
+            var response = await elasticClient.SearchAsync(
                 searchExpression.Compile());
 
             return Ok(response.Documents);
