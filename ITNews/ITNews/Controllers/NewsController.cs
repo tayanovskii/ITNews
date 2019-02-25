@@ -51,7 +51,7 @@ namespace ITNews.Controllers
         public IEnumerable<NewsCardDto> GetCardNews()
         {
             var listNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.NewsTags)
                 .ThenInclude(tag => tag.Tag)
                 .Include(news => news.NewsCategories)
@@ -73,7 +73,7 @@ namespace ITNews.Controllers
             }
 
             var findNews = await context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
@@ -143,7 +143,7 @@ namespace ITNews.Controllers
             }
 
             var listFindNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
@@ -163,7 +163,7 @@ namespace ITNews.Controllers
         public IActionResult GetNewsByTad([FromRoute] int tagId)
         {
             var listFindNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
@@ -183,7 +183,7 @@ namespace ITNews.Controllers
         public IActionResult GetNewsByCategory([FromRoute] int categoryId)
         {
             var listFindNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.CommentLikes)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Comments)
                 .ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)

@@ -22,7 +22,7 @@ namespace ITNews.Services.News
             var result = new QueryResult<Data.Entities.News>();
 
             var query = context.News
-                    .Include(news => news.User).ThenInclude(user => user.CommentLikes)
+                    .Include(news => news.User).ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
                     .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
                     .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
                     .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
@@ -38,8 +38,7 @@ namespace ITNews.Services.News
                 ["ModifiedAt"] = news => news.ModifiedAt,
                 ["Rating"] = news => news.Ratings.Average(rating => rating.Value)
             };
-
-
+           
             if (queryObj.SortBy == "Rating")
             {
                 query = query.Where(news => news.Ratings!=null && news.Ratings.Any());
