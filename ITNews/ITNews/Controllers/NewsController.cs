@@ -344,7 +344,7 @@ namespace ITNews.Controllers
             return CreatedAtAction("GetFullNews", new {id = news.Id});
         }
 
-        [HttpGet("/search/reindex")]
+        [HttpGet("search/reindex")]
         public async Task<IActionResult> ReIndex()
         {
             await elasticClient.DeleteByQueryAsync<News>(q => q.MatchAll());

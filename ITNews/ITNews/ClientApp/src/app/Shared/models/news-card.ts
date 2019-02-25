@@ -5,6 +5,7 @@ export class NewsCard {
   id: number;
   title: string;
   description: string;
+  content: string;
   createdAt: Date;
   modifiedAt: Date;
   categories: Category[];

@@ -4,7 +4,7 @@ import { ViewNewsComponent } from './components/view-news/view-news.component';
 import { CreateNewsComponent } from './components/create-news/create-news.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SharedModule } from '../Shared/shared.module';
+import { SharedModule, getBaseUrl } from '../Shared/shared.module';
 import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 import { HttpClient } from '@angular/common/http';
 import { AngularMarkdownEditorModule } from 'angular-markdown-editor';
@@ -18,6 +18,7 @@ import { NewsCommentComponent } from '../News/components/news-comment/news-comme
 import { RatingService } from './services/rating.service';
 import { OtherUserGuard } from '../Shared/services/other-user.guard';
 import { WriterRoleGuard } from '../Shared/services/writer-role.guard';
+import { SearchResultComponent } from '../News/components/search-result/search-result.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { WriterRoleGuard } from '../Shared/services/writer-role.guard';
     NewsSuccessSavingComponent,
     ViewNewsComponent,
     NewsHeaderComponent,
-    NewsCommentComponent
+    NewsCommentComponent,
+    SearchResultComponent
   ],
   imports: [
     SharedModule,
@@ -59,13 +61,18 @@ import { WriterRoleGuard } from '../Shared/services/writer-role.guard';
       { path: 'news/create', component: CreateNewsComponent, canActivate: [AuthGuard, WriterRoleGuard]  },
       { path: 'news/success-edit/:id', component: NewsSuccessSavingComponent },
       { path: 'news/success-create/:id', component: NewsSuccessSavingComponent },
-      { path: 'news/view-news/:id', component: ViewNewsComponent}
+      { path: 'news/view-news/:id', component: ViewNewsComponent},
+      { path: 'news/search-result', component: SearchResultComponent}
     ])
   ],
   providers: [
     CommentService,
     RatingService,
-    CommentLikeService
+    CommentLikeService,
+    {
+      provide: 'BASE_URL',
+      useFactory: getBaseUrl
+    }
   ]
 })
 export class NewsModule { }

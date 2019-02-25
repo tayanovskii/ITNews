@@ -12,9 +12,9 @@
       <li class="nav-item">
           <a class="nav-link" [routerLink]="['/admin/users']" routerLinkActive="router-link-active">Users</a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
           <a class="nav-link" [routerLink]="['/admin/dashboard']" routerLinkActive="router-link-active">Dashboard</a>
-      </li>
+      </li> -->
       <ng-template #auth>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/user/login']" routerLinkActive="router-link-active">Login</a>
@@ -41,9 +41,9 @@
     <div class="nav-item">
         <a class="nav-link btn btn-secondary" [routerLink]="['/news/create']" routerLinkActive="router-link-active">Create News</a>
     </div>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <form class="form-inline my-2 my-lg-0" #f="ngForm">
+      <input #searchString="ngModel" name="searchInput" ngModel class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" (click)="searchNews(f.value.searchInput)">Search</button>
     </form>
   </div>
 </nav>

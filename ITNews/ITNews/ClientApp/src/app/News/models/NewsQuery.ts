@@ -1,5 +1,5 @@
 import { Category } from './../../Shared/models/category';
-export interface NewsQuery {
+export class NewsQuery {
   category: string;
   tag: string;
   userName: string;

@@ -5,7 +5,7 @@ import { SaveRating } from './../../models/SaveRating';
 import { RatingService } from './../../services/rating.service';
 import { CommentService } from './../../services/comment.service';
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { NewsService } from '../../services/news.service';
 import { News } from '../../models/News';
 import { faUserCircle, faSortAlphaDown } from '@fortawesome/free-solid-svg-icons';
@@ -39,7 +39,8 @@ export class ViewNewsComponent implements OnInit {
     private authService: AuthService,
     private ratingService: RatingService,
     private likeService: CommentLikeService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    @Inject('BASE_URL') private baseUrl: string
   ) {
     // this.news = <News>{};
     // this.news.tags = [];
@@ -66,7 +67,7 @@ export class ViewNewsComponent implements OnInit {
       //   }, error => console.log(error));
     }
 
-    this._hubConnection = new HubConnectionBuilder().withUrl(`https://localhost:5001/commentHub?newsId=${id}`).build();
+    this._hubConnection = new HubConnectionBuilder().withUrl(`${this.baseUrl}commentHub?newsId=${id}`).build();
     this._hubConnection
       .start()
       .then(() => console.log('Connection started!'))

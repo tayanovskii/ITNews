@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="row search-box m-2"><div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary">By Relevance</button>
+    <button type="button" class="btn btn-secondary">By Created Date</button>
+  </div></div>
+  <div class="row news-list m-3">
+      <ng-container *ngFor="let n of news; let i = index">
+          <div class="card m-4">
+              <div class="card-body">
+              <h5 class="card-title"> {{n.t}}</h5>
+                <p class="card-text" [innerHtml]="n.content"></p>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Created Date: </strong> {{n.createdAt | date:mediumDate }}</li>
+                <li class="list-group-item"><strong>Visitor Count:</strong> {{ n.visitorCount | number }}</li>
+              </ul>
+              <div class="card-body">
+                <a class="btn btn-outline-primary" [routerLink]="['/news/view-news', n.id]" routerLinkActive="router-link-active">Read more</a>
+              </div>
+            </div>
+            <div class="w-100"></div>
+          </ng-container>
+  </div>
+  <div class="row paginator">
+    <div class="col">
+      <ngb-pagination
+          [(page)]="query.page"
+          [pageSize]="query.pageSize"
+          [collectionSize]="totalItems"
+          (pageChange)="updateUserList($event)">
+      </ngb-pagination>
+    </div>
+    <div class="col">
+      <div class="float-right">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text"> Page Size: </label>
+          </div>
+          <select class="custom-select" id="inputGroupSelect01" (change)="changePageSize($event.target.value)">
+            <!-- <option selected>{{ pageSize }}</option> -->
+            <option *ngFor="let size of pageSizeArray" value="{{size}}">{{size}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+

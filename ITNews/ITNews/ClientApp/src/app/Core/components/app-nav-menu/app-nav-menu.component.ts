@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/Shared/services/auth.service';
 import { Observable, Subscription } from 'rxjs';
 import { faSignInAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-menu',
@@ -12,7 +13,8 @@ export class AppNavMenuComponent implements OnInit {
   username$: Observable<string>;
   isLoggedIn$: Observable<boolean>;
   constructor(
-    public authService: AuthService) { }
+    public authService: AuthService,
+    private router: Router) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;
@@ -22,5 +24,8 @@ export class AppNavMenuComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
-
+  searchNews(queryString) {
+    console.log(queryString);
+    this.router.navigate(['/news/search-result', {query: queryString}]);
+  }
 }

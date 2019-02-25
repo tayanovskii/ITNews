@@ -6,6 +6,7 @@ import { SaveNews } from '../models/SaveNews';
 import { News } from '../models/News';
 import { NewsCard } from 'src/app/Shared/models/news-card';
 import { NewsQuery } from '../models/NewsQuery';
+import { SearchNewsQuery } from 'src/app/News/models/SearchNewsQuery';
 
 
 @Injectable()
@@ -29,6 +30,9 @@ export class NewsService {
   }
   getNews(queryObj: NewsQuery) {
     return this.http.get<QueryResult>(this.url + '?' + QueryBuildHelper.getQuery(queryObj));
+  }
+  searchNews(queryObj: SearchNewsQuery) {
+    return this.http.get<NewsCard[]>(this.url + '/search' + '?' + QueryBuildHelper.getQuery(queryObj));
   }
   getCardNews() {}
   getCardNewsByUserId(userId: string) {
