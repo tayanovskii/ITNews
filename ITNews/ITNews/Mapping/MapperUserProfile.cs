@@ -47,9 +47,11 @@ namespace ITNews.Mapping
                 .AfterMap((user, dto) =>
                 {
                     dto.CountLikes = 0;
-                    foreach (var comment in user.Comments)
+                    if (user.Comments != null && user.Comments.Any())
+                        foreach (var comment in user.Comments)
                     {
-                        dto.CountLikes += comment.Likes.Count();
+                            if (comment.Likes != null && user.Comments.Any())
+                                dto.CountLikes += comment.Likes.Count();
                     }
                 });
                
@@ -74,8 +76,10 @@ namespace ITNews.Mapping
                 .AfterMap((user, dto) =>
                 {
                     dto.CountLikes = 0;
+                    if (user.Comments != null && user.Comments.Any())
                         foreach (var comment in user.Comments)
                         {
+                            if (comment.Likes != null && user.Comments.Any())
                                 dto.CountLikes += comment.Likes.Count();
                         }
                 })
