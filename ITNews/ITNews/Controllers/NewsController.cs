@@ -72,10 +72,10 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            var findNews = await context.News.Include(news => news.User)
-                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
-                .Include(news => news.Comments)
-                .ThenInclude(comment => comment.Likes)
+            var findNews = await context.News
+                .Include(news => news.User).ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.User)
                 .Include(news => news.Ratings)
                 .Include(news => news.NewsCategories)
                 .ThenInclude(category => category.Category)
@@ -184,13 +184,10 @@ namespace ITNews.Controllers
         {
             var listFindNews = context.News.Include(news => news.User)
                 .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
-                .Include(news => news.Comments)
-                .ThenInclude(comment => comment.Likes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
-                .Include(news => news.NewsCategories)
-                .ThenInclude(category => category.Category)
-                .Include(news => news.NewsTags)
-                .ThenInclude(tag => tag.Tag)
+                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
                 .Where(news => news.NewsCategories.Any(category => category.CategoryId == categoryId));
 
             var listFindNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listFindNews);
@@ -220,7 +217,8 @@ namespace ITNews.Controllers
             Expression<Func<SearchDescriptor<News>, ISearchRequest>> searchExpression = s =>
                  s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
                      .From((newsQuery.Page - 1) * newsQuery.PageSize)
-                     .Size(newsQuery.PageSize);
+                     .Size(newsQuery.PageSize)
+                     ;
 
             Expression<Func<News, object>> sortField = news => news.CreatedAt;
 
