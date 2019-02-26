@@ -6,7 +6,6 @@ namespace ITNews.DTO.NewsDto
 {
     public class NewsCardDto
     {
-        //todo rating count
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

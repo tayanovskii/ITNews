@@ -218,7 +218,12 @@ namespace ITNews.Controllers
                  s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
                      .From((newsQuery.Page - 1) * newsQuery.PageSize)
                      .Size(newsQuery.PageSize)
-                     ;
+                     .Highlight(h=>h
+                         .Fields(
+                             fs=>fs.Field(news => news.Content),
+                             fs=>fs.Field(news => news.Description),
+                             fs=>fs.Field(news => news.Title)
+                             ));
 
             Expression<Func<News, object>> sortField = news => news.CreatedAt;
 
@@ -248,7 +253,46 @@ namespace ITNews.Controllers
             var response = await elasticClient.SearchAsync(
                 searchExpression.Compile());
 
-            return Ok(response.Documents);
+           
+
+            var listHits = response.Hits.Select(hit => new
+            {
+                newsId = hit.Source.Id,
+                content = Join("...", hit.Highlights["content"]?.Highlights),
+                title = Join("...", hit.Highlights["title"]?.Highlights),
+                description = Join("...", hit.Highlights["description"]?.Highlights)
+            });
+
+
+            var searchNews = context.News.Include(news => news.User)
+                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
+                .Include(news => news.NewsTags)
+                .ThenInclude(tag => tag.Tag)
+                .Include(news => news.NewsCategories)
+                .ThenInclude(category => category.Category)
+                .Include(news => news.Comments)
+                .ThenInclude(comment => comment.Likes)
+                .Include(news => news.Ratings)
+                .Where(news => listHits.Select(n => n.newsId).Contains(news.Id));
+
+            var listNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<FindNewsDto>>(searchNews);
+
+            foreach (var listHit in listHits)
+            {
+                if (!IsNullOrEmpty(listHit.content))
+                {
+                    listNewsCardDto.SingleOrDefault(dto => dto.Id == listHit.newsId).Content = listHit.content;
+                }
+                  
+                    if (!IsNullOrEmpty(listHit.title))
+                        listNewsCardDto.SingleOrDefault(dto => dto.Id == listHit.newsId).Title = listHit.title;
+
+                if (!IsNullOrEmpty(listHit.description))
+                    listNewsCardDto.SingleOrDefault(dto => dto.Id == listHit.newsId).Description = listHit.description;
+
+            }
+
+            return Ok(listNewsCardDto);
         }
 
         // PUT: api/News/5

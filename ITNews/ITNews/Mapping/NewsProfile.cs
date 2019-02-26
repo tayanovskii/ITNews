@@ -127,7 +127,11 @@ namespace ITNews.Mapping
             CreateMap<NewsQuery, NewsQueryDto>()
                 .ReverseMap();
 
-          
+
+            CreateMap<News, FindNewsDto>()
+                .IncludeBase<News, NewsCardDto>()
+                .ForMember(dto => dto.Content, opt => opt.MapFrom(news => news.Content));
+
         }
     }
 }
