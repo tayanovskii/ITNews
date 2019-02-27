@@ -87,11 +87,8 @@ export class AuthService {
     private isUserInRole(roleName: string): boolean {
       const decodedToken = this.getDecodeToken();
       if (decodedToken) {
-        for (const r of decodedToken.role) {
-          if (r.toLowerCase().includes(roleName) || r.toLowerCase() === roleName) {
-            console.log('User is ->' + roleName);
-            return true;
-          }
+        if (decodedToken.role.includes(roleName)) {
+          return true;
         }
         return false;
         // return decodedToken.role.includes('admin');
