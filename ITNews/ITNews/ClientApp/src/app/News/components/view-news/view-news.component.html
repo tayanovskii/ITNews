@@ -40,7 +40,7 @@
               </div>
               <div class="float-right">
                   <button type="button" class="btn btn-light">Cancel</button>
-                  <button type="button" class="btn btn-primary" [disabled]="!(currentComment || authService.isLoggedIN())" (click)="addComment()">Leave a Comment</button>
+                  <button type="button" class="btn btn-primary" [disabled]="!(currentComment.length > 0 && authService.isLoggedIN())" (click)="addComment()">Leave a Comment</button>
               </div>
         </div>
         <div *ngIf="news.comments.length > 0" class="comments-list">

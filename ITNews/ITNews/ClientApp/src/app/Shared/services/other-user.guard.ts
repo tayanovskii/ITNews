@@ -1,25 +1,38 @@
 import { NewsService } from './../../News/services/news.service';
 import { AuthService } from 'src/app/Shared/services/auth.service';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { News } from 'src/app/News/models/News';
 
 @Injectable()
 export class OtherUserGuard implements CanActivate {
   news: News;
+  isAccess = false;
   constructor(
+    private ngZone: NgZone,
     private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private newsService: NewsService
-    ) {}
+  ) { }
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    const newsId = +this.activatedRoute.snapshot.paramMap.get('id');
-    console.log('Othe User Guard works');
-    if (newsId) {
+    const newsId = +next.paramMap.get('id');
+    console.log('NewsId->', newsId);
+      if (newsId) {
+        this.ngZone.run(() => {
+          this.checkUser(newsId);
+        });
+        console.log('isAccess: ', this.isAccess);
+        return this.isAccess;
+       } else {
+        return false;
+    }
+  }
+  checkUser(newsId: number) {
+    this.ngZone.run(() => {
       this.newsService.getNewsById(newsId)
       .subscribe(res => {
         this.news = res;
@@ -27,12 +40,14 @@ export class OtherUserGuard implements CanActivate {
         console.log('UserId from News: ', this.news.userMiniCardDto.userId);
         if (this.authService.getUserId() === this.news.userMiniCardDto.userId
           || this.authService.isUserAdmin()) {
-          return true;
+          console.log('Users id is equal');
+          this.isAccess = true;
+        } else {
+          this.isAccess = false;
         }
-        return false;
-      });
-    } else {
-      return false;
-    }
+        console.log('isAccess is -> ', this.isAccess);
+      }, error => console.log(error));
+    });
+
   }
 }

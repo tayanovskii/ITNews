@@ -24,8 +24,8 @@ export class HomeComponent implements OnInit {
   options: CloudOptions = {
     // if width is between 0 and 1 it will be set to the size of the upper element multiplied by the value
     width : 1,
-    height : 400,
-    overflow: true,
+    height : 200,
+    overflow: false,
   };
   zoomOnHoverOptions: ZoomOnHoverOptions = {
     scale: 1.3, // Elements will become 130 % of current zize on hover
@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
     .subscribe(res => {
         res.forEach(t => {
         console.log(JSON.stringify(t));
-        this.cloudData.push(<CloudData>{ text: t.name, weight: t.entryCount, color: 'dark-blue' });
+        this.cloudData.push(<CloudData>{ text: t.name, weight: t.entryCount * 1.2, color: 'dark-blue' });
       });
     });
   }

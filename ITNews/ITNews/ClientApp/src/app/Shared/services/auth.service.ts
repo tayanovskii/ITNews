@@ -89,6 +89,7 @@ export class AuthService {
       if (decodedToken) {
         for (const r of decodedToken.role) {
           if (r.toLowerCase().includes(roleName) || r.toLowerCase() === roleName) {
+            console.log('User is ->' + roleName);
             return true;
           }
         }

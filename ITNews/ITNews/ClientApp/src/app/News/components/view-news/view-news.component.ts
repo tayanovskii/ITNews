@@ -83,8 +83,8 @@ export class ViewNewsComponent implements OnInit {
       content: this.currentComment,
       userId: this.authService.getUserId(),
       newsId: this.news.id
-
     };
+    console.log('This comment will be add to this news ' + JSON.stringify(comment));
     this.commentService.createComment(comment)
     .subscribe(res => {
       console.log('Comment has been added');

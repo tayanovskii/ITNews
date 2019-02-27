@@ -6,11 +6,16 @@ h1 {
 }
 .most-viewed-card {
   background-color: #f7f7f7;
+  margin-top: 20px;
+}
+.sticky-top {
+  top: 80px;
 }
 .most-viewed-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* position: relative; */
     margin: 0 20px;
     height: 50px;
     border-bottom: 1px solid #d5dddf;
@@ -36,4 +41,17 @@ h1 {
   display: list-item ;
   list-style-type: none;
   text-align: -webkit-match-parent;
+}
+.tag-cloud {
+  margin-top: 30px;
+  /* background-color: #f7f7f7; */
+}
+.tag-cloud-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin: 0 20px;
+    height: 50px;
+    border-bottom:  1px solid #d5dddf;
 }
