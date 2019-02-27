@@ -235,7 +235,14 @@ namespace ITNews.Controllers
                     searchExpression = s =>
                         s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
                             .From((newsQuery.Page - 1) * newsQuery.PageSize)
-                            .Size(newsQuery.PageSize).Sort(sortDescriptor =>
+                            .Size(newsQuery.PageSize)
+                            .Highlight(h => h
+                                .Fields(
+                                    fs => fs.Field(news => news.Content),
+                                    fs => fs.Field(news => news.Description),
+                                    fs => fs.Field(news => news.Title)
+                                ))
+                        .Sort(sortDescriptor =>
                         sortDescriptor.Field(fieldDescriptor =>
                             fieldDescriptor.Field(sortField).Order(SortOrder.Ascending)));
                 }
@@ -244,7 +251,14 @@ namespace ITNews.Controllers
                     searchExpression = s =>
                         s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
                             .From((newsQuery.Page - 1) * newsQuery.PageSize)
-                            .Size(newsQuery.PageSize).Sort(sortDescriptor =>
+                            .Size(newsQuery.PageSize)
+                            .Highlight(h => h
+                                .Fields(
+                                    fs => fs.Field(news => news.Content),
+                                    fs => fs.Field(news => news.Description),
+                                    fs => fs.Field(news => news.Title)
+                                ))
+                            .Sort(sortDescriptor =>
                                 sortDescriptor.Field(fieldDescriptor =>
                                     fieldDescriptor.Field(sortField).Order(SortOrder.Descending)));
                 }
@@ -253,46 +267,60 @@ namespace ITNews.Controllers
             var response = await elasticClient.SearchAsync(
                 searchExpression.Compile());
 
-           
-
-            var listHits = response.Hits.Select(hit => new
+            foreach (var responseHit in response.Hits)
             {
-                newsId = hit.Source.Id,
-                content = Join("...", hit.Highlights["content"]?.Highlights),
-                title = Join("...", hit.Highlights["title"]?.Highlights),
-                description = Join("...", hit.Highlights["description"]?.Highlights)
-            });
+                if (!responseHit.Highlights.Any()) continue;
 
-
-            var searchNews = context.News.Include(news => news.User)
-                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
-                .Include(news => news.NewsTags)
-                .ThenInclude(tag => tag.Tag)
-                .Include(news => news.NewsCategories)
-                .ThenInclude(category => category.Category)
-                .Include(news => news.Comments)
-                .ThenInclude(comment => comment.Likes)
-                .Include(news => news.Ratings)
-                .Where(news => listHits.Select(n => n.newsId).Contains(news.Id));
-
-            var listNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<FindNewsDto>>(searchNews);
-
-            foreach (var listHit in listHits)
-            {
-                if (!IsNullOrEmpty(listHit.content))
+                foreach (var responseHitHighlight in responseHit.Highlights)
                 {
-                    listNewsCardDto.SingleOrDefault(dto => dto.Id == listHit.newsId).Content = listHit.content;
+                    if (responseHitHighlight.Key == "content")
+                    {
+                        var hitContent = Join("...", responseHitHighlight.Value.Highlights);
+                        responseHit.Source.Content = hitContent;
+                    }
+
+                    if (responseHitHighlight.Key == "title")
+                    {
+                        var hitContent = Join("...", responseHitHighlight.Value.Highlights);
+                        responseHit.Source.Title = hitContent;
+                    }
+
+                    if (responseHitHighlight.Key == "description")
+                    {
+                        var hitContent = Join("...", responseHitHighlight.Value.Highlights);
+                        responseHit.Source.Description = hitContent;
+                    }
                 }
-                  
-                    if (!IsNullOrEmpty(listHit.title))
-                        listNewsCardDto.SingleOrDefault(dto => dto.Id == listHit.newsId).Title = listHit.title;
-
-                if (!IsNullOrEmpty(listHit.description))
-                    listNewsCardDto.SingleOrDefault(dto => dto.Id == listHit.newsId).Description = listHit.description;
-
             }
 
-            return Ok(listNewsCardDto);
+            var listHitsNews = response.Hits.Select(hit => hit.Source);
+            var resultSearchNews = new List<News>();
+            foreach (var hitNews in listHitsNews)
+            {
+                     var searchNews = await context.News
+                     .Include(news => news.User)
+                        .ThenInclude(user => user.Comments)
+                         .ThenInclude(comment => comment.Likes)
+                    .Include(news => news.NewsTags)
+                        .ThenInclude(tag => tag.Tag)
+                    .Include(news => news.NewsCategories)
+                        .ThenInclude(category => category.Category)
+                    .Include(news => news.Comments)
+                        .ThenInclude(comment => comment.Likes)
+                    .Include(news => news.Ratings)
+                         .SingleOrDefaultAsync(news => news.Id == hitNews.Id);
+
+                searchNews.Content = hitNews.Content;
+                searchNews.Title = hitNews.Title;
+                searchNews.Description = hitNews.Description;
+
+                resultSearchNews.Add(searchNews);
+            }
+
+            var resultSearchNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<FindNewsDto>>(resultSearchNews);
+
+
+            return Ok(resultSearchNewsCardDto);
         }
 
         // PUT: api/News/5
