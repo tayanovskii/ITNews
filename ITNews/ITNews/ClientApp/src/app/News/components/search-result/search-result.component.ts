@@ -33,8 +33,9 @@ export class SearchResultComponent implements OnInit {
     this.newsService.searchNews(this.query)
     .subscribe(res => {
       this.news = res;
-      console.log(JSON.stringify(res));
+      console.log(JSON.stringify(this.news));
     }, error => console.log(error));
+
   }
   updateUserList($event) {
     console.log($event);

@@ -1,3 +1,30 @@
+<div class="row filter-area">
+    <div class="col-md-6 row">
+      <div class="col">
+          <div class="d-inline-block" ngbDropdown #myDropFilterField="ngbDropdown">
+              <button class="btn btn-outline-primary mr-2" id="choosingFilterField" ngbDropdownToggle >Filter By</button>
+              <div ngbDropdownMenu aria-labelledby="choosingFilterField">
+                <button (click)="changeFilter('')" class="dropdown-item">All</button>
+                <button (click)="changeFilter('category')" class="dropdown-item">By Category</button>
+                <button (click)="changeFilter('tag')" class="dropdown-item">By Tag</button>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="d-inline-block" ngbDropdown #myDropFilter="ngbDropdown">
+              <button [disabled]="!filterBy" class="btn btn-outline-primary mr-2" id="choosingFilter" ngbDropdownToggle >Select Filter</button>
+              <div *ngIf="filterBy==='category'" ngbDropdownMenu aria-labelledby="choosingFilter">
+                 <button (click)="resetFilter()" class="dropdown-item">Select Filter..</button>
+                 <button *ngFor="let category of categories" (click)="filterNewsByCategory(category.name)" class="dropdown-item">{{category.name}}</button>
+              </div>
+              <div *ngIf="filterBy==='tag'" ngbDropdownMenu aria-labelledby="choosingFilter">
+                  <button (click)="resetFilter()" class="dropdown-item">Select Filter..</button>
+                  <button *ngFor="let tag of tags" (click)="filterNewsByTag(tag.name)" class="dropdown-item">{{tag.name}}</button>
+               </div>
+          </div>
+      </div>
+    </div>
+  </div>
 <div *ngIf="news" class="news-list" >
   <h3>{{title}}</h3>
   <news-card *ngFor="let card of news" [card]="card"></news-card>

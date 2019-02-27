@@ -1,3 +1,5 @@
+import { Category } from './../../../Shared/models/category';
+import { CategoryService } from 'src/app/Shared/services/category.service';
 import { ArrayHelpers } from './../../../Shared/helpers/ArrayHelpers';
 import { NewsQuery } from './../../../News/models/NewsQuery';
 import { NewsCard } from 'src/app/Shared/models/news-card';
@@ -6,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { CloudOptions, CloudData, ZoomOnHoverOptions } from 'angular-tag-cloud-module';
 import { TagService } from 'src/app/Shared/services/tag.service';
 import { text } from '@fortawesome/fontawesome-svg-core';
+import { Tag } from 'src/app/Shared/models/tag';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +23,7 @@ export class HomeComponent implements OnInit {
   pageSizeArray;
   pageSizeForMostViewed;
   mostViewedNews: NewsCard[];
+
   // tag cloud options and data
   cloudData: CloudData[] = [];
   options: CloudOptions = {
@@ -63,7 +68,8 @@ export class HomeComponent implements OnInit {
       this.mostViewedNews = res.items;
       console.log('Most Viewed News was received');
     });
-  }
+
+     }
   changeTotalItems($event) {
     this.totalItems = $event;
   }

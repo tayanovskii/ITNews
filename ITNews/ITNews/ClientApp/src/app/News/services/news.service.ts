@@ -32,6 +32,7 @@ export class NewsService {
     return this.http.get<QueryResult>(this.url + '?' + QueryBuildHelper.getQuery(queryObj));
   }
   searchNews(queryObj: SearchNewsQuery) {
+    console.log(QueryBuildHelper.getQuery(queryObj));
     return this.http.get<NewsCard[]>(this.url + '/search' + '?' + QueryBuildHelper.getQuery(queryObj));
   }
   getCardNews() {}

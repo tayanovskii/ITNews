@@ -10,11 +10,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./app-nav-menu.component.css']
 })
 export class AppNavMenuComponent implements OnInit {
+  queryString = '';
   username$: Observable<string>;
   isLoggedIn$: Observable<boolean>;
   constructor(
     public authService: AuthService,
-    private router: Router) { }
+    private router: Router) {
+     }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;
@@ -24,8 +26,9 @@ export class AppNavMenuComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
-  searchNews(queryString) {
-    console.log(queryString);
-    this.router.navigate(['/news/search-result', {query: queryString}]);
+  searchNews() {
+    console.log(this.queryString);
+    this.router.navigate(['/news/search-result', {query: this.queryString}]);
+    this.queryString = '';
   }
 }

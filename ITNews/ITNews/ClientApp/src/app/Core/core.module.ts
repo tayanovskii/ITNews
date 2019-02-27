@@ -29,7 +29,8 @@ import { NoAccessComponent } from '../Core/components/no-access/no-access.compon
   exports: [
     AppNavMenuComponent,
     HomeComponent,
-    NoAccessComponent
+    NoAccessComponent,
+    NewsCardComponent
   ]
 })
 export class CoreModule { }

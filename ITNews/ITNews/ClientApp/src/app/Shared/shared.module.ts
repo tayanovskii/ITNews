@@ -21,6 +21,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { FileUploadModule } from 'primeng/fileupload';
 import { OtherUserGuard } from './services/other-user.guard';
+import { NewsCardComponent } from '../Core/components/news-card/news-card.component';
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
 }

@@ -10,7 +10,7 @@ import { NewsCard } from '../../../Shared/models/news-card';
 export class NewsCardComponent implements OnInit {
   // tslint:disable-next-line:no-input-rename
   @Input('card') card: NewsCard;
-
+  @Input() isForSearch = false;
   constructor() { }
 
   ngOnInit() {

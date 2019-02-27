@@ -1,3 +1,4 @@
+import { CoreModule } from './../Core/core.module';
 import { CommentLikeService } from './services/comment-likes.service';
 import { CommentService } from './services/comment.service';
 import { ViewNewsComponent } from './components/view-news/view-news.component';
@@ -19,6 +20,7 @@ import { RatingService } from './services/rating.service';
 import { OtherUserGuard } from '../Shared/services/other-user.guard';
 import { WriterRoleGuard } from '../Shared/services/writer-role.guard';
 import { SearchResultComponent } from '../News/components/search-result/search-result.component';
+import { NewsCardComponent } from '../Core/components/news-card/news-card.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { SearchResultComponent } from '../News/components/search-result/search-r
     SharedModule,
     ReactiveFormsModule,
     FontAwesomeModule,
+    CoreModule,
     MarkdownModule.forRoot({
       loader: HttpClient,
       markedOptions: {
