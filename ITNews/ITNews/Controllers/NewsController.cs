@@ -72,10 +72,10 @@ namespace ITNews.Controllers
                 return BadRequest(ModelState);
             }
 
-            var findNews = await context.News.Include(news => news.User)
-                .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
-                .Include(news => news.Comments)
-                .ThenInclude(comment => comment.Likes)
+            var findNews = await context.News
+                .Include(news => news.User).ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.User)
                 .Include(news => news.Ratings)
                 .Include(news => news.NewsCategories)
                 .ThenInclude(category => category.Category)
@@ -184,13 +184,10 @@ namespace ITNews.Controllers
         {
             var listFindNews = context.News.Include(news => news.User)
                 .ThenInclude(user => user.Comments).ThenInclude(comment => comment.Likes)
-                .Include(news => news.Comments)
-                .ThenInclude(comment => comment.Likes)
+                .Include(news => news.Comments).ThenInclude(comment => comment.Likes)
                 .Include(news => news.Ratings)
-                .Include(news => news.NewsCategories)
-                .ThenInclude(category => category.Category)
-                .Include(news => news.NewsTags)
-                .ThenInclude(tag => tag.Tag)
+                .Include(news => news.NewsCategories).ThenInclude(category => category.Category)
+                .Include(news => news.NewsTags).ThenInclude(tag => tag.Tag)
                 .Where(news => news.NewsCategories.Any(category => category.CategoryId == categoryId));
 
             var listFindNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<NewsCardDto>>(listFindNews);
@@ -220,7 +217,13 @@ namespace ITNews.Controllers
             Expression<Func<SearchDescriptor<News>, ISearchRequest>> searchExpression = s =>
                  s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
                      .From((newsQuery.Page - 1) * newsQuery.PageSize)
-                     .Size(newsQuery.PageSize);
+                     .Size(newsQuery.PageSize)
+                     .Highlight(h=>h
+                         .Fields(
+                             fs=>fs.Field(news => news.Content),
+                             fs=>fs.Field(news => news.Description),
+                             fs=>fs.Field(news => news.Title)
+                             ));
 
             Expression<Func<News, object>> sortField = news => news.CreatedAt;
 
@@ -232,7 +235,14 @@ namespace ITNews.Controllers
                     searchExpression = s =>
                         s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
                             .From((newsQuery.Page - 1) * newsQuery.PageSize)
-                            .Size(newsQuery.PageSize).Sort(sortDescriptor =>
+                            .Size(newsQuery.PageSize)
+                            .Highlight(h => h
+                                .Fields(
+                                    fs => fs.Field(news => news.Content),
+                                    fs => fs.Field(news => news.Description),
+                                    fs => fs.Field(news => news.Title)
+                                ))
+                        .Sort(sortDescriptor =>
                         sortDescriptor.Field(fieldDescriptor =>
                             fieldDescriptor.Field(sortField).Order(SortOrder.Ascending)));
                 }
@@ -241,7 +251,14 @@ namespace ITNews.Controllers
                     searchExpression = s =>
                         s.Query(q => q.QueryString(d => d.Query(newsQuery.Query)))
                             .From((newsQuery.Page - 1) * newsQuery.PageSize)
-                            .Size(newsQuery.PageSize).Sort(sortDescriptor =>
+                            .Size(newsQuery.PageSize)
+                            .Highlight(h => h
+                                .Fields(
+                                    fs => fs.Field(news => news.Content),
+                                    fs => fs.Field(news => news.Description),
+                                    fs => fs.Field(news => news.Title)
+                                ))
+                            .Sort(sortDescriptor =>
                                 sortDescriptor.Field(fieldDescriptor =>
                                     fieldDescriptor.Field(sortField).Order(SortOrder.Descending)));
                 }
@@ -250,7 +267,60 @@ namespace ITNews.Controllers
             var response = await elasticClient.SearchAsync(
                 searchExpression.Compile());
 
-            return Ok(response.Documents);
+            foreach (var responseHit in response.Hits)
+            {
+                if (!responseHit.Highlights.Any()) continue;
+
+                foreach (var responseHitHighlight in responseHit.Highlights)
+                {
+                    if (responseHitHighlight.Key == "content")
+                    {
+                        var hitContent = Join("...", responseHitHighlight.Value.Highlights);
+                        responseHit.Source.Content = hitContent;
+                    }
+
+                    if (responseHitHighlight.Key == "title")
+                    {
+                        var hitContent = Join("...", responseHitHighlight.Value.Highlights);
+                        responseHit.Source.Title = hitContent;
+                    }
+
+                    if (responseHitHighlight.Key == "description")
+                    {
+                        var hitContent = Join("...", responseHitHighlight.Value.Highlights);
+                        responseHit.Source.Description = hitContent;
+                    }
+                }
+            }
+
+            var listHitsNews = response.Hits.Select(hit => hit.Source);
+            var resultSearchNews = new List<News>();
+            foreach (var hitNews in listHitsNews)
+            {
+                     var searchNews = await context.News
+                     .Include(news => news.User)
+                        .ThenInclude(user => user.Comments)
+                         .ThenInclude(comment => comment.Likes)
+                    .Include(news => news.NewsTags)
+                        .ThenInclude(tag => tag.Tag)
+                    .Include(news => news.NewsCategories)
+                        .ThenInclude(category => category.Category)
+                    .Include(news => news.Comments)
+                        .ThenInclude(comment => comment.Likes)
+                    .Include(news => news.Ratings)
+                         .SingleOrDefaultAsync(news => news.Id == hitNews.Id);
+
+                searchNews.Content = hitNews.Content;
+                searchNews.Title = hitNews.Title;
+                searchNews.Description = hitNews.Description;
+
+                resultSearchNews.Add(searchNews);
+            }
+
+            var resultSearchNewsCardDto = mapper.Map<IEnumerable<News>, IEnumerable<FindNewsDto>>(resultSearchNews);
+
+
+            return Ok(resultSearchNewsCardDto);
         }
 
         // PUT: api/News/5
