@@ -21,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CreateProfileComponent implements OnInit {
   profile: UserProfile;
+  editMode: boolean;
   // icons
   specializationIcon = faUserMd;
   calendarIcon = faCalendarAlt;
@@ -45,14 +46,33 @@ export class CreateProfileComponent implements OnInit {
     };
   }
   ngOnInit(): void {
+    this.editMode = this.activatedRoute.snapshot.url[0].path.includes('edit') || this.activatedRoute.snapshot.url[1].path.includes('edit');
+    if (this.editMode) {
+      this.profileService.getUserProfileByUser(this.profile.userId)
+        .subscribe(res => {
+            this.profile = res;
+            console.log(JSON.stringify(this.profile.birthDay));
+          },
+          error => console.log(error));
+    }
   }
   saveProfile() {
-    console.log(JSON.stringify(this.profile));
-    this.profileService.createUserProfile(this.profile)
-    .subscribe(res => {
-      this.toastr.success('Profile saved!', 'Creation Profile Detail!');
-      console.log('Profile has been successfully created' + JSON.stringify(res));
-    }, error => console.log(error));
+    console.log('Saving this profile', JSON.stringify(this.profile));
+
+    if (this.editMode) {
+      this.profileService.changeUserProfile(this.profile, this.profile.id)
+        .subscribe(res => {
+            console.log('Profile has been successfully edited' + JSON.stringify(res));
+          },
+          error => console.log(error));
+    } else {
+      this.profileService.createUserProfile(this.profile)
+        .subscribe(res => {
+          //this.toastr.success('Profile saved!', 'Creation Profile Detail!');
+          console.log('Profile has been successfully created' + JSON.stringify(res));
+        }, error => console.log(error));
+    }
+    
   }
 
   uploadPhoto(photo) {

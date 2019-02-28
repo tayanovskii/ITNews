@@ -59,6 +59,7 @@ export class UserProfileComponent implements OnInit {
   isCanChange(): boolean {
     return !(this.authService.isUserAdmin() || this.authService.getUserId() === this.profile.userId);
   }
+
   saveProfile() {
     console.log('New Value for FirstName: ' + this.profile.firstName);
     this.userProfileService.changeUserProfile(this.profile, this.profile.id)

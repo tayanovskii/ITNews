@@ -3,20 +3,23 @@
 </h3>
 <div class="row user-profile-content">
   <div class="col">
+    <img *ngIf="profile && profile.avatar" class="img-thumbnail" src="/uploads/userAvatars/{{profile.avatar}}" alt="{{ userId }}">
     <div *ngIf="userName" class="account-info">
-      <img *ngIf="profile && profile.avatar" class="img-thumbnail" src="/uploads/userAvatars/{{profile.avatar}}" alt="{{ userId }}">
       <ul class="list-group" style="width: 25rem;">
-        <li class="list-group-item">UserName:
+        <li class="list-group-item">
+          UserName:
           <div class="float-right">
             {{ userName }}
           </div>
         </li>
-        <li *ngIf="role" class="list-group-item">Role:
+        <li *ngIf="role" class="list-group-item">
+          Role:
           <div class="float-right">
             {{ role }}
           </div>
         </li>
-        <li *ngIf="email" class="list-group-item">Email:
+        <li *ngIf="email" class="list-group-item">
+          Email:
           <div class="float-right">
             {{ email }}
           </div>
@@ -25,58 +28,72 @@
     </div>
     <div>
       <a [routerLink]="['/']" routerLinkActive="router-link-active" class="mt-2 btn btn-outline-secondary">
-        <div style="text-align:center">
-            <fa-icon [icon]="backIcon"></fa-icon>
+        <div style="text-align: center">
+          <fa-icon [icon]="backIcon"></fa-icon>
         </div>
-        To main page</a>
+        To main page
+      </a>
     </div>
     <!-- <user-card [user-card]=""></user-card> -->
   </div>
   <div class="col">
     <div *ngIf="profile else notExistProfile">
-        <table class="table">
-            <thead>
-              <th>Profile info</th>
-              <th></th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>First Name:</td>
-                <td><input-editor class="mx-auto float-right" id="firstName" [(ngModel)]="profile.firstName" type="text" placeholder="Enter First Name"
-                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
-              </tr>
-              <tr>
-                <td>Last Name:</td>
-                <td><input-editor class="mx-auto float-right" id="lastName" [(ngModel)]="profile.lastName" type="text" placeholder="Enter Last Name"
-                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
-              </tr>
-              <tr>
-                <td>Birth Day:</td>
-                <td><date-editor class="mx-auto float-right" [(ngModel)]="profile.birthDay" placeholder="Enter a Date"
-                  (onSave)="saveProfile()" disabled="{{isCanChange()}}" format="mediumDate" >
-                  </date-editor></td>
-              </tr>
-              <tr>
-                <td>Specialization:</td>
-                <td><input-editor class="mx-auto float-right" id="specialization" [(ngModel)]="profile.specialization" type="text"
-                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
-              </tr>
-              <tr>
-                <td>City:</td>
-                <td><input-editor class="mx-auto float-right" id="city" [(ngModel)]="profile.city" type="text"
-                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
-              </tr>
-              <tr>
-                <td>Country:</td>
-                <td><input-editor class="mx-auto float-right" id="country" [(ngModel)]="profile.country" type="text"
-                  (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor></td>
-              </tr>
-            </tbody>
-          </table>
+      <table class="table">
+        <thead>
+        <th>Profile info</th>
+        <th></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>First Name:</td>
+            <td>
+              <input-editor class="mx-auto float-right" id="firstName" [(ngModel)]="profile.firstName" type="text" placeholder="Enter First Name"
+                            (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor>
+            </td>
+          </tr>
+          <tr>
+            <td>Last Name:</td>
+            <td>
+              <input-editor class="mx-auto float-right" id="lastName" [(ngModel)]="profile.lastName" type="text" placeholder="Enter Last Name"
+                            (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor>
+            </td>
+          </tr>
+          <tr>
+            <td>Birth Day:</td>
+            <td>
+              <date-editor class="mx-auto float-right" [(ngModel)]="profile.birthDay" placeholder="Enter a Date"
+                           (onSave)="saveProfile()" disabled="{{isCanChange()}}" format="mediumDate">
+              </date-editor>
+            </td>
+          </tr>
+          <tr>
+            <td>Specialization:</td>
+            <td>
+              <input-editor class="mx-auto float-right" id="specialization" [(ngModel)]="profile.specialization" type="text"
+                            (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor>
+            </td>
+          </tr>
+          <tr>
+            <td>City:</td>
+            <td>
+              <input-editor class="mx-auto float-right" id="city" [(ngModel)]="profile.city" type="text"
+                            (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor>
+            </td>
+          </tr>
+          <tr>
+            <td>Country:</td>
+            <td>
+              <input-editor class="mx-auto float-right" id="country" [(ngModel)]="profile.country" type="text"
+                            (onSave)="saveProfile()" disabled="{{isCanChange()}}"></input-editor>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <a *ngIf="!isCanChange()" [routerLink]="['/user/edit-profile']" routerLinkActive="router-link-active" class="btn btn-primary">Change Profile</a>
     </div>
     <ng-template #notExistProfile>
       <h6>Profile doesn't exist yet</h6>
-      <a *ngIf="myProfileMode" class="btn btn-primary" [routerLink]="['/user/create-profile']" routerLinkActive="router-link-active">Create</a>
+      <a class="btn btn-primary" [routerLink]="['/user/create-profile']" routerLinkActive="router-link-active">Create</a>
     </ng-template>
   </div>
 </div>
